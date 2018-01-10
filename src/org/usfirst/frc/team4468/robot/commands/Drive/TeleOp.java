@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class Joystick extends Command {
+public class TeleOp extends Command {
     
     private Drivetrain dt = Robot.drive;
     private OI oi = Robot.oi;
 
-    public Joystick() {
+    public TeleOp() {
         requires(dt);
     }
     

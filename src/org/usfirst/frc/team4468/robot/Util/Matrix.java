@@ -1,17 +1,20 @@
 package org.usfirst.frc.team4468.robot.Util;
 
 /******************************************************************************
- *  Compilation:  javac Matrix.java
- *  Execution:    java Matrix
  *
  *  A bare-bones collection of static methods for manipulating
  *  matrices.
+ *  
+ *  Sources: https://introcs.cs.princeton.edu/java/22library/Matrix.java.html,
+ *           
  *
  ******************************************************************************/
 
 public class Matrix {
 
-    // return n-by-n identity matrix I
+    /* n-by-n identity matrix I
+     * @param n the column and row number the generated array
+     */
     public static double[][] identity(int n) {
         double[][] a = new double[n][n];
         for (int i = 0; i < n; i++)
@@ -19,7 +22,10 @@ public class Matrix {
         return a;
     }
 
-    // return x^T y
+    /* x^T y
+     * @param x is an array
+     * @param y is an array
+     */
     public static double dot(double[] x, double[] y) {
         if (x.length != y.length) throw new RuntimeException("Illegal vector dimensions.");
         double sum = 0.0;
@@ -28,7 +34,9 @@ public class Matrix {
         return sum;
     }
 
-    // return B = A^T
+    /* B = A^T
+     * @param a is a matrix
+     */
     public static double[][] transpose(double[][] a) {
         int m = a.length;
         int n = a[0].length;
@@ -39,7 +47,10 @@ public class Matrix {
         return b;
     }
 
-    // return c = a + b
+    /* c = a + b
+     * @param a is a matrix
+     * @param b is also a matrix
+     */
     public static double[][] add(double[][] a, double[][] b) {
         int m = a.length;
         int n = a[0].length;
@@ -50,7 +61,10 @@ public class Matrix {
         return c;
     }
 
-    // return c = a - b
+    /* c = a - b
+     * @param a is a matrix
+     * @param b is also a matrix
+     */
     public static double[][] subtract(double[][] a, double[][] b) {
         int m = a.length;
         int n = a[0].length;
@@ -61,7 +75,10 @@ public class Matrix {
         return c;
     }
 
-    // return c = a * b
+    /* c = a * b
+     * @param a is a matrix
+     * @param b is also a matrix
+     */
     public static double[][] multiply(double[][] a, double[][] b) {
         int m1 = a.length;
         int n1 = a[0].length;
@@ -76,7 +93,10 @@ public class Matrix {
         return c;
     }
 
-    // matrix-vector multiplication (y = A * x)
+    /* matrix-vector multiplication (y = A * x)
+     * @param a is a matrix
+     * @param x is the matrix
+     */
     public static double[] multiply(double[][] a, double[] x) {
         int m = a.length;
         int n = a[0].length;
@@ -89,7 +109,10 @@ public class Matrix {
     }
 
 
-    // vector-matrix multiplication (y = x^T A)
+    /* vector-matrix multiplication (y = x^T A)
+     * @param a is a matrix
+     * @param x is the matrix
+     */
     public static double[] multiply(double[] x, double[][] a) {
         int m = a.length;
         int n = a[0].length;
@@ -101,6 +124,9 @@ public class Matrix {
         return y;
     }
     
+    /* The determinant of the matrix A det(A)
+     * @param matrix is a matrix
+     */
     public static double determinant(double[][] matrix) {
         if (matrix.length != matrix[0].length)
             throw new IllegalStateException("invalid dimensions");
@@ -115,6 +141,9 @@ public class Matrix {
         return det;
     }
 
+    /* The determinant of the matrix A (A^-1)
+     * @param matrix is a matrix
+     */
     public static double[][] inverse(double[][] matrix) {
         double[][] inverse = new double[matrix.length][matrix.length];
 
@@ -137,6 +166,11 @@ public class Matrix {
         return inverse;
     }
 
+    /* The determinant of the matrix A minor(A)
+     * @param matrix is a matrix
+     * @param row    is the row value
+     * @param column is the column value
+     */
     public static double[][] minor(double[][] matrix, int row, int column) {
         double[][] minor = new double[matrix.length - 1][matrix.length - 1];
 
