@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4468.robot.Util;
+package org.usfirst.frc.team4468.robot.Util.Math;
 
 /******************************************************************************
  *

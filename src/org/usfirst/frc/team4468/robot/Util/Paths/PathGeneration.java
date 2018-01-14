@@ -1,13 +1,15 @@
 package org.usfirst.frc.team4468.robot.Util.Paths;
 
-import org.usfirst.frc.team4468.robot.Util.Matrix;
+import org.usfirst.frc.team4468.robot.Util.Math.Matrix;
+import org.usfirst.frc.team4468.robot.Util.Math.Polynomial;
+
 import java.util.List;
 
 public class PathGeneration {
     
     private Waypoint[] W;
-    private List<Quintic> X;
-    private List<Quintic> Y;
+    private List<Polynomial> X;
+    private List<Polynomial> Y;
     
     /* Variatic constructor that takes anyone more than 1 different inputs and stores them to later be generated
      * @param point  this is the necessary first point
@@ -51,8 +53,8 @@ public class PathGeneration {
              * |        |    ________________________________________________________________________________________________
              * \/       \/   |                                                                                               |
              */
-            Y.add(new Quintic(Matrix.multiply(A, new double[] { W[i].y, W[i].Vy, W[i].Ay, W[i+1].y, W[i+1].Vy, W[i+1].Ay })));
-            X.add(new Quintic(Matrix.multiply(A, new double[] { W[i].x, W[i].Vx, W[i].Ax, W[i+1].y, W[i+1].Vx, W[i+1].Ax })));
+            Y.add(new Polynomial(Matrix.multiply(A, new double[] { W[i].y, W[i].Vy, W[i].Ay, W[i+1].y, W[i+1].Vy, W[i+1].Ay })));
+            X.add(new Polynomial(Matrix.multiply(A, new double[] { W[i].x, W[i].Vx, W[i].Ax, W[i+1].y, W[i+1].Vx, W[i+1].Ax })));
         }
         
     }
