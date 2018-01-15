@@ -66,4 +66,8 @@ public class Constants{
     //Intake
     public static int intakePort1 = 6;
     public static int intakePort2 = 7;
+    
+    //Lifter
+    public static int lifterPort1 = 8;
+    public static int lifterPort2 = 9;
 }

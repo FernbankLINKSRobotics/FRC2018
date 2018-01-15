@@ -18,11 +18,12 @@ import org.usfirst.frc.team4468.robot.subsystems.*;
  */
 public class Robot extends IterativeRobot {
 
-    public static Constants  constants;
-    public static Intake     intake;
-	public static Drivetrain drive;
-	public static Shifter    shift;
-	public static OI         oi;
+    public static Constants    constants;
+    public static Intake       intake;
+	public static Drivetrain   drive;
+	public static Shifter      shift;
+	public static OI           oi;
+	public static RotatingLift rotatingLift;
 
 	Command autonomousCommand;
 	/**
@@ -31,10 +32,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		oi     = new OI();
-		shift  = new Shifter();
-		drive  = new Drivetrain();
-		intake = new Intake();
+		oi           = new OI();
+		shift        = new Shifter();
+		drive        = new Drivetrain();
+		intake       = new Intake();
+		rotatingLift = new RotatingLift();
 		//chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 	}

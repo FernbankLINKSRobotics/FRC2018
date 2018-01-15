@@ -12,7 +12,7 @@ public class IntakeSpeed extends Command {
 
 	private Intake in = Robot.intake;
 	
-	private double speed = 0
+	private double speed = 0;
 	
     public IntakeSpeed(double s) {
     		requires(in);
@@ -23,7 +23,7 @@ public class IntakeSpeed extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.intake.setSpeed(speed);
+    	in.setSpeed(speed);
     	
     	
     }
