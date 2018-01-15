@@ -24,9 +24,12 @@ public class PID {
     private double kI;
     private double kD;
     private boolean perTolerance;
-    private double the_percent;
     private boolean absTolerance;
+    private boolean setRange;
+    private double the_percent;
     private double the_distance;
+    private double minRange;
+    private double maxRange;
     
     //Used for calculating deltaE (A.R.C of the error)
     private double previousError;
@@ -44,6 +47,12 @@ public class PID {
         kP = P;
         kI = I;
         kD = D;
+    }
+    
+    public void setOutputRange(double min, double max) {
+    	setRange = true;
+    	minRange = min;
+    	maxRange = max;
     }
     
     /**
@@ -77,12 +86,12 @@ public class PID {
      */
     public double calculate(double target, double measure){
     	
+    	double output;
     	double error;
     	// Setting the tolerance
     	if (perTolerance) {
     		// Setting the percent tolerance
-    		double percentDistance;
-    		percentDistance = the_percent*target;
+    		 double percentDistance = (the_percent/100)*target;
     		if (Math.abs(previousError)<=percentDistance) {
             	error = 0;
             }
@@ -120,11 +129,37 @@ public class PID {
         
         /**** D ****/
         derivative = (deltaE/deltaT)*kD;
+        
         previousError = error; // Set the previous error for the next cycle
         previousTime = Timer.getFPGATimestamp(); // Set the beginning time for the time measured between each output
-        return (proportional + integral + derivative);
+        output = (proportional + integral + derivative);
         // Return
+        if (setRange) {
+        	// Limit to the range if range is set
+        	return Clamp(minRange, maxRange, output);
+        }
+        else {
+        	return output;
+        }
         
+    }
+    
+    /**
+     * Limits the output to a specified range
+     * 
+     * @param min The minimum range
+     * @param max The maximum range
+     * @param value The output to be limited
+     * @return The limited values
+     */
+    public double Clamp(double min, double max, double value) {
+    	if (value<min) {
+    		value = min;
+    	}
+    	if (value>max) {
+    		value = max;
+    	}
+    	return value;
     }
     
 }
