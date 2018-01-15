@@ -36,7 +36,7 @@ public class Robot extends IterativeRobot {
 		shift        = new Shifter();
 		drive        = new Drivetrain();
 		intake       = new Intake();
-		rotatingLift = new RotatingLift();
+		rotatingLift = new RotatingLift(6);
 		//chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 	}

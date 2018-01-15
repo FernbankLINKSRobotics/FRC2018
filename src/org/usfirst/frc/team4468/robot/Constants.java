@@ -39,9 +39,9 @@ public class Constants{
 	public static int rightBot = 5;
 
 	// IO
-	public static int controlJoy = 0;
+	public static int controlJoy = 2;
 	public static int rightJoy = 1;
-	public static int leftJoy = 2;
+	public static int leftJoy = 0;
 	
 	//// Encoders
 	// Constants
@@ -68,6 +68,6 @@ public class Constants{
     public static int intakePort2 = 7;
     
     //Lifter
-    public static int lifterPort1 = 8;
-    public static int lifterPort2 = 9;
+    public static int lifterPort1 = 0;
+    public static int lifterPort2 = 1;
 }

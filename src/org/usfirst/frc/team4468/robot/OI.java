@@ -1,6 +1,9 @@
 package org.usfirst.frc.team4468.robot;
 
+import org.usfirst.frc.team4468.robot.commands.Manipulators.Rotate;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -16,6 +19,10 @@ public class OI {
      * a new button is pressed and it ties together the commands and subsystems
      */
     public OI() {
-        
+    		JoystickButton l2 = new JoystickButton(left, 2);
+    		JoystickButton l3 = new JoystickButton(left, 3);
+    	
+        l2.whenPressed(new Rotate(.1));
+        l3.whenPressed(new Rotate(-.1));
     }
 }
