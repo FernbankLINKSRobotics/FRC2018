@@ -155,6 +155,10 @@ public class PID {
     			error = target - measure;
     		}
     	}
+    	else if (disabled) {
+        	// Stop moving
+        	error = 0;
+        }
     	else {
     		// Setting the error without any tolerance
     		error = target - measure;
@@ -192,10 +196,6 @@ public class PID {
         if (setRange) {
         	// Limit to the range if range is set
         	return Clamp(minRange, maxRange, output);
-        }
-        else if (disabled) {
-        	// Stop moving
-        	return 0;
         }
         else {
         	return output;
