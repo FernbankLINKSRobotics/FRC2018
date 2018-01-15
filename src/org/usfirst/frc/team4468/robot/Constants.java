@@ -62,4 +62,8 @@ public class Constants{
     //Shifter
     public static int shifterPort1 = 4;
     public static int shifterPort2 = 5;
+    
+    //Intake
+    public static int intakePort1 = 6;
+    public static int intakePort2 = 7;
 }

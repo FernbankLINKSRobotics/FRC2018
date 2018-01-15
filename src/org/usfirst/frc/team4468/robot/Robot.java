@@ -19,25 +19,24 @@ import org.usfirst.frc.team4468.robot.subsystems.*;
 public class Robot extends IterativeRobot {
 
     public static Constants  constants;
+    public static Intake     intake;
 	public static Drivetrain drive;
 	public static Shifter    shift;
 	public static OI         oi;
 
 	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
-
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		oi    = new OI();
-		shift = new Shifter();
-		drive = new Drivetrain();
+		oi     = new OI();
+		shift  = new Shifter();
+		drive  = new Drivetrain();
+		intake = new Intake();
 		//chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", chooser);
 	}
 
 	/**
@@ -68,7 +67,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
