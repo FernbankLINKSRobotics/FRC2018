@@ -25,15 +25,23 @@ public class PID {
     private double kD;
     private boolean perTolerance;
     private boolean absTolerance;
+    private boolean fFactorSetVelocity;
+    private boolean fFactorSetAccel;
     private boolean setRange;
+    private double fFactorV;
+    private double fFactorA;
     private double the_percent;
     private double the_distance;
     private double minRange;
     private double maxRange;
+    private double target;
+    
     
     //Used for calculating deltaE (A.R.C of the error)
     private double previousError;
     private double previousTime;
+    private double previousMeasure;
+    private double previousVelocity;
     private double errorSum;
     
     /**
@@ -49,6 +57,12 @@ public class PID {
         kD = D;
     }
     
+    /**
+     * Sets the output range
+     * 
+     * @param min The minimum range
+     * @param max The maximum range
+     */
     public void setOutputRange(double min, double max) {
     	setRange = true;
     	minRange = min;
@@ -76,15 +90,42 @@ public class PID {
     }
     
     /**
+     * Sets the target.
+     * 
+     * @param theTarget The specified distance to go.
+     */
+    public void setPoint(double theTarget) {
+    	target = theTarget;
+    }
+    
+    /**
+     * Sets the velocity feed forward factor.
+     * 
+     * @param fff The velocity feed forward factor.
+     */
+    public void feedForwardVelocity(double fff) {
+    	fFactorSetVelocity = true;
+    	fFactorV = fff;
+    }
+    
+    /**
+     * Sets the acceleration feed forward factor.
+     * 
+     * @param fff The acceleration feed forward factor.
+     */
+    public void feedForwardAccel(double accel) {
+    	fFactorSetAccel = true;
+    	fFactorA = ACCEL;
+    }
+    /**
      * Run a single PID calculation on the given inputs. This does not loop
      * itself and must be placed in a loop.
      * 
-     * @param target The desired value
      * @param measure The current value
      * @return The summation of the P, I, and D operations. Generally used
      * as an output.
      */
-    public double calculate(double target, double measure){
+    public double calculate(double measure){
     	
     	double output;
     	double error;
@@ -130,9 +171,21 @@ public class PID {
         /**** D ****/
         derivative = (deltaE/deltaT)*kD;
         
+        output = proportional + integral + derivative;
+        double velocity = (measure-previousMeasure)/(deltaT);
+        if (fFactorSetVelocity) {
+        	// Setting the output if the f factor (velocity) is set
+        	output += (velocity*fFactorV); // Adding the f factor (velocity)
+        }
+        if (fFactorSetAccel) {
+        	double acceleration = (velocity-previousVelocity)/(deltaT);
+        	// Setting the output if the f factor (acceleration) is set
+        	output += (acceleration*fFactorA);
+        }
+        previousVelocity = velocity; // Set the previous velocity location for the next cycle
+        previousMeasure = measure; // Set the previous measured location for the next cycle
         previousError = error; // Set the previous error for the next cycle
         previousTime = Timer.getFPGATimestamp(); // Set the beginning time for the time measured between each output
-        output = (proportional + integral + derivative);
         // Return
         if (setRange) {
         	// Limit to the range if range is set
@@ -153,10 +206,10 @@ public class PID {
      * @return The limited values
      */
     public double Clamp(double min, double max, double value) {
-    	if (value<min) {
+    	if (value < min) {
     		value = min;
     	}
-    	if (value>max) {
+    	if (value > max) {
     		value = max;
     	}
     	return value;
