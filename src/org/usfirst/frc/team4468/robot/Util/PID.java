@@ -1,5 +1,7 @@
 package org.usfirst.frc.team4468.robot.Util;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  * 
  * This class is designed to run a PID loop on any input. This class is
@@ -24,6 +26,8 @@ public class PID {
     
     //Used for calculating deltaE (A.R.C of the error)
     private double previousError;
+    private double previousTime;
+    private double errorSum;
     
     /**
      * Constructor. Creates a new PID instance.
@@ -48,26 +52,38 @@ public class PID {
      * @return The summation of the P, I, and D operations. Generally used
      * as an output.
      */
-    public double calculate(double target, double measure, double deltaT){
-        
+
+    
+    public double calculate(double target, double measure, double range){
+    	double error;
         // The operational values
         double proportional = 0;
         double integral = 0;
         double derivative = 0;
-        double error = target - measure;
+        if (Math.abs(previousError)<=range) {
+        	error = 0;
+        }
+        else {
+        	error = target - measure;
+        }
+        errorSum += error;
         double deltaE = previousError-error;
+        double deltaT = Timer.getFPGATimestamp() - previousTime;
         
         /**** P ****/
         proportional = error*kP;
         
         /**** I ****/
-        integral += error*deltaT*kI;
+        //integral += error*timerSum*kI;
+        integral = errorSum*kI;
         
         /**** D ****/
         derivative = (deltaE/deltaT)*kD;
-        
         previousError = error; // Set the previous error for the next cycle
-        return (proportional + integral + derivative); // Return
+        previousTime = Timer.getFPGATimestamp();
+        return (proportional + integral + derivative);
+        // Return
+        
     }
 }
     
