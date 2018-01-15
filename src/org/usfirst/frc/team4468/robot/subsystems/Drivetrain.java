@@ -104,6 +104,11 @@ public class Drivetrain extends Subsystem {
         return ave((leftVel - leftPrevVel), (rightVel- rightPrevVel));
     }
     
+    // Converts pulses to inches
+    public double PulsesToInches(double p) {
+        return p * Constants.distancePerPulse;
+    }
+    
     // Returns the average of two values
     private double ave(double left, double right) {
         return (left + right) / 2;
