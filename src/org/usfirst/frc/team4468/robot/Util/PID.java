@@ -23,6 +23,10 @@ public class PID {
     private double kP;
     private double kI;
     private double kD;
+    private boolean perTolerance;
+    private double the_percent;
+    private boolean absTolerance;
+    private double the_distance;
     
     //Used for calculating deltaE (A.R.C of the error)
     private double previousError;
@@ -43,29 +47,67 @@ public class PID {
     }
     
     /**
+     * Sets the percent tolerance.
+     * 
+     * @param percent The specified percent tolerance.
+     */
+    public void setPerTolerance(double percent) {
+    	perTolerance = true;
+    	the_percent = percent;
+    }
+    
+    /**
+     * Sets the absolute tolerance.
+     * 
+     * @param percent The specified encoder distance tolerance.
+     */
+    public void setAbsTolerance(double distance) {
+    	absTolerance = true;
+    	the_distance = distance;
+    }
+    
+    /**
      * Run a single PID calculation on the given inputs. This does not loop
      * itself and must be placed in a loop.
      * 
      * @param target The desired value
      * @param measure The current value
-     * @param deltaT The A.R.C of the time {@code (currentTime-startTime)}
      * @return The summation of the P, I, and D operations. Generally used
      * as an output.
      */
-
-    
-    public double calculate(double target, double measure, double range){
+    public double calculate(double target, double measure){
+    	
     	double error;
+    	// Setting the tolerance
+    	if (perTolerance) {
+    		// Setting the percent tolerance
+    		double percentDistance;
+    		percentDistance = the_percent*target;
+    		if (Math.abs(previousError)<=percentDistance) {
+            	error = 0;
+            }
+            else {
+            	error = target - measure;
+            }
+    	}
+    	else if (absTolerance) {
+    		// Setting the absolute tolerance
+    		if (Math.abs(previousError)<=the_distance) {
+    			error = 0;
+    		}
+    		else {
+    			error = target - measure;
+    		}
+    	}
+    	else {
+    		// Setting the error without any tolerance
+    		error = target - measure;
+    	}
+        
         // The operational values
         double proportional = 0;
         double integral = 0;
         double derivative = 0;
-        if (Math.abs(previousError)<=range) {
-        	error = 0;
-        }
-        else {
-        	error = target - measure;
-        }
         errorSum += error;
         double deltaE = previousError-error;
         double deltaT = Timer.getFPGATimestamp() - previousTime;
@@ -74,16 +116,16 @@ public class PID {
         proportional = error*kP;
         
         /**** I ****/
-        //integral += error*timerSum*kI;
         integral = errorSum*kI;
         
         /**** D ****/
         derivative = (deltaE/deltaT)*kD;
         previousError = error; // Set the previous error for the next cycle
-        previousTime = Timer.getFPGATimestamp();
+        previousTime = Timer.getFPGATimestamp(); // Set the beginning time for the time measured between each output
         return (proportional + integral + derivative);
         // Return
         
     }
+    
 }
     
