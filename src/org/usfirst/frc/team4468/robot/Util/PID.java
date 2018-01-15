@@ -26,13 +26,16 @@ public class PID {
     private boolean perTolerance;
     private boolean absTolerance;
     private boolean fFactorSetAccel;
-    private boolean setRange;
+    private boolean setRangeO;
+    private boolean setRangeI;
     private boolean disabled;
     private double fFactorA;
     private double the_percent;
     private double the_distance;
-    private double minRange;
-    private double maxRange;
+    private double minRangeO;
+    private double maxRangeO;
+    private double minRangeI;
+    private double maxRangeI;
     private double target;
     
     
@@ -63,9 +66,21 @@ public class PID {
      * @param max The maximum range
      */
     public void setOutputRange(double min, double max) {
-    	setRange = true;
-    	minRange = min;
-    	maxRange = max;
+    	setRangeO = true;
+    	minRangeO = min;
+    	maxRangeO = max;
+    }
+    
+    /**
+    * Sets the input range
+    * 
+    * @param min The minimum range
+    * @param max The maximum range
+    */
+    public void setInputRange(double min, double max) {
+    	setRangeI = true;
+    	minRangeI = min;
+    	maxRangeI = max;
     }
     
     /**
@@ -94,7 +109,13 @@ public class PID {
      * @param theTarget The specified distance to go.
      */
     public void setPoint(double theTarget) {
-    	target = theTarget;
+    	if (setRangeI) {
+    		// Limit the input to specified ranges
+    		target = Clamp(minRangeI, maxRangeI, theTarget);
+    	}
+    	else {
+    		target = theTarget;
+    	}
     }
     
     /**
@@ -193,9 +214,9 @@ public class PID {
         previousError = error; // Set the previous error for the next cycle
         previousTime = Timer.getFPGATimestamp(); // Set the beginning time for the time measured between each output
         // Return
-        if (setRange) {
+        if (setRangeO) {
         	// Limit to the range if range is set
-        	return Clamp(minRange, maxRange, output);
+        	return Clamp(minRangeO, maxRangeO, output);
         }
         else {
         	return output;
