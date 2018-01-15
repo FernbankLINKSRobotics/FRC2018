@@ -58,4 +58,8 @@ public class Constants{
     
     // Gyro
     public static Port gyroPort = SerialPort.Port.kUSB1;
+    
+    //Shifter
+    public static int shifterPort1 = 4;
+    public static int shifterPort2 = 5;
 }

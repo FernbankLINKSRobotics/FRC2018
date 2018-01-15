@@ -18,9 +18,10 @@ import org.usfirst.frc.team4468.robot.subsystems.*;
  */
 public class Robot extends IterativeRobot {
 
-    public static Constants constants;
+    public static Constants  constants;
 	public static Drivetrain drive;
-	public static OI oi;
+	public static Shifter    shift;
+	public static OI         oi;
 
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -31,7 +32,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		oi = new OI();
+		oi    = new OI();
+		shift = new Shifter();
+		drive = new Drivetrain();
 		//chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
