@@ -104,5 +104,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during test mode
 	 */
 	@Override
-	public void testPeriodic() {}
+	public void testPeriodic() {
+		rotatingLift.rotate(0.1);
+	}
 }

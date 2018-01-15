@@ -16,7 +16,7 @@ public class RotatingLift extends Subsystem {
     public void initDefaultCommand() {}
     
     // Sets the motors to a specified speed
-    public void Rotate(double speed) {
+    public void rotate(double speed) {
     		motors.set(speed);
     }
     
