@@ -25,25 +25,26 @@ public class Drivetrain extends Subsystem {
             new VictorSP(Constants.rightBot)
     );
     
-    public Encoder leftEncoder = new Encoder(
+    private Encoder leftEncoder = new Encoder(
             Constants.leftEnc1, 
             Constants.leftEnc2, 
             Constants.leftEncInverted, 
             Encoder.EncodingType.k4X
     );
     
-    public Encoder rightEncoder = new Encoder(
+    private Encoder rightEncoder = new Encoder(
             Constants.rightEnc1, 
             Constants.rightEnc2, 
             Constants.rightEncInverted,
             Encoder.EncodingType.k4X
     );
     
-    public AHRS gyro = new AHRS(Constants.gyroPort);
+    private AHRS gyro = new AHRS(Constants.gyroPort);
     
     // Variable Declarations
     private double leftPrevVel = 0;
     private double rightPrevVel = 0;
+    private double prevAngularVel = 0;
     
     
     
@@ -74,7 +75,8 @@ public class Drivetrain extends Subsystem {
         rightMotors.set(right);
     }
     
-    // Stops all of the motors
+    /* Stops all of the motors
+     */
     public void stop() {
         leftMotors .stopMotor();
         rightMotors.stopMotor();
@@ -83,17 +85,23 @@ public class Drivetrain extends Subsystem {
     
     
     //// Encoder Getters
-    // The average distance between the motors
+    /* gets the displacement of the robot
+     * @return The average distance between the motors
+     */
     public double getDis() {
         return ave(leftEncoder.getDistance(), rightEncoder.getDistance());
     }
     
-    // The average velocity between the motors
+    /* Gets the velocity of the robot
+     * @return The average velocity between the motors
+     */
     public double getVel() {
         return ave(leftEncoder.getRate(), rightEncoder.getRate());
     }
     
-    // The average acceleration between the motors
+    /* Gets the acceleration of the robot
+     * @return The average acceleration between the motors
+     */
     public double getAcc() {
         double leftVel  = leftEncoder .getRate();
         double rightVel = rightEncoder.getRate();
@@ -104,15 +112,47 @@ public class Drivetrain extends Subsystem {
         return ave((leftVel - leftPrevVel), (rightVel- rightPrevVel));
     }
     
-    // Converts pulses to inches
+    /* Converts pulses to inches
+     * @param p the number of encoder pulses
+     * @return the number of inches 
+     */
     public double PulsesToInches(double p) {
         return p * Constants.distancePerPulse;
     }
     
-    // Returns the average of two values
+    /* Average
+     * @return the average of two values
+     */
     private double ave(double left, double right) {
         return (left + right) / 2;
     }
+    
+    
+    
+    //// Gyro Readings
+    /* The gyro angle of the robot
+     * @return the angle in degrees
+     */
+    public double getAngle() {
+        return gyro.getAngle();
+    }
+    
+    /* The robot's angular velocity
+     * @return degrees/sec 
+     */
+    public double getAngularVel() {
+        return gyro.getRate();
+    }
+    
+    /* The robot's angular acceleration
+     * @return degrees/sec^2
+     */
+    public double getAngularAcc() {
+        double angularVel = gyro.getRate();
+        prevAngularVel = angularVel;
+        return angularVel - prevAngularVel;
+    }
+    
     
     
     //// Resets Sensors

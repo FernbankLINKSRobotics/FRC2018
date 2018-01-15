@@ -14,7 +14,11 @@ public class ShiftUp extends Command {
 		requires(sf);
 	}
 
-	// Called repeatedly when this Command is scheduled to run
+	/* Called repeatedly when this Command is scheduled to run
+	 * this toggles the shifter from high to low
+	 * (non-Javadoc)
+	 * @see edu.wpi.first.wpilibj.command.Command#execute()
+	 */
 	@Override
 	protected void execute() {
 		prevState = sf.isHighGear();
@@ -26,13 +30,14 @@ public class ShiftUp extends Command {
 		}
 	}
 
-	// Make this return true when this Command no longer needs to run execute()
+	/* This stops when the state of the shifter changes either from low to high
+	 * or from high to low
+	 * (non-Javadoc)
+	 * @see edu.wpi.first.wpilibj.command.Command#isFinished()
+	 * @return true when this Command no longer needs to run execute()
+	 */
 	@Override
 	protected boolean isFinished() {
 		return !(prevState == sf.isHighGear()); // Runs until interrupted
 	}
-
-	// Called once after isFinished returns true
-	@Override
-	protected void end() {}
 }

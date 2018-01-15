@@ -18,23 +18,37 @@ public class TeleOp extends Command {
         requires(dt);
     }
     
-    // Called repeatedly when this Command is scheduled to run
+    /* Called repeatedly when this Command is scheduled to run
+     * this drives the tank based on the values of the joysticks
+     * (non-Javadoc)
+     * @see edu.wpi.first.wpilibj.command.Command#execute()
+     */
     protected void execute() {
         dt.drive(oi.left.getY(), oi.left.getY());
     }
 
-    // Make this return true when this Command no longer needs to run execute()
+    /* It will NEVER end
+     * (non-Javadoc)
+     * @see edu.wpi.first.wpilibj.command.Command#isFinished()
+     * @return true when this Command no longer needs to run execute()
+     */
     protected boolean isFinished() {
         return false;
     }
 
-    // Called once after isFinished returns true
+    /* Called once after isFinished returns true 
+     * (non-Javadoc)
+     * @see edu.wpi.first.wpilibj.command.Command#end()
+     */
     protected void end() {
         dt.stop();
     }
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
+    /* Called when another command which requires one or more of the same
+     * subsystems is scheduled to run
+     * (non-Javadoc)
+     * @see edu.wpi.first.wpilibj.command.Command#interrupted()
+     */
     protected void interrupted() {
         dt.stop();
     }
