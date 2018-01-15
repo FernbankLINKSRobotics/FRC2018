@@ -25,10 +25,9 @@ public class PID {
     private double kD;
     private boolean perTolerance;
     private boolean absTolerance;
-    private boolean fFactorSetVelocity;
     private boolean fFactorSetAccel;
     private boolean setRange;
-    private double fFactorV;
+    private boolean disabled;
     private double fFactorA;
     private double the_percent;
     private double the_distance;
@@ -99,24 +98,31 @@ public class PID {
     }
     
     /**
-     * Sets the velocity feed forward factor.
-     * 
-     * @param fff The velocity feed forward factor.
-     */
-    public void feedForwardVelocity(double fff) {
-    	fFactorSetVelocity = true;
-    	fFactorV = fff;
-    }
-    
-    /**
      * Sets the acceleration feed forward factor.
      * 
      * @param fff The acceleration feed forward factor.
      */
     public void feedForwardAccel(double accel) {
     	fFactorSetAccel = true;
-    	fFactorA = ACCEL;
+    	fFactorA = accel;
     }
+    
+    /**
+     * Disables the PID
+     */
+    public void disable() {
+    	disabled = true;
+    }
+    
+    /**
+     * Returns the specified setpoint
+     * 
+     * @return the setpoint
+     */
+    public double getSetpoint() {
+    	return target;
+    }
+    
     /**
      * Run a single PID calculation on the given inputs. This does not loop
      * itself and must be placed in a loop.
@@ -173,10 +179,6 @@ public class PID {
         
         output = proportional + integral + derivative;
         double velocity = (measure-previousMeasure)/(deltaT);
-        if (fFactorSetVelocity) {
-        	// Setting the output if the f factor (velocity) is set
-        	output += (velocity*fFactorV); // Adding the f factor (velocity)
-        }
         if (fFactorSetAccel) {
         	double acceleration = (velocity-previousVelocity)/(deltaT);
         	// Setting the output if the f factor (acceleration) is set
@@ -190,6 +192,10 @@ public class PID {
         if (setRange) {
         	// Limit to the range if range is set
         	return Clamp(minRange, maxRange, output);
+        }
+        else if (disabled) {
+        	// Stop moving
+        	return 0;
         }
         else {
         	return output;
@@ -214,6 +220,7 @@ public class PID {
     	}
     	return value;
     }
+    
     
 }
     
