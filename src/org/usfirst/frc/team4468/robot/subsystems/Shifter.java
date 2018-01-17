@@ -1,11 +1,7 @@
 package org.usfirst.frc.team4468.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.usfirst.frc.team4468.robot.Constants;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
@@ -18,7 +14,7 @@ public class Shifter extends Subsystem {
 	private DoubleSolenoid shift = new DoubleSolenoid(Constants.shifterPort1, Constants.shifterPort2);
 	private boolean state;
 	
-	//// Constructior and Subystsem x
+	//// Constructor and Subsystem
 	public Shifter() {
 		super();
 		state = (shift.get() == Value.kForward);
@@ -30,13 +26,15 @@ public class Shifter extends Subsystem {
 	
 	
 	//// Actuate
-	 // If the shifter is shifted up the status is true. The robot is in high gear
+	/*  If the shifter is shifted up the status is true. The robot is in high gear
+	 */
 	public void up() {
 		shift.set(Value.kForward);
 		state = true;
 	}
 	
-	// If the shifter is not shifted up the status is false. The robot is not in high gear
+	/* If the shifter is not shifted up the status is false. The robot is not in high gear
+	 */
 	public void down() {
 		shift.set(Value.kReverse);
 		state = false;
@@ -50,10 +48,5 @@ public class Shifter extends Subsystem {
 	 */
 	public boolean isHighGear() {
 		return state;
-	}
-	
-	// Puts the status of the Solenoid in high gear as either true or fale on the Smart Dashbaard
-	public void log() {
-		// SmartDashboard.putBoolean("Gear high: ",state);
 	}
 }

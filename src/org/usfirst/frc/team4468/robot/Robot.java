@@ -4,9 +4,6 @@ package org.usfirst.frc.team4468.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.usfirst.frc.team4468.robot.subsystems.*;
 
 /**
@@ -18,12 +15,12 @@ import org.usfirst.frc.team4468.robot.subsystems.*;
  */
 public class Robot extends IterativeRobot {
 
+    public static RotatingLift rotatingLift;
     public static Constants    constants;
     public static Intake       intake;
 	public static Drivetrain   drive;
 	public static Shifter      shift;
 	public static OI           oi;
-	public static RotatingLift rotatingLift;
 
 	Command autonomousCommand;
 	/**
@@ -33,10 +30,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi           = new OI();
+		intake       = new Intake();
 		shift        = new Shifter();
 		drive        = new Drivetrain();
-		intake       = new Intake();
-		rotatingLift = new RotatingLift(6);
+		rotatingLift = new RotatingLift();
 		//chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 	}

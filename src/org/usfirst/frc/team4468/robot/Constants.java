@@ -30,13 +30,21 @@ public class Constants{
     public static double stageRatio = 34/50;
     public static double encoderRatio = 3;
     
-    // Drivetrain
+    ///// Drivetrain
+    // Left Side
 	public static int leftTop  = 0;
 	public static int leftMid  = 1;
 	public static int leftBot  = 2;
-	public static int rightTop = 3;
-	public static int rightMid = 4;
-	public static int rightBot = 5;
+	public static double leftP = 0;
+	public static double leftI = 0;
+	public static double leftD = 0;
+	// Right Side
+	public static int rightTop  = 3;
+	public static int rightMid  = 4;
+	public static int rightBot  = 5;
+	public static double rightP = 0;
+	public static double rightI = 0;
+	public static double rightD = 0;
 
 	// IO
 	public static int controlJoy = 2;
@@ -59,15 +67,18 @@ public class Constants{
     // Gyro
     public static Port gyroPort = SerialPort.Port.kUSB1;
     
-    //Shifter
+    // Shifter
     public static int shifterPort1 = 4;
     public static int shifterPort2 = 5;
     
-    //Intake
+    // Intake
     public static int intakePort1 = 6;
     public static int intakePort2 = 7;
     
-    //Lifter
+    // Lifter
     public static int lifterPort1 = 0;
     public static int lifterPort2 = 1;
+    public static double lifterP  = 0;
+    public static double lifterI  = 0;
+    public static double lifterD  = 0;
 }

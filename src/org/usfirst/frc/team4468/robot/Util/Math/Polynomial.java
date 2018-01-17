@@ -52,10 +52,6 @@ public class Polynomial {
         double[] ret = coefficient;
         int i = 0;
         
-        if(n < 1) {
-            return coefficient;
-        }
-        
         do {
             if(ret.length > 0) {
                 ret = derivativeImpl(ret);
