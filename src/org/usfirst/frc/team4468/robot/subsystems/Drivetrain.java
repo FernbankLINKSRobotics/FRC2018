@@ -112,6 +112,21 @@ public class Drivetrain extends Subsystem {
         return ave((leftVel - leftPrevVel), (rightVel- rightPrevVel));
     }
     
+    /* gets the displacement of the right side
+     * @return The number of pulses of the right side
+     */
+    public double getRightDistance() {
+        return rightEncoder.getDistance();
+    }
+    
+    /* gets the displacement of the left side
+     * @return The number of pulses of the left side
+     */
+    public double getLeftDistance() {
+        return leftEncoder.getDistance();
+    }
+    
+    
     /* Converts pulses to inches
      * @param p the number of encoder pulses
      * @return the number of inches 

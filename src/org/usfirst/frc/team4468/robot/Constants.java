@@ -66,6 +66,9 @@ public class Constants{
     
     // Gyro
     public static Port gyroPort = SerialPort.Port.kUSB1;
+    public static double angleP = 0;
+    public static double angleI = 0;
+    public static double angleD = 0;
     
     // Shifter
     public static int shifterPort1 = 4;
@@ -81,4 +84,9 @@ public class Constants{
     public static double lifterP  = 0;
     public static double lifterI  = 0;
     public static double lifterD  = 0;
+    
+    // Potentiometer
+    public static int potPort = 0; // Placeholder
+    public static double potRange = 312; // Placeholder
+    public static double potOff = 0; // Placeholder
 }

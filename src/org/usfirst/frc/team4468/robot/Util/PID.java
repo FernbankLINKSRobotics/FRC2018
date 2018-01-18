@@ -66,9 +66,9 @@ public class PID {
      * @param max The maximum range
      */
     public void setOutputRange(double min, double max) {
-    	setRangeO = true;
-    	minRangeO = min;
-    	maxRangeO = max;
+    	    setRangeO = true;
+    	    minRangeO = min;
+    	    maxRangeO = max;
     }
     
     /**
@@ -78,9 +78,9 @@ public class PID {
     * @param max The maximum range
     */
     public void setInputRange(double min, double max) {
-    	setRangeI = true;
-    	minRangeI = min;
-    	maxRangeI = max;
+        setRangeI = true;
+    	    minRangeI = min;
+    	    maxRangeI = max;
     }
     
     /**
@@ -89,8 +89,8 @@ public class PID {
      * @param percent The specified percent tolerance.
      */
     public void setPerTolerance(double percent) {
-    	perTolerance = true;
-    	the_percent = percent;
+    	    perTolerance = true;
+    	    the_percent = percent;
     }
     
     /**
@@ -99,8 +99,18 @@ public class PID {
      * @param percent The specified encoder distance tolerance.
      */
     public void setAbsTolerance(double distance) {
-    	absTolerance = true;
-    	the_distance = distance;
+    	    absTolerance = true;
+    	    the_distance = distance;
+    }
+    
+    public boolean onTarget(double measure) {
+        if(perTolerance) {
+            return Math.abs(measure - target) < Math.abs(target * (the_percent/ 100));
+        } else if (absTolerance) {
+            return Math.abs(measure - target) < target;
+        } else {
+            throw new IllegalArgumentException("Please set a tolerance");
+        }
     }
     
     /**
@@ -109,13 +119,12 @@ public class PID {
      * @param theTarget The specified distance to go.
      */
     public void setPoint(double theTarget) {
-    	if (setRangeI) {
-    		// Limit the input to specified ranges
-    		target = Clamp(minRangeI, maxRangeI, theTarget);
-    	}
-    	else {
-    		target = theTarget;
-    	}
+    	    if (setRangeI) {
+    	        // Limit the input to specified ranges
+    	        target = Clamp(minRangeI, maxRangeI, theTarget);
+    	    } else {
+    	        target = theTarget;
+    	    }
     }
     
     /**
@@ -124,15 +133,15 @@ public class PID {
      * @param fff The acceleration feed forward factor.
      */
     public void feedForwardAccel(double accel) {
-    	fFactorSetAccel = true;
-    	fFactorA = accel;
+    	    fFactorSetAccel = true;
+    	    fFactorA = accel;
     }
     
     /**
      * Disables the PID
      */
     public void disable() {
-    	disabled = true;
+    	    disabled = true;
     }
     
     /**
@@ -141,7 +150,7 @@ public class PID {
      * @return the setpoint
      */
     public double getSetpoint() {
-    	return target;
+    	    return target;
     }
     
     /**
@@ -153,37 +162,31 @@ public class PID {
      * as an output.
      */
     public double calculate(double measure){
-    	
-    	double output;
-    	double error;
-    	// Setting the tolerance
-    	if (perTolerance) {
-    		// Setting the percent tolerance
-    		 double percentDistance = (the_percent/100)*target;
-    		if (Math.abs(previousError)<=percentDistance) {
-            	error = 0;
+    	    double output;
+    	    double error;
+    	    // Setting the tolerance
+    	    if (perTolerance) {
+    	        // Setting the percent tolerance
+    	        double percentDistance = Math.abs((the_percent/100)*target);
+    	        if (Math.abs(previousError)<=percentDistance) {
+    	            error = 0;
+    	        } else {
+    	            error = target - measure;
             }
-            else {
-            	error = target - measure;
-            }
-    	}
-    	else if (absTolerance) {
-    		// Setting the absolute tolerance
-    		if (Math.abs(previousError)<=the_distance) {
-    			error = 0;
-    		}
-    		else {
-    			error = target - measure;
-    		}
-    	}
-    	else if (disabled) {
-        	// Stop moving
-        	error = 0;
-        }
-    	else {
-    		// Setting the error without any tolerance
-    		error = target - measure;
-    	}
+    	    } else if (absTolerance) {
+    	        // Setting the absolute tolerance
+    	        if (Math.abs(previousError)<=the_distance) {
+    	            error = 0;
+    	        } else {
+    	            error = target - measure;
+    	        }
+    	    } else if (disabled) {
+    	        // Stop moving
+    	        error = 0;
+    	    } else {
+    	        // Setting the error without any tolerance
+    	        error = target - measure;
+    	    }
         
         // The operational values
         double proportional = 0;
@@ -204,22 +207,23 @@ public class PID {
         
         output = proportional + integral + derivative;
         double velocity = (measure-previousMeasure)/(deltaT);
+        
         if (fFactorSetAccel) {
-        	double acceleration = (velocity-previousVelocity)/(deltaT);
-        	// Setting the output if the f factor (acceleration) is set
-        	output += (acceleration*fFactorA);
+        	    double acceleration = (velocity-previousVelocity)/(deltaT);
+        	    // Setting the output if the f factor (acceleration) is set
+        	    output += (acceleration*fFactorA);
         }
+        
         previousVelocity = velocity; // Set the previous velocity location for the next cycle
         previousMeasure = measure; // Set the previous measured location for the next cycle
         previousError = error; // Set the previous error for the next cycle
         previousTime = Timer.getFPGATimestamp(); // Set the beginning time for the time measured between each output
         // Return
         if (setRangeO) {
-        	// Limit to the range if range is set
-        	return Clamp(minRangeO, maxRangeO, output);
-        }
-        else {
-        	return output;
+            // Limit to the range if range is set
+        	    return Clamp(minRangeO, maxRangeO, output);
+        } else {
+        	    return output;
         }
         
     }
@@ -233,15 +237,13 @@ public class PID {
      * @return The limited values
      */
     public double Clamp(double min, double max, double value) {
-    	if (value < min) {
-    		value = min;
-    	}
-    	if (value > max) {
-    		value = max;
-    	}
-    	return value;
+    	    if (value < min) {
+    	        value = min;
+    	    }
+    	    if (value > max) {
+    	        value = max;
+    	    }
+    	    return value;
     }
-    
-    
 }
     
