@@ -2,21 +2,6 @@ package org.usfirst.frc.team4468.robot.Util;
 
 import edu.wpi.first.wpilibj.Timer;
 
-/**
- * 
- * This class is designed to run a PID loop on any input. This class is
- * designed to be capable of running PID wherever necessary in the event
- * that PID is not defaultly supported by the hardware. PID is designed to
- * calculate error (how far away you are from your target value) and lower
- * the output as you approach your target value so that you avoid
- * overshooting. PID stands for proportional, integral, and derivative.
- * Three scaling constants are given for each operation to tune the outputs.
- * The outputs of these functions are summed; this is the returned value.
- * 
- * @author Toaster Tech
- * @link https://github.com/ToasterTechFRC/Toaster-Base-Bot/blob/master/Toaster%20Base%20Bot/src/utils/PID.java
- *
- */
 public class PID {
     
     //Constants
