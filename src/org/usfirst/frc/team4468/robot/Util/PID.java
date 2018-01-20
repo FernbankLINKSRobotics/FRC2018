@@ -98,6 +98,17 @@ public class PID {
         }
     }
     
+    public double[] motionProfiling(double endDistance, double v_cruise, double a, double iDistance) {
+    	double velocity;
+    	double acceleration;
+    	double accelDistance = (Math.pow(v_cruise, 2))/(2*a);
+    	if (accelDistance < (endDistance/2)*.95) {
+    		
+    	}
+    	double[] array = {1.0, 2.0};
+    	return array;
+    }
+    
     /**
      * Sets the target.
      * 
