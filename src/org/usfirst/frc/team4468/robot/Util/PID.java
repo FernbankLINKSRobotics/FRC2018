@@ -98,12 +98,24 @@ public class PID {
         }
     }
     
-    public double[] motionProfiling(double endDistance, double v_cruise, double a, double iDistance) {
+    public double[] motionProfiling(double endDistance, double v_cruise, double a, double time) {
     	double velocity;
     	double acceleration;
+    	double returnDistance;
     	double accelDistance = (Math.pow(v_cruise, 2))/(2*a);
     	if (accelDistance < (endDistance/2)*.95) {
-    		
+    		double timeTakenAD = Math.sqrt((2*accelDistance)/a);
+    		double cruiseTime = (endDistance - 2*accelDistance)*v_cruise;
+    		double totalTime = 2*timeTakenAD + cruiseTime;
+    		if (time <= timeTakenAD) {
+    			returnDistance = (1/2)*a*Math.pow(time, 2);
+    		}
+    		else if (time > timeTakenAD && time < (totalTime - timeTakenAD)) {
+    			returnDistance = accelDistance + (time-timeTakenAD)*v_cruise;
+    		}
+    		else {
+    			returnDistance = accelDistance + cruiseTime*v_cruise + (1/2)*(a)*Math.pow((timeTakenAD - time), 2);
+    		}
     	}
     	double[] array = {1.0, 2.0};
     	return array;
