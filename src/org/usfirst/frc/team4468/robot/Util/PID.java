@@ -25,11 +25,11 @@ public class PID {
     
     
     //Used for calculating deltaE (A.R.C of the error)
-    private double previousError;
-    private double previousTime;
-    private double previousMeasure;
-    private double previousVelocity;
-    private double errorSum;
+    private double previousError = 0;
+    private double previousTime = 0;
+    private double previousMeasure = 0;
+    private double previousVelocity = 0;
+    private double errorSum = 0;
     
     /**
      * Constructor. Creates a new PID instance.
