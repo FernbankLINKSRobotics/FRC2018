@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4468.robot;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 
@@ -65,7 +66,7 @@ public class Constants{
     public static int rightEnc1 = 2;
     
     // Gyro
-    public static Port gyroPort = SerialPort.Port.kUSB1;
+    public static edu.wpi.first.wpilibj.I2C.Port gyroPort = I2C.Port.kOnboard;
     public static double angleP = 0;
     public static double angleI = 0;
     public static double angleD = 0;
@@ -79,14 +80,14 @@ public class Constants{
     public static int intakePort2 = 7;
     
     // Lifter
-    public static int lifterPort1 = 0;
-    public static int lifterPort2 = 1;
+    public static int lifterPort1 = 8;
+    public static int lifterPort2 = 9;
     public static double lifterP  = 0;
     public static double lifterI  = 0;
     public static double lifterD  = 0;
     
     // Potentiometer
     public static int potPort = 0; // Placeholder
-    public static double potRange = 312; // Placeholder
+    public static double potRange = 300; // Placeholder
     public static double potOff = 0; // Placeholder
 }

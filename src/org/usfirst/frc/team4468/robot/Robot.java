@@ -29,11 +29,12 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		oi           = new OI();
+		rotatingLift = new RotatingLift();
+		constants    = new Constants();
 		intake       = new Intake();
 		shift        = new Shifter();
 		drive        = new Drivetrain();
-		rotatingLift = new RotatingLift();
+		oi           = new OI();
 		//chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 	}
@@ -95,6 +96,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		System.out.println("Right Encoder:" + drive.getRightDistance());
+		System.out.println("Left Encoer:"   + drive.getLeftDistance());
+		System.out.println("Angle:"         + drive.getAngle());
 	}
 
 	/**

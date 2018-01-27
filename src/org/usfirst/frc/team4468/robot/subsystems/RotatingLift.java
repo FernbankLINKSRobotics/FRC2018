@@ -12,37 +12,36 @@ public class RotatingLift extends Subsystem {
 	//// Declarations
 	private SpeedControllerGroup motors = new SpeedControllerGroup(
 	        new VictorSP (Constants.lifterPort1),
-	        new VictorSP (Constants.lifterPort1)
+	        new VictorSP (Constants.lifterPort2)
 	);
 	
-	private Potentiometer pot = new AnalogPotentiometer(
+	private AnalogPotentiometer pot = new AnalogPotentiometer(
 	        Constants.potPort, 
 	        Constants.potRange, 
 	        Constants.potOff
 	);
 	
 	
-	
 	//// Constructor and Command
-	public RotatingLift() {}
+	public RotatingLift() {
+		
+	}	
 	
     public void initDefaultCommand() {}
     
     
-    
+
     //// Motor Control
     /* Sets the motors to a specified speed
      */
     public void rotate(double speed) {
     		motors.set(speed);
     }
-    
     /*  Stops motor movement
      */
     public void stop() {
     		motors.stopMotor();
     }
-    
     
     
     //// Sensors

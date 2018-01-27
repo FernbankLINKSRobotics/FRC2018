@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4468.robot;
 
 
-import org.usfirst.frc.team4468.robot.commands.Manipulators.Rotate;
+//import org.usfirst.frc.team4468.robot.commands.Manipulators.Rotate;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -22,8 +22,6 @@ public class OI {
     public OI() {
     		JoystickButton l2 = new JoystickButton(left, 2);
     		JoystickButton l3 = new JoystickButton(left, 3);
-    	
-        l2.whenPressed(new Rotate(.1));
-        l3.whenPressed(new Rotate(-.1));
+    
     }
 }

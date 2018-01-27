@@ -8,13 +8,15 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
+
+
 public class Rotate extends Command {
 
 	private double speed = 0;
 	private RotatingLift rl = Robot.rotatingLift;
 	
     public Rotate(double s) {
-        requires(rl);
+        requires(Robot.rotatingLift);
         speed = s;
     }
     
@@ -52,3 +54,5 @@ public class Rotate extends Command {
         rl.stop();
     }
 }
+
+
