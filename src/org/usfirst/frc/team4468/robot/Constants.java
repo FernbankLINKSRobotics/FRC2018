@@ -30,6 +30,7 @@ public class Constants{
     public static double lowUnstagedGearRatio = 6/17;
     public static double stageRatio = 34/50;
     public static double encoderRatio = 3;
+    public double maxVelocity = 6;
     
     ///// Drivetrain
     // Left Side
