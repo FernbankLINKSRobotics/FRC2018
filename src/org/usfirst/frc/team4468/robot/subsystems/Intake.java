@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class Intake extends Subsystem {
-	////Declerations
+	//// Declarations
 	private VictorSP left = new VictorSP(Constants.intakePort1);
 	private VictorSP right = new VictorSP(Constants.intakePort2);
 	
