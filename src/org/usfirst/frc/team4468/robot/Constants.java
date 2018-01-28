@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -12,10 +13,6 @@ import edu.wpi.first.wpilibj.SerialPort.Port;
  * and lbs
  */
 public class Constants{
-    /* We will be running a 6 miniCIM drive on the Vex PRO 2014 Drive in a Day with
-     * a Vex PRO 3 CIM ball shifter.
-     */
-    
     //// System Units
     // General
     public static double weight = 130;
@@ -73,12 +70,14 @@ public class Constants{
     public static double angleD = 0;
     
     // Shifter
-    public static int shifterPort1 = 4;
-    public static int shifterPort2 = 5;
+    public static int shifterPort1 = 0;
+    public static int shifterPort2 = 1;
     
     // Intake
     public static int intakePort1 = 6;
     public static int intakePort2 = 7;
+    public static int intakeClampPort1 = 2;
+    public static int intakeClampPort2 = 3;
     
     // Lifter
     public static int lifterPort1 = 8;
@@ -89,6 +88,6 @@ public class Constants{
     
     // Potentiometer
     public static int potPort = 0; // Placeholder
-    public static double potRange = 300; // Placeholder
+    public static double potRange = 3600; // Placeholder
     public static double potOff = 0; // Placeholder
 }

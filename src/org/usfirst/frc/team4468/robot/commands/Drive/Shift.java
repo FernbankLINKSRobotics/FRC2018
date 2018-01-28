@@ -1,17 +1,18 @@
 package org.usfirst.frc.team4468.robot.commands.Drive;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
-
 import org.usfirst.frc.team4468.robot.Robot;
 import org.usfirst.frc.team4468.robot.subsystems.Shifter;
 
-public class ShiftUp extends Command {
+public class Shift extends Command {
 
-	public boolean prevState;
+	public Value target;
 	public Shifter sf = Robot.shift;
 	
-	public ShiftUp() {
+	public Shift(Value i) {
 		requires(sf);
+		target = i;
 	}
 
 	/* Called repeatedly when this Command is scheduled to run
@@ -21,12 +22,8 @@ public class ShiftUp extends Command {
 	 */
 	@Override
 	protected void execute() {
-		prevState = sf.isHighGear();
-		
-		if(!sf.isHighGear()) {
-			sf.up();
-		} else {
-			sf.down();
+		if(target != sf.getState()) {
+		    sf.set(target);
 		}
 	}
 
@@ -38,6 +35,6 @@ public class ShiftUp extends Command {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return !(prevState == sf.isHighGear()); // Runs until interrupted
+		return target == sf.getState(); // Runs until interrupted
 	}
 }

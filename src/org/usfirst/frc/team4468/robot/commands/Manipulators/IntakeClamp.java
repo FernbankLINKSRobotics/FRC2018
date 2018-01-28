@@ -4,19 +4,20 @@ import org.usfirst.frc.team4468.robot.Constants;
 import org.usfirst.frc.team4468.robot.Robot;
 import org.usfirst.frc.team4468.robot.subsystems.Intake;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class IntakeSpeed extends Command {
-    
+public class IntakeClamp extends Command {
     private Intake in = Robot.intake;
-    private double speed = 0;
     
-    public IntakeSpeed(double s) {
+    private Value clamp;
+    
+    public IntakeClamp(Value v) {
         requires(in);
-        speed = s;
+        clamp = v;
     }
     
     /* Called repeatedly when this Command is scheduled to run
@@ -24,26 +25,13 @@ public class IntakeSpeed extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        in.setSpeed(speed);
+        in.clamp(clamp);
     }
 
     /* Make this return true when this Command no longer needs to run execute()
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return false;
-    }
-
-    /* Called once after isFinished returns true
-     */
-    protected void end() {
-        in.stop();
-    }
-
-    /* Called when another command which requires one or more of the same
-     * subsystems is scheduled to run
-     */
-    protected void interrupted() {
-        in.stop();
+        return clamp == in.getState();
     }
 }
