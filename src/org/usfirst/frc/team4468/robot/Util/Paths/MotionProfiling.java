@@ -11,8 +11,17 @@ public class MotionProfiling {
 	double[] x_values; 
 	double[] y_values;
 	
-	public MotionProfiling(double[] xvalues, double[] yvalues, double cruiseV, double acceleration, double currentTime, double cruise_ratio, double accel_distance){
-		endDistance = xvalues[xvalues.length];
+	/**
+     * Constructor. Creates a new MotionProfiling instance.
+     * 
+     * @param cruiseV The cruise velocity
+     * @param acceleration The starting acceleration and ending deceleration
+     * @param currentTime The current time
+     * @param cruise_ratio The ratio setting MINIMUM distance needed to be at a constant velocity
+     * @param target The 1d end distance
+     */
+	public MotionProfiling(double cruiseV, double acceleration, double currentTime, double cruise_ratio, double target){
+		endDistance = target;
 		if (cruiseV > 6) {
 			v_cruise = 6;
 		}
@@ -20,23 +29,47 @@ public class MotionProfiling {
 			v_cruise = cruiseV;
 		}
 		a = acceleration;
-		accelDistance = accel_distance;
 		time = currentTime;
 		cruiseRatio = cruise_ratio;
+	}
+	
+	/**
+     * Constructor. Creates a new MotionProfiling instance.
+     * 
+     * @param xvalues An array of all the x values the robot will cross
+     * @param yvalues An array of all the y values the robot will cross
+     * @param acceleration The starting acceleration and ending deceleration
+     * @param currentTime The current time
+     * @param accel_distance The distance allotted for the robot to accelerate and decelerate
+     */
+	public MotionProfiling(double[] xvalues, double[] yvalues, double acceleration, double currentTime, double accel_distance) {
+		a = acceleration;
+		accelDistance = accel_distance;
+		time = currentTime;
 		x_values = xvalues;
 		y_values = yvalues;
 	}
 	
+	/**
+     * 1d motion profiling
+     * 
+     * @return An array of expected distance, velocity, and acceleration based on current time
+     */
 	public double[] execute1D() {
-	    	// The cruise distance is the total distance times the cruise ratio
+	    	// The cruise ratio is the MINIMUM distance needed to be at cruise velocity
 	    	double returnVelocity;
 	    	double returnAcceleration;
 	    	double returnDistance;
+	    	//calculating acceleration distance considering what portion of the distance cruise velocity will be at
 	    	double accelDistance1 = (Math.pow(v_cruise, 2))/(2*a);
 	    	if (accelDistance1 < (endDistance/2)*(1-(cruiseRatio/2))) {
+	    		//below is only initiated if the acceleration distance allows for allotted cruise distance
+	    		//calculating time taken for each segment
 	    		double timeTakenAD = Math.sqrt((2*accelDistance1)/a);
 	    		double cruiseTime = (endDistance - 2*accelDistance1)/v_cruise;
 	    		double totalTime = 2*timeTakenAD + cruiseTime;
+	    		
+	    		//returning values based on current time
 	    		if (time <= timeTakenAD) {
 	    			returnDistance = (1/2)*a*Math.pow(time, 2);
 	    			returnVelocity = a*time;
@@ -49,6 +82,7 @@ public class MotionProfiling {
 	    			returnAcceleration = 0;
 	    		}
 	    		else {
+	    			//the same properties that go for the acceleration period also go for the deceleration period
 	    			double t = time - (cruiseTime+timeTakenAD);
 	    			returnDistance = accelDistance1 + cruiseTime*v_cruise + (v_cruise*t+((1/2)*(-a)*Math.pow(t, 2)));
 	    			returnVelocity = v_cruise + (-a)*t;
@@ -56,10 +90,14 @@ public class MotionProfiling {
 	    		}
 	    	}
 	    	else {
+	    		//lowers accel distance to fit the cruise ratio
 	    		double accelDistance2 = endDistance*((1-cruiseRatio)/2);
+	    		//setting a lower cruise velocity to account for the lower accel distance
+	    		double v_cruise1 = Math.sqrt(2*a*accelDistance2);
 	    		double timeTakenAD = Math.sqrt((2*accelDistance2)/a);
-	    		double cruiseTime = (endDistance*cruiseRatio)/v_cruise;
+	    		double cruiseTime = (endDistance*cruiseRatio)/v_cruise1;
 	    		double totalTime = timeTakenAD*2 + cruiseTime;
+	    		//Using the same calculations as before except with v_cruise1 instead of v_cruise
 	    		if (time <= timeTakenAD) {
 	    			returnDistance = (1/2)*a*Math.pow(time, 2);
 	    			returnVelocity = a*time;
@@ -67,40 +105,57 @@ public class MotionProfiling {
 	    		}
 	    		else if (time > timeTakenAD && time < (totalTime - timeTakenAD)) {
 	    			double t = time - timeTakenAD;
-	    			returnDistance = accelDistance2 + t*v_cruise;
-	    			returnVelocity = v_cruise;
+	    			returnDistance = accelDistance2 + t*v_cruise1;
+	    			returnVelocity = v_cruise1;
 	    			returnAcceleration = 0;
 	    		}
 	    		else {
 	    			double t = time - (cruiseTime+timeTakenAD);
-	    			returnDistance = accelDistance2 + cruiseTime*v_cruise + (v_cruise*t+((1/2)*(-a)*Math.pow(t, 2)));
-	    			returnVelocity = v_cruise + (-a)*t;
+	    			returnDistance = accelDistance2 + cruiseTime*v_cruise1 + (v_cruise1*t+((1/2)*(-a)*Math.pow(t, 2)));
+	    			returnVelocity = v_cruise1 + (-a)*t;
 	    			returnAcceleration = -a;
 	    		}
 	    	}
+	    	
+	    	//returning the current distance, velocity, and acceleration
 	    	double[] array = {returnDistance, returnVelocity, returnAcceleration};
 	    	return array;
 	    }
 	
+	/**
+     * Calculates values depending on the curvature of a three-point arc
+     * 
+     * @return An array of maximum velocity depending on curvature, distance covered (arc length), and the length of the chord between the arc
+     */
 	public double[] getMaxVelocity(double x_current, double y_current, double x_curve, double y_curve, double x_end, double y_end) {
-		
-		//x_values and y_values should only have three values: current position, end position, position in between current and end position
+		//These three inputs will come together to create an arc: an estimation of what the robot's motion will be
+		//This creates a chord between the first and last point on the arc
 		double chord_slope = (y_end-y_current)/(x_end-x_current);
+		//This creates a slope of the line perpendicular to the equation of the chord
 		double T_slope = -1/chord_slope;
-		
+		//Finding the intersection between the chord and the perpendicular line, which used x_curve and y_curve to be created
 		double x_inter = ((y_curve-T_slope*x_curve)-(y_current-chord_slope*x_current))/(chord_slope-T_slope);
 		double y_inter = chord_slope*x_inter+(y_current-x_current*chord_slope);
+		//finding the distance between the chord and perpendicular line intersection point and the x_curve and y_curve point
 		double chord_height = Math.hypot(x_curve-x_inter, y_curve-y_inter);
+		//finding the length of the chord
 		double chord_length = Math.hypot(x_end-x_current, y_end-y_current);
 		
+		//finding the radius and arc length based on chord_height and chord_length
 		double radius = (chord_height/2)+(Math.pow(chord_length, 2)/(8*chord_height));
 		double distance = 2*Math.asin(-chord_length/(2*radius))*radius;
+		//calculating maximum velocity considering curvature of the arc
+		double maxVelocity = Math.sqrt(radius*9.81);
 		
-		double[] returnArray = {Math.sqrt(radius*9.81), distance, chord_length};
-		
+		double[] returnArray = {maxVelocity, distance, chord_length};
 		return returnArray;
 	}
 	
+	/**
+     * 2d motion profiling
+     * 
+     * @return An array of expected distance, velocity, and acceleration based on current time
+     */
 	public double[] execute2D() {
 		
 		int allValues = x_values.length;
@@ -109,11 +164,7 @@ public class MotionProfiling {
 		double[] maxVelocities = new double[x_values.length];
 		double[] distance = new double[x_values.length];
 		double[] timeTaken = new double[x_values.length];
-		
-		
-		
-		//So that no more than 1 point is unaccounted for
-		
+
 		for (int i = 0; i < allValues; i = i + 2) {
 				maxVelocities[i] = getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0];
 				//Sets the max velocity according to the next two points
@@ -248,6 +299,14 @@ public class MotionProfiling {
 		return returnArray;
 	}
 	
+	/**
+     * Calculates the sum of an array up to a certain index
+     * 
+     * @param array The array to be added up
+     * @param index The index that the sum goes up to
+     * 
+     * @return The sum
+     */
 	public double arraySum(double[] array, double index) {
 		double sum = 0;
 		for (int i = 0; i < index+1; i++) {
@@ -257,3 +316,4 @@ public class MotionProfiling {
 	}
 	 
 }
+
