@@ -42,8 +42,7 @@ public class MotionProfiling {
      * @param currentTime The current time
      * @param accel_distance The distance allotted for the robot to accelerate and decelerate
      */
-	public MotionProfiling(double[] xvalues, double[] yvalues, double acceleration, double currentTime, double accel_distance) {
-		a = acceleration;
+	public MotionProfiling(double[] xvalues, double[] yvalues, double currentTime, double accel_distance) {
 		accelDistance = accel_distance;
 		time = currentTime;
 		x_values = xvalues;
@@ -205,15 +204,17 @@ public class MotionProfiling {
     	for (int i = 0; i < x_values.length; i++) {
     		if (distance[j]>accelDistance) {
     			//finds the distance array indexes where the starting acceleration applies
-    			stopIndex = i;
+    			stopIndex = j;
     		}
     		else {
     			j = j + 1;
     		}
     	}
+    	//Setting acceleration based on accel distance specified
+    	double tdaccel = Math.pow(maxVelocities[stopIndex], 2)/(2*distance[stopIndex]);
     	for (int i = 0; i < (stopIndex+1); i++) {
     		//Sets the acceleration values
-    		acceleration[i] = a;
+    		acceleration[i] = tdaccel;
     	}
     	//this loop utilizes the first max velocity being zero to set the next max velocity
     	for (int i = 1; i < (stopIndex+1); i++) {
@@ -235,7 +236,7 @@ public class MotionProfiling {
     	}
     	for (int i = endIndex; i < (allValues+1); i++) {
     		//Sets the deceleration values
-    		acceleration[i] = -a;
+    		acceleration[i] = -tdaccel;
     	}
     	//Changes the current velocity during the deceleration period
     	for (int i = endIndex; i < (allValues+1); i++) {
