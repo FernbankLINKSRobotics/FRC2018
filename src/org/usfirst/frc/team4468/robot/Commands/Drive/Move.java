@@ -27,7 +27,7 @@ public class Move extends CommandGroup {
         
         for(int i=0; i < n-1; i++) {
             double x = i/path.getX().size();
-            distances(prof.execute2D(x)[1], path.omega(x));
+            distances(prof.execute2D(2, X[i], Y[i])[4], path.omega(x));
             addParallel(new LeftDistance(leftDis));
             addSequential(new RightDistance(rightDis));
         }
@@ -46,4 +46,3 @@ public class Move extends CommandGroup {
         }
     }
 }
-

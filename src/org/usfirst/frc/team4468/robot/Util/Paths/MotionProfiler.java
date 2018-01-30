@@ -150,7 +150,7 @@ public class MotionProfiler {
      * 
      * @return An array of expected distance, velocity, and acceleration based on current time
      */
-	public double[] execute2D(double time) {
+	public double[] execute2D(double time, double current_x, double current_y) {
 		
 		int allValues = x_values.length;
 		
@@ -259,6 +259,9 @@ public class MotionProfiler {
     	double returnDistance;
     	double returnVelocity;
     	double returnAccel;
+    	double currentDistance = 0;
+    	double currentVelocity = 0;
+    	double currentAccel = 0;
     	
 		int currentIndex = 0;
 		for (int i = 0; i < allValues; i++) {
@@ -290,8 +293,16 @@ public class MotionProfiler {
 			returnVelocity = maxVelocities[currentIndex];
 		}
 		
+		for (int i=0; i<x_values.length;i++) {
+		    if (x_values[i]==current_x && y_values[i] == current_y) {
+		        currentDistance = distance[i];
+		        currentVelocity = maxVelocities[i];
+		        currentAccel = acceleration[i];
+		    }
+		}
+		
 		//stores what the distance covered, current velocity, and current acceleration values should be in an array
-		double[] returnArray = {returnDistance, returnVelocity, returnAccel};
+		double[] returnArray = {returnDistance, returnVelocity, returnAccel, currentDistance, currentVelocity, currentAccel};
 		return returnArray;
 	}
 	

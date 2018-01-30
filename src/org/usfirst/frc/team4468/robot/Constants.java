@@ -6,13 +6,12 @@ import edu.wpi.first.wpilibj.Timer;
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
  * the wiring easier and significantly reduces the number of magic numbers
- * floating around. NOTE: all of the measurements are in imperial units so inches 
- * and lbs
+ * floating around.
  */
 public class Constants{
     //// System Units
     // General
-    public static double weight = 130;
+    public static double weight = 59; // Placeholder
     // Wheel
     public static double distanceBetweenWheels = 27;
     public static double wheelDiameter = 0.1524;
@@ -20,7 +19,7 @@ public class Constants{
     // Gears
     public static double highUnstagedGearRatio = 12/125;
     public static double lowUnstagedGearRatio = 6/17;
-    public static double stageRatio = 34/50; // I know that this is incorrect
+    public static double stageRatio = 20/64;
     public static double encoderRatio = 3;
     public static double maxVelocity = 6;
     
