@@ -15,16 +15,14 @@ public class Constants{
     public static double weight = 130;
     // Wheel
     public static double distanceBetweenWheels = 27;
-    public static double wheelDiameter = 4;
+    public static double wheelDiameter = 0.1524;
     public static double wheelCircumference = wheelDiameter * Math.PI;
     // Gears
-    public static double highWheelGearRatio = 6/25;
-    public static double lowWheelGearRatio = 204/3125;
     public static double highUnstagedGearRatio = 12/125;
     public static double lowUnstagedGearRatio = 6/17;
-    public static double stageRatio = 34/50;
+    public static double stageRatio = 34/50; // I know that this is incorrect
     public static double encoderRatio = 3;
-    public double maxVelocity = 6;
+    public static double maxVelocity = 6;
     
     ///// Drivetrain
     // Left Side

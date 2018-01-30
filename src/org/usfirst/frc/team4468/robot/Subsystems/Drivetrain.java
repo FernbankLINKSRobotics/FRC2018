@@ -131,7 +131,7 @@ public class Drivetrain extends Subsystem {
      * @param p the number of encoder pulses
      * @return the number of inches 
      */
-    public double pulsesToInches(double p) {
+    public double pulsesToDistance(double p) {
         return p * Constants.distancePerPulse;
     }
     

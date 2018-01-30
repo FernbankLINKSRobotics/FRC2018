@@ -14,17 +14,16 @@ public class MotionProfiler {
      * Constructor. Creates a new MotionProfiling instance.
      * 
      * @param cruiseV The cruise velocity
+     * @param maxV The maximum possible velocity
      * @param acceleration The starting acceleration and ending deceleration
-     * @param currentTime The current time
      * @param cruise_ratio The ratio setting MINIMUM distance needed to be at a constant velocity
      * @param target The 1d end distance
      */
-	public MotionProfiler(double cruiseV, double acceleration, double cruise_ratio, double target){
+	public MotionProfiler(double cruiseV, double maxV, double acceleration, double cruise_ratio, double target){
 		endDistance = target;
-		if (cruiseV > 6) {
-			v_cruise = 6;
-		}
-		else {
+		if (cruiseV > maxV) {
+			v_cruise = maxV;
+		} else {
 			v_cruise = cruiseV;
 		}
 		a = acceleration;
@@ -37,7 +36,6 @@ public class MotionProfiler {
      * @param xvalues An array of all the x values the robot will cross
      * @param yvalues An array of all the y values the robot will cross
      * @param acceleration The starting acceleration and ending deceleration
-     * @param currentTime The current time
      * @param accel_distance The distance allotted for the robot to accelerate and decelerate
      */
 	public MotionProfiler(double[] xvalues, double[] yvalues, double accel_distance) {
