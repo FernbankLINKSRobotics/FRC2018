@@ -1,10 +1,7 @@
 package org.usfirst.frc.team4468.robot;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.SerialPort.Port;
-
-
+import edu.wpi.first.wpilibj.Timer;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -90,4 +87,14 @@ public class Constants{
     public static int potPort = 0; // Placeholder
     public static double potRange = 3600; // Placeholder
     public static double potOff = 0; // Placeholder
+    
+    
+    //// System functions
+    private static double prevTime = 0;
+    public static double dt() {
+        double time = Timer.getFPGATimestamp();
+        double delta = time - prevTime;
+        prevTime = time;
+        return delta/1000;
+    }
 }

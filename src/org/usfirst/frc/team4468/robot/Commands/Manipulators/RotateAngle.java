@@ -1,9 +1,9 @@
-package org.usfirst.frc.team4468.robot.commands.Manipulators;
+package org.usfirst.frc.team4468.robot.Commands.Manipulators;
 
 import org.usfirst.frc.team4468.robot.Constants;
 import org.usfirst.frc.team4468.robot.Robot;
 import org.usfirst.frc.team4468.robot.Util.PID;
-import org.usfirst.frc.team4468.robot.subsystems.RotatingLift;
+import org.usfirst.frc.team4468.robot.Subsystems.RotatingLift;
 
 import edu.wpi.first.wpilibj.command.Command;
 

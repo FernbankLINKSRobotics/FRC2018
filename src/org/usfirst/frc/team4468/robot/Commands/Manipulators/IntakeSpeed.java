@@ -1,22 +1,20 @@
-package org.usfirst.frc.team4468.robot.commands.Manipulators;
+package org.usfirst.frc.team4468.robot.Commands.Manipulators;
 
 import org.usfirst.frc.team4468.robot.Robot;
-import org.usfirst.frc.team4468.robot.subsystems.RotatingLift;
+import org.usfirst.frc.team4468.robot.Subsystems.Intake;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-
-
-public class Rotate extends Command {
-
-	private double speed = 0;
-	private RotatingLift rl = Robot.rotatingLift;
-	
-    public Rotate(double s) {
-        requires(Robot.rotatingLift);
+public class IntakeSpeed extends Command {
+    
+    private Intake in = Robot.intake;
+    private double speed = 0;
+    
+    public IntakeSpeed(double s) {
+        requires(in);
         speed = s;
     }
     
@@ -25,34 +23,26 @@ public class Rotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        rl.rotate(speed);
+        in.setSpeed(speed);
     }
 
     /* Make this return true when this Command no longer needs to run execute()
-     * (non-Javadoc)
-     * @see edu.wpi.first.wpilibj.command.Command#isFinished()
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return !Robot.oi.left.getRawButton(2) || !Robot.oi.left.getRawButton(2);
+        return false;
     }
 
     /* Called once after isFinished returns true
-     * (non-Javadoc)
-     * @see edu.wpi.first.wpilibj.command.Command#end()
      */
     protected void end() {
-        rl.stop();
+        in.stop();
     }
 
     /* Called when another command which requires one or more of the same
      * subsystems is scheduled to run
-     * (non-Javadoc)
-     * @see edu.wpi.first.wpilibj.command.Command#interrupted()
      */
     protected void interrupted() {
-        rl.stop();
+        in.stop();
     }
 }
-
-

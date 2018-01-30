@@ -1,9 +1,9 @@
-package org.usfirst.frc.team4468.robot.commands.Drive;
+package org.usfirst.frc.team4468.robot.Commands.Drive;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team4468.robot.Robot;
-import org.usfirst.frc.team4468.robot.subsystems.Shifter;
+import org.usfirst.frc.team4468.robot.Subsystems.Shifter;
 
 public class Shift extends Command {
 

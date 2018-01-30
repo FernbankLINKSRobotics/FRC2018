@@ -1,8 +1,7 @@
-package org.usfirst.frc.team4468.robot.commands.Manipulators;
+package org.usfirst.frc.team4468.robot.Commands.Manipulators;
 
-import org.usfirst.frc.team4468.robot.Constants;
 import org.usfirst.frc.team4468.robot.Robot;
-import org.usfirst.frc.team4468.robot.subsystems.Intake;
+import org.usfirst.frc.team4468.robot.Subsystems.Intake;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;

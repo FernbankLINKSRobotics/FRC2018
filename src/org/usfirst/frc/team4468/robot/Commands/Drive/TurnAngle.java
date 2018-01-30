@@ -1,9 +1,9 @@
-package org.usfirst.frc.team4468.robot.commands.Drive;
+package org.usfirst.frc.team4468.robot.Commands.Drive;
 
 import org.usfirst.frc.team4468.robot.Constants;
 import org.usfirst.frc.team4468.robot.Robot;
 import org.usfirst.frc.team4468.robot.Util.PID;
-import org.usfirst.frc.team4468.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team4468.robot.Subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 

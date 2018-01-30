@@ -1,11 +1,10 @@
 package org.usfirst.frc.team4468.robot.Util.Paths;
 
-public class MotionProfiling {
+public class MotionProfiler {
 	
 	double endDistance;
 	double v_cruise;
 	double a;
-	double time;
 	double cruiseRatio;
 	double accelDistance;
 	double[] x_values; 
@@ -20,7 +19,7 @@ public class MotionProfiling {
      * @param cruise_ratio The ratio setting MINIMUM distance needed to be at a constant velocity
      * @param target The 1d end distance
      */
-	public MotionProfiling(double cruiseV, double acceleration, double currentTime, double cruise_ratio, double target){
+	public MotionProfiler(double cruiseV, double acceleration, double cruise_ratio, double target){
 		endDistance = target;
 		if (cruiseV > 6) {
 			v_cruise = 6;
@@ -29,7 +28,6 @@ public class MotionProfiling {
 			v_cruise = cruiseV;
 		}
 		a = acceleration;
-		time = currentTime;
 		cruiseRatio = cruise_ratio;
 	}
 	
@@ -42,9 +40,8 @@ public class MotionProfiling {
      * @param currentTime The current time
      * @param accel_distance The distance allotted for the robot to accelerate and decelerate
      */
-	public MotionProfiling(double[] xvalues, double[] yvalues, double currentTime, double accel_distance) {
+	public MotionProfiler(double[] xvalues, double[] yvalues, double accel_distance) {
 		accelDistance = accel_distance;
-		time = currentTime;
 		x_values = xvalues;
 		y_values = yvalues;
 	}
@@ -54,7 +51,7 @@ public class MotionProfiling {
      * 
      * @return An array of expected distance, velocity, and acceleration based on current time
      */
-	public double[] execute1D() {
+	public double[] execute1D(double time) {
 	    	// The cruise ratio is the MINIMUM distance needed to be at cruise velocity
 	    	double returnVelocity;
 	    	double returnAcceleration;
@@ -155,7 +152,7 @@ public class MotionProfiling {
      * 
      * @return An array of expected distance, velocity, and acceleration based on current time
      */
-	public double[] execute2D() {
+	public double[] execute2D(double time) {
 		
 		int allValues = x_values.length;
 		

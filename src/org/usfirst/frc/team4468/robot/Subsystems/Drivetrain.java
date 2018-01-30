@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4468.robot.subsystems;
+package org.usfirst.frc.team4468.robot.Subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Encoder;
@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team4468.robot.Constants;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import org.usfirst.frc.team4468.robot.commands.Drive.TeleOp;
+import org.usfirst.frc.team4468.robot.Commands.Drive.TeleOp;
 /**
  *
  */

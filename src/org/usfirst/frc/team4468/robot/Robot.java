@@ -4,7 +4,7 @@ package org.usfirst.frc.team4468.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.usfirst.frc.team4468.robot.subsystems.*;
+import org.usfirst.frc.team4468.robot.Subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the

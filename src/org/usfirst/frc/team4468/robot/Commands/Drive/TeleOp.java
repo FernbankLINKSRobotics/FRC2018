@@ -1,9 +1,10 @@
-package org.usfirst.frc.team4468.robot.commands.Drive;
+package org.usfirst.frc.team4468.robot.Commands.Drive;
 
 import org.usfirst.frc.team4468.robot.OI;
 import org.usfirst.frc.team4468.robot.Robot;
-import org.usfirst.frc.team4468.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team4468.robot.Subsystems.Drivetrain;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -24,7 +25,7 @@ public class TeleOp extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        dt.drive(oi.left.getY(), oi.left.getY());
+        dt.drive(oi.drvr.getY(Hand.kLeft), oi.drvr.getY(Hand.kRight));
     }
 
     /* It will NEVER end

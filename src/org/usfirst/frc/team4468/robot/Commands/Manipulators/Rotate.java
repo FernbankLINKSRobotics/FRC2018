@@ -1,37 +1,31 @@
-package org.usfirst.frc.team4468.robot.commands.Drive;
+package org.usfirst.frc.team4468.robot.Commands.Manipulators;
 
-import org.usfirst.frc.team4468.robot.Constants;
 import org.usfirst.frc.team4468.robot.Robot;
-import org.usfirst.frc.team4468.robot.Util.PID;
-import org.usfirst.frc.team4468.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team4468.robot.Subsystems.RotatingLift;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class LeftDistance extends Command {
 
-    private double distance;
-    
-    private Drivetrain dt = Robot.drive;
-    private PID pid;
-        
-    public LeftDistance(double d) {
-        requires(dt);
-        distance = d;
-            
-        pid = new PID(Constants.leftP, Constants.leftI, Constants.leftD);
-        pid.setOutputRange(-1, 1);
-        pid.setPoint(distance);
+
+public class Rotate extends Command {
+
+	private double speed = 0;
+	private RotatingLift rl = Robot.rotatingLift;
+	
+    public Rotate(double s) {
+        requires(Robot.rotatingLift);
+        speed = s;
     }
-        
+    
     /* Called repeatedly when this Command is scheduled to run
      * (non-Javadoc)
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        dt.drive(pid.calculate(dt.getLeftDistance()), 0);
+        rl.rotate(speed);
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -40,7 +34,7 @@ public class LeftDistance extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return pid.onTarget(dt.getLeftDistance());
+        return false;
     }
 
     /* Called once after isFinished returns true
@@ -48,7 +42,7 @@ public class LeftDistance extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#end()
      */
     protected void end() {
-        dt.stop();
+        rl.stop();
     }
 
     /* Called when another command which requires one or more of the same
@@ -57,6 +51,8 @@ public class LeftDistance extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#interrupted()
      */
     protected void interrupted() {
-        dt.stop();
+        rl.stop();
     }
 }
+
+

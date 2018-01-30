@@ -1,4 +1,4 @@
-package org.usfirst.frc.team4468.robot.subsystems;
+package org.usfirst.frc.team4468.robot.Subsystems;
 
 import org.usfirst.frc.team4468.robot.Constants;
 import edu.wpi.first.wpilibj.command.Subsystem;
