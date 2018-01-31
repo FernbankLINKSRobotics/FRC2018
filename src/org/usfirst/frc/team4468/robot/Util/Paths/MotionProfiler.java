@@ -6,6 +6,7 @@ public class MotionProfiler {
 	double v_cruise;
 	double a;
 	double cruiseRatio;
+	double limit;
 	double accelDistance;
 	double[] x_values; 
 	double[] y_values;
@@ -28,6 +29,7 @@ public class MotionProfiler {
 		}
 		a = acceleration;
 		cruiseRatio = cruise_ratio;
+		limit= limitingFactor;
 	}
 	
 	/**
@@ -35,13 +37,14 @@ public class MotionProfiler {
      * 
      * @param xvalues An array of all the x values the robot will cross
      * @param yvalues An array of all the y values the robot will cross
-     * @param acceleration The starting acceleration and ending deceleration
      * @param accel_distance The distance allotted for the robot to accelerate and decelerate
+     * @param limitingFactor The amount you want to limit the max velocity to
      */
-	public MotionProfiler(double[] xvalues, double[] yvalues, double accel_distance) {
+	public MotionProfiler(double[] xvalues, double[] yvalues, double accel_distance, double limitingFactor) {
 		accelDistance = accel_distance;
 		x_values = xvalues;
 		y_values = yvalues;
+		limit= limitingFactor;
 	}
 	
 	/**
@@ -148,7 +151,8 @@ public class MotionProfiler {
 	/**
      * 2d motion profiling
      * 
-     * @return An array of expected distance, velocity, and acceleration based on current time
+     * @return An array of expected distance, velocity, and acceleration based on current time along with 
+     * distance, velocity, and acceleration as specified by a specific x,y pair
      */
 	public double[] execute2D(double time, double current_x, double current_y) {
 		
@@ -160,10 +164,11 @@ public class MotionProfiler {
 		double[] timeTaken = new double[x_values.length];
 
 		for (int i = 0; i < allValues; i = i + 2) {
-				maxVelocities[i] = getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0];
+				maxVelocities[i] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit);
 				//Sets the max velocity according to the next two points
+				//Limit the max velocity by the limiting factor so one side of the robot doesn't go more than max speed
 				if (i < allValues) {
-					maxVelocities[i+1] = getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0];
+					maxVelocities[i+1] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit);
 					//Shows distance that WAS accomplished, why we add +1 to i
 					distance[i+1] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[1])/2 + arraySum(distance, i);
 					if (i < (allValues-1)) {
@@ -293,6 +298,7 @@ public class MotionProfiler {
 			returnVelocity = maxVelocities[currentIndex];
 		}
 		
+		//Returning values for a certain x,y pair
 		for (int i=0; i<x_values.length;i++) {
 		    if (x_values[i]==current_x && y_values[i] == current_y) {
 		        currentDistance = distance[i];
