@@ -8,8 +8,10 @@ public class MotionProfiler {
 	double cruiseRatio;
 	double limit;
 	double accelDistance;
+	double max_velocity;
 	double[] x_values; 
 	double[] y_values;
+	
 	
 	/**
      * Constructor. Creates a new MotionProfiling instance.
@@ -29,7 +31,6 @@ public class MotionProfiler {
 		}
 		a = acceleration;
 		cruiseRatio = cruise_ratio;
-		limit= limitingFactor;
 	}
 	
 	/**
@@ -40,11 +41,12 @@ public class MotionProfiler {
      * @param accel_distance The distance allotted for the robot to accelerate and decelerate
      * @param limitingFactor The amount you want to limit the max velocity to
      */
-	public MotionProfiler(double[] xvalues, double[] yvalues, double accel_distance, double limitingFactor) {
+	public MotionProfiler(double[] xvalues, double[] yvalues, double accel_distance, double max, double limitingFactor) {
 		accelDistance = accel_distance;
 		x_values = xvalues;
 		y_values = yvalues;
 		limit= limitingFactor;
+		max_velocity = max;
 	}
 	
 	/**
@@ -164,24 +166,22 @@ public class MotionProfiler {
 		double[] timeTaken = new double[x_values.length];
 
 		for (int i = 0; i < allValues; i = i + 2) {
-				maxVelocities[i] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit);
 				//Sets the max velocity according to the next two points
 				//Limit the max velocity by the limiting factor so one side of the robot doesn't go more than max speed
 				if (i < allValues) {
-					maxVelocities[i+1] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit);
+					maxVelocities[i+1] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit));
 					//Shows distance that WAS accomplished, why we add +1 to i
 					distance[i+1] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[1])/2 + arraySum(distance, i);
 					if (i < (allValues-1)) {
+						maxVelocities[i] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit));
 						distance[i+2] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[1])/2 + arraySum(distance, i+1);
 					}
 					//Use if statements so we don't get an error about array size
+					else {
+						maxVelocities[i] = Clamp(0, max_velocity, getMaxVelocity(x_values[allValues-2], y_values[allValues-2], x_values[allValues-1], y_values[allValues-1], x_values[allValues], y_values[allValues])[0]);
+					}
 				}
 		}
-		if (x_values.length % 2 == 0) {
-			maxVelocities[allValues] = getMaxVelocity(x_values[allValues-2], y_values[allValues-2], x_values[allValues-1], y_values[allValues-1], x_values[allValues], y_values[allValues])[0];
-		}
-		//if the amount of values is even, set the last value manually
-		
 		//Sets acceleration depending on if two velocities are different
 		//Acceleration period will most likely happen once every three points
 		for (int i = 1; i < x_values.length; i = i+2) {
@@ -327,6 +327,24 @@ public class MotionProfiler {
 		}
 		return sum;
 	}
+	
+	/**
+     * Limits the output to a specified range
+     * 
+     * @param min The minimum range
+     * @param max The maximum range
+     * @param value The output to be limited
+     * @return The limited values
+     */
+    public double Clamp(double min, double max, double value) {
+    	    if (value < min) {
+    	        value = min;
+    	    }
+    	    if (value > max) {
+    	        value = max;
+    	    }
+    	    return value;
+    }
 	 
 }
 
