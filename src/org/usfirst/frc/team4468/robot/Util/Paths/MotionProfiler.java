@@ -41,8 +41,8 @@ public class MotionProfiler {
      * @param accel_distance The distance allotted for the robot to accelerate and decelerate
      * @param limitingFactor The amount you want to limit the max velocity to
      */
-	public MotionProfiler(double[] xvalues, double[] yvalues, double accel_distance, double max, double limitingFactor) {
-		accelDistance = accel_distance;
+	public MotionProfiler(double[] xvalues, double[] yvalues, double acceleration, double max, double limitingFactor) {
+		a = acceleration;
 		x_values = xvalues;
 		y_values = yvalues;
 		limit= limitingFactor;
@@ -192,12 +192,50 @@ public class MotionProfiler {
 			}
 		}
 		
+		//the start distance and max velocity will be zero
 		distance[0] = 0;
 		maxVelocities[0] = 0;
-		//the start distance and max velocity will be zero
-	
-		//The velocities set below will override those previously set in the maxVelocities array based on acceleration, effectively clamping them
 		
+		//Calculating acceleration DISTANCE
+		int y = 1;
+		int accelIndex = 0;
+		for (int i = 1; i<x_values.length; i++) {
+			//Calculating velocity output after a specified distance of acceleration
+			double v = Math.sqrt(2*a*distance[y]);
+			//Checking if that velocity is significantly less than the maxVelocity set for that distance
+			if (v < maxVelocities[y]) {
+				y = y + 1;
+			}
+			else {
+				//Subtracting one because we don't want the accelerated velocity to be OVER max velocity
+				accelIndex = y-1;
+			}
+		}
+		//SETTING ACCELERATION
+		for (int i = 0; i < (accelIndex+1); i++) {
+			acceleration[i] = a;
+		}
+		
+		//The velocities set below will override those previously set in the maxVelocities array based on acceleration, effectively clamping them
+    	for (int i = 1; i < (accelIndex+1); i++) {
+    		//Sets the current velocity during the start acceleration period
+    		maxVelocities[i] = Math.sqrt(Math.pow(maxVelocities[i-1], 2)+2*acceleration[i]*(distance[i]-distance[i-1]));
+    	}
+    	
+    	//SETTING DECELERATION
+    	//We want this to be an overapproximation instead of an underapproximation so it fully goes to 0
+    	int decelIndex = accelIndex+1;
+    	for (int i = (allValues-decelIndex); i < (allValues+1); i++) {
+    		//Sets the deceleration values
+    		acceleration[i] = -a;
+    	}
+    	//Changes the current velocity during the deceleration period
+    	for (int i = (allValues-decelIndex); i < (allValues+1); i++) {
+    		maxVelocities[i] = Math.sqrt(Math.pow(maxVelocities[i-1], 2)+2*acceleration[i]*(distance[i]-distance[i-1]));
+    	}
+		
+		
+		/*
 		//SETTING ACCELERATION
     	int stopIndex = 0;
     	int j = 0;
@@ -216,12 +254,6 @@ public class MotionProfiler {
     		//Sets the acceleration values
     		acceleration[i] = tdaccel;
     	}
-    	//this loop utilizes the first max velocity being zero to set the next max velocity
-    	for (int i = 1; i < (stopIndex+1); i++) {
-    		//Sets the current velocity during the start acceleration period
-    		maxVelocities[i] = Math.sqrt(Math.pow(maxVelocities[i-1], 2)+2*acceleration[i]*(distance[i]-distance[i-1]));
-    	}
-    	
     	//SETTING DECELERATION 
     	int endIndex = 0;
     	int h = 0;
@@ -234,14 +266,8 @@ public class MotionProfiler {
     			endIndex = i;
     		}
     	}
-    	for (int i = endIndex; i < (allValues+1); i++) {
-    		//Sets the deceleration values
-    		acceleration[i] = -tdaccel;
-    	}
-    	//Changes the current velocity during the deceleration period
-    	for (int i = endIndex; i < (allValues+1); i++) {
-    		maxVelocities[i] = Math.sqrt(Math.pow(maxVelocities[i-1], 2)+2*acceleration[i]*(distance[i]-distance[i-1]));
-    	}
+    	*/
+    	
     	
     	
     	
