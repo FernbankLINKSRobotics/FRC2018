@@ -5,6 +5,7 @@ public class MotionProfiler {
 	double endDistance;
 	double v_cruise;
 	double a;
+	double ta;
 	double cruiseRatio;
 	double limit;
 	double accelDistance;
@@ -42,7 +43,7 @@ public class MotionProfiler {
      * @param limitingFactor The amount you want to limit the max velocity to
      */
 	public MotionProfiler(double[] xvalues, double[] yvalues, double acceleration, double max, double limitingFactor) {
-		a = acceleration;
+		ta = acceleration;
 		x_values = xvalues;
 		y_values = yvalues;
 		limit= limitingFactor;
@@ -201,7 +202,7 @@ public class MotionProfiler {
 		int accelIndex = 0;
 		for (int i = 1; i<x_values.length; i++) {
 			//Calculating velocity output after a specified distance of acceleration
-			double v = Math.sqrt(2*a*distance[y]);
+			double v = Math.sqrt(2*ta*distance[y]);
 			//Checking if that velocity is significantly less than the maxVelocity set for that distance
 			if (v < maxVelocities[y]) {
 				y = y + 1;
@@ -213,7 +214,7 @@ public class MotionProfiler {
 		}
 		//SETTING ACCELERATION
 		for (int i = 0; i < (accelIndex+1); i++) {
-			acceleration[i] = a;
+			acceleration[i] = ta;
 		}
 		
 		//The velocities set below will override those previously set in the maxVelocities array based on acceleration, effectively clamping them
@@ -227,7 +228,7 @@ public class MotionProfiler {
     	int decelIndex = accelIndex+1;
     	for (int i = (allValues-decelIndex); i < (allValues+1); i++) {
     		//Sets the deceleration values
-    		acceleration[i] = -a;
+    		acceleration[i] = -ta;
     	}
     	//Changes the current velocity during the deceleration period
     	for (int i = (allValues-decelIndex); i < (allValues+1); i++) {
