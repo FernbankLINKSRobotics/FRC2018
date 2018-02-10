@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4468.robot;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.I2C;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -19,9 +19,11 @@ public class Constants{
     // Gears
     public static double highUnstagedGearRatio = 12/125;
     public static double lowUnstagedGearRatio = 6/17;
-    public static double stageRatio = 20/64;
-    public static double encoderRatio = 3;
+    public static double stageRatio = 64/20;
+    public static double encoderRatio = 1/3;
     public static double maxVelocity = 6;
+    // Driver Input
+    public static double deadband = 0.1;
     
     ///// Drivetrain
     // Left Side
@@ -40,14 +42,13 @@ public class Constants{
 	public static double rightD = 0;
 
 	// IO
-	public static int controlJoy = 2;
-	public static int rightJoy = 1;
-	public static int leftJoy = 0;
+	public static int driveController = 0;
+	public static int operatorController = 1;
 	
 	//// Encoders
 	// Constants
 	public static double pulsesPerRev = 128;
-	public static double distancePerPulse = wheelCircumference / (pulsesPerRev * (encoderRatio * stageRatio));
+	public static double distancePerPulse = 0.000396745; //wheelCircumference / (pulsesPerRev * (stageRatio * encoderRatio));
 	// Left Encoder
 	public static boolean leftEncInverted = true;
 	public static int leftEnc2 = 1;

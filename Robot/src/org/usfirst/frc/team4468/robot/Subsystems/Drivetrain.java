@@ -70,9 +70,16 @@ public class Drivetrain extends Subsystem {
      * @param left  the values to the left side of the drive train
      * @param right the right values to the right side
      */
-    public void drive(double left, double right) {
-        leftMotors .set((left + right)/2);
-        rightMotors.set((left - right)/2);
+    public void drive(double ang, double spd) {
+        if(Math.abs(ang) < Constants.deadband) {
+            ang = 0;
+        }
+        if(Math.abs(spd) < Constants.deadband) {
+            spd = 0;
+        }
+        
+        leftMotors .set((spd + ang)/2);
+        rightMotors.set((spd - ang)/2);
     }
     
     /* Stops all of the motors

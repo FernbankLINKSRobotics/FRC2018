@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4468.robot.Commands.Manipulators;
 
+import org.usfirst.frc.team4468.robot.OI;
 import org.usfirst.frc.team4468.robot.Robot;
 import org.usfirst.frc.team4468.robot.Subsystems.RotatingLift;
 
@@ -12,12 +13,13 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class Rotate extends Command {
 
-	private double speed = 0;
+    private boolean forward;
 	private RotatingLift rl = Robot.rotatingLift;
+	private OI u = Robot.oi;
 	
-    public Rotate(double s) {
+    public Rotate(boolean in) {
         requires(Robot.rotatingLift);
-        speed = s;
+        forward = in;
     }
     
     /* Called repeatedly when this Command is scheduled to run
@@ -25,7 +27,11 @@ public class Rotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        rl.rotate(speed);
+        if(forward) {
+            rl.rotate(0.2);
+        } else {
+            rl.rotate(-0.2);
+        }
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -34,7 +40,7 @@ public class Rotate extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return false;
+        return !(u.ctrl.getAButton() || u.ctrl.getYButton());
     }
 
     /* Called once after isFinished returns true

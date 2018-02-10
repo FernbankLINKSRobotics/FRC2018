@@ -2,6 +2,7 @@
 package org.usfirst.frc.team4468.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.usfirst.frc.team4468.robot.Subsystems.*;
@@ -88,6 +89,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		drive.encoderReset();
 	}
 
 	/**
@@ -96,9 +98,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		System.out.println("Right Encoder:" + drive.getRightDistance());
-		System.out.println("Left Encoer:"   + drive.getLeftDistance());
-		System.out.println("Angle:"         + drive.getAngle());
+		System.out.println("Right Encoder Distance:" + drive.pulsesToDistance(drive.getRightDistance()));
+		System.out.println("Left Encoer Distance:"   + drive.pulsesToDistance(drive.getLeftDistance()));
+		System.out.println("Right Encoder Ticks:" + drive.getRightDistance());
+        System.out.println("Left Encoer Ticks:"   + drive.getLeftDistance());
 	}
 
 	/**
@@ -106,6 +109,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		rotatingLift.rotate(0.1);
+		rotatingLift.rotate(oi.ctrl.getY(Hand.kLeft));
+		intake.setSpeed(oi.ctrl.getY(Hand.kRight));
 	}
 }

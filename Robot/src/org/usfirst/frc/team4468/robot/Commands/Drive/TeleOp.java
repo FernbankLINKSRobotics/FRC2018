@@ -25,7 +25,7 @@ public class TeleOp extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        dt.drive(oi.drvr.getY(Hand.kRight), oi.drvr.getX(Hand.kLeft));
+        dt.drive(oi.drvr.getX(Hand.kLeft), oi.drvr.getY(Hand.kRight));
     }
 
     /* It will NEVER end
