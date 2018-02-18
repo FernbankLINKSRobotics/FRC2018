@@ -26,7 +26,7 @@ public class PID {
     
     
     //Used for calculating deltaE (A.R.C of the error)
-    private double previousError = 0;
+    private double previousError = 100;
     private double previousTime = 0;
     private double previousMeasure = 0;
     private double previousVelocity = 0;
@@ -76,7 +76,7 @@ public class PID {
      */
     public void setPerTolerance(double percent) {
     	    perTolerance = true;
-    	    the_percent = percent;
+    	    the_percent = percent/100;
     }
     
     /**
@@ -86,7 +86,7 @@ public class PID {
      */
     public void setAbsTolerance(double distance) {
     	    absTolerance = true;
-    	    the_distance = distance;
+    	    the_distance = distance/100;
     }
     
     public boolean onTarget(double measure) {
@@ -150,6 +150,7 @@ public class PID {
     public double calculate(double measure){
     	    double output;
     	    double error;
+    	    double returnOutput;
     	    // Setting the tolerance
     	    if (perTolerance) {
     	        // Setting the percent tolerance
@@ -194,6 +195,7 @@ public class PID {
         output = proportional + integral + derivative;
         double velocity = (measure-previousMeasure)/(deltaT);
         
+        
         if (fFactorSetAccel) {
         	    double acceleration = (velocity-previousVelocity)/(deltaT);
         	    // Setting the output if the f factor (acceleration) is set
@@ -205,11 +207,12 @@ public class PID {
         previousError = error; // Set the previous error for the next cycle
         previousTime = Timer.getFPGATimestamp(); // Set the beginning time for the time measured between each output
         // Return
+        returnOutput = output/100;
         if (setRangeO) {
             // Limit to the range if range is set
-        	    return Clamp(minRangeO, maxRangeO, output);
+        	    return Clamp(minRangeO, maxRangeO, returnOutput);
         } else {
-        	    return output;
+        	    return returnOutput;
         }
         
     }
@@ -230,6 +233,10 @@ public class PID {
     	        value = max;
     	    }
     	    return value;
+    }
+    
+    public void reset() {
+    		target = 0;
     }
 }
     

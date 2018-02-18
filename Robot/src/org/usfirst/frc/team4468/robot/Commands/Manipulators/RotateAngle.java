@@ -6,34 +6,66 @@ import org.usfirst.frc.team4468.robot.Util.PID;
 import org.usfirst.frc.team4468.robot.Subsystems.RotatingLift;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 
 /**
  * This uses the Pot attached to the rotating arm to move
  * to a specific angle.
  */
 public class RotateAngle extends Command {
-    
-    private double theta;
-    
+
     private RotatingLift rl = Robot.rotatingLift;
     private PID pid;
+    //PIDController pid;
+   // private PIDOutput pidOut;
     
-    public RotateAngle(double t) {
+    
+    public RotateAngle(double angle) {
+    		double theta = angle;
+    		System.out.println("PID RotateAngle");
+    	
+    		/*PIDController pid;
         requires(rl);
-        theta = t;
+    		pidOut = new PIDOutput() {
+			@Override
+			public void pidWrite(double d) {
+				rl.rotate(d);
+			}
+    		}; */
+			
         
         pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD);
-        pid.setInputRange(0, 180);
-        pid.setOutputRange(-1, 1);
+        pid.reset();
+        
+        //pid.setInputRange(-180.0, 180.0);
+        pid.setOutputRange(-1.0, 1.0);
+        pid.setPerTolerance(.5);
+        
+        System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
+        System.out.println("setpoint one: " + pid.getSetpoint());
+        
+        /*
+        pid = new PIDController(0.005, 0, 0.01, Robot.drive.leftEncoder, pidOut);
+		pid.setPercentTolerance(5);
+		pid.setOutputRange(-1, 1);
+		pid.setInputRange(0, 180);
+		pid.setContinuous(); */
     }
     
     /* Called repeatedly when this Command is scheduled to run
      * (non-Javadoc)
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
+    /*protected void initialize() {
+		pid.enable();
+    } */
     protected void execute() {
-        rl.rotate(pid.calculate(rl.getAngle()));
+    		System.out.println("Executed");
+    		rl.rotate(pid.calculate(rl.getAngle()));
+    		System.out.println("Calculated Distance:" + pid.calculate(rl.getAngle()));
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -42,7 +74,16 @@ public class RotateAngle extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return pid.onTarget(rl.getAngle());
+    		if (rl.getAngle() >= 20.0) {
+    			return true;
+    		}
+    		else {
+    			return false;
+    		}
+        //return pid.onTarget(rl.getAngle());
+    		/*boolean isDone = (pid.getError() < .5);
+		SmartDashboard.putBoolean("Distance Reached Yet: ", isDone);
+		return isDone; */
     }
 
     /* Called once after isFinished returns true
@@ -51,6 +92,7 @@ public class RotateAngle extends Command {
      */
     protected void end() {
         rl.stop();
+        //pid.reset();
     }
 
     /* Called when another command which requires one or more of the same

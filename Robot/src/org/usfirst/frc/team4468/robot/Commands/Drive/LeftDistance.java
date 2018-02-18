@@ -5,6 +5,8 @@ import org.usfirst.frc.team4468.robot.Robot;
 import org.usfirst.frc.team4468.robot.Util.PID;
 import org.usfirst.frc.team4468.robot.Subsystems.Drivetrain;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -18,20 +20,43 @@ public class LeftDistance extends Command {
     private PID pid;
         
     public LeftDistance(double d) {
+    	
+    		System.out.println("PID");
+    	
         requires(dt);
         distance = d;
-            
-        pid = new PID(Constants.leftP, Constants.leftI, Constants.leftD);
+        pid = new PID(Constants.leftP, Constants.leftI, Constants.lifterD);
         pid.setOutputRange(-1, 1);
+        pid.setPerTolerance(1);
         pid.setPoint(distance);
+        
+           /*
+        PIDOutput pidOut = new PIDOutput() {
+			@Override
+			public void pidWrite(double d) {
+				dt.setLeft(d);
+			}
+		};
+		
+		pid = new PIDController(1, 0, 0, dt.leftEncoder, pidOut);
+		pid.setPercentTolerance(2);
+		pid.setOutputRange(-1, 1);
+		*/
+    		
     }
+    
+    protected void initialize() {
+        System.out.println("Is Initialized");
+	}
         
     /* Called repeatedly when this Command is scheduled to run
      * (non-Javadoc)
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        dt.drive(pid.calculate(dt.getLeftDistance()), 0);
+    		System.out.println("Inside Left execute");
+    		System.out.println(pid.calculate(dt.getLeftDistance()));
+    		dt.setLeft(pid.calculate(dt.getLeftDistance()));
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -57,6 +82,7 @@ public class LeftDistance extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#interrupted()
      */
     protected void interrupted() {
+    		System.out.println("Interrupted");
         dt.stop();
     }
 }

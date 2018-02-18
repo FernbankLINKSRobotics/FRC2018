@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4468.robot;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.I2C;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj.I2C;
 public class Constants{
     //// System Units
     // General
+	public static double angleOffset = 1066.615;
     public static double weight = 59; // Placeholder
     // Wheel
     public static double distanceBetweenWheels = 27;
@@ -27,17 +29,15 @@ public class Constants{
     
     ///// Drivetrain
     // Left Side
-	public static int leftTop  = 0;
-	public static int leftMid  = 1;
-	public static int leftBot  = 3;
-	public static double leftP = 0;
+	public static int leftPair = 9;
+	public static int leftBot  = 8;
+	public static double leftP = .999999;
 	public static double leftI = 0;
 	public static double leftD = 0;
 	// Right Side
-	public static int rightTop  = 4;
-	public static int rightMid  = 5;
+	public static int rightPair = 7;
 	public static int rightBot  = 6;
-	public static double rightP = 0;
+	public static double rightP = .999999;
 	public static double rightI = 0;
 	public static double rightD = 0;
 
@@ -51,38 +51,38 @@ public class Constants{
 	public static double distancePerPulse = 0.000396745; //wheelCircumference / (pulsesPerRev * (stageRatio * encoderRatio));
 	// Left Encoder
 	public static boolean leftEncInverted = true;
-	public static int leftEnc2 = 1;
-	public static int leftEnc1 = 0;
+	public static int leftEnc2 = 3;
+	public static int leftEnc1 = 2;
 	// Right Encoder
     public static boolean rightEncInverted = false;
-    public static int rightEnc2 = 3;
-    public static int rightEnc1 = 2;
+    public static int rightEnc2 = 1;
+    public static int rightEnc1 = 0;
     
     // Gyro
     public static edu.wpi.first.wpilibj.I2C.Port gyroPort = I2C.Port.kOnboard;
-    public static double angleP = 0;
+    public static double angleP = 1;
     public static double angleI = 0;
     public static double angleD = 0;
     
     // Shifter
-    public static int shifterPort1 = 0;
-    public static int shifterPort2 = 1;
+    public static int shifterPort1 = 1;
+    public static int shifterPort2 = 2;
     
     // Intake
-    public static int intakePort1 = 7;
-    public static int intakePort2 = 8;
-    public static int intakeClampPort1 = 2;
-    public static int intakeClampPort2 = 3;
+    public static int intakePort1 = 5;
+    public static int intakePort2 = 4;
+    public static int intakeClampPort1 = 3;
+    public static int intakeClampPort2 = 4;
     
     // Lifter
-    public static int lifterPort1 = 9;
-    public static double lifterP  = 0;
+    public static int lifterPort1 = 3;
+    public static double lifterP  = 5;
     public static double lifterI  = 0;
-    public static double lifterD  = 0;
+    public static double lifterD  = .12;
     
     // Potentiometer
-    public static int potPort = 0; // Placeholder
-    public static double potRange = 3600; // Placeholder
+    public static int potPort = 3; // Placeholder
+    public static double potRange = 1125; // Placeholder
     public static double potOff = 0; // Placeholder
     
     
@@ -94,4 +94,5 @@ public class Constants{
         prevTime = time;
         return delta/1000;
     }
+    //public static PTune = SmartDashboard.getNumber("PID", Constants.angleP);
 }

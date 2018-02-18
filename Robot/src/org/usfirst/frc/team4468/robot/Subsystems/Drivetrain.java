@@ -14,25 +14,23 @@ public class Drivetrain extends Subsystem {
     //// Declarations
     // Class Declarations
     private SpeedControllerGroup leftMotors = new SpeedControllerGroup(
-            new VictorSP(Constants.leftTop),
-            new VictorSP(Constants.leftMid),
+            new VictorSP(Constants.leftPair),
             new VictorSP(Constants.leftBot)
     );
     
     private SpeedControllerGroup rightMotors = new SpeedControllerGroup(
-            new VictorSP(Constants.rightTop),
-            new VictorSP(Constants.rightMid),
+            new VictorSP(Constants.rightPair),
             new VictorSP(Constants.rightBot)
     );
     
-    private Encoder leftEncoder = new Encoder(
+    public Encoder leftEncoder = new Encoder(
             Constants.leftEnc1, 
             Constants.leftEnc2, 
             Constants.leftEncInverted, 
             Encoder.EncodingType.k4X
     );
     
-    private Encoder rightEncoder = new Encoder(
+    public Encoder rightEncoder = new Encoder(
             Constants.rightEnc1, 
             Constants.rightEnc2, 
             Constants.rightEncInverted,
@@ -80,6 +78,14 @@ public class Drivetrain extends Subsystem {
         
         leftMotors .set((spd + ang)/2);
         rightMotors.set((spd - ang)/2);
+    }
+    
+    public void setLeft(double s) {
+    		leftMotors.set(s);
+    }
+    
+    public void setRight(double s) {
+    		rightMotors.set(s);
     }
     
     /* Stops all of the motors

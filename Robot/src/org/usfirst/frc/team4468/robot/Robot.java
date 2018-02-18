@@ -4,8 +4,16 @@ package org.usfirst.frc.team4468.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.usfirst.frc.team4468.robot.Commands.Drive.LeftDistance;
+import org.usfirst.frc.team4468.robot.Commands.Manipulators.RotateAngle;
+import org.usfirst.frc.team4468.robot.Commands.Routines.Run;
 import org.usfirst.frc.team4468.robot.Subsystems.*;
+import org.usfirst.frc.team4468.robot.Util.PID;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -15,15 +23,22 @@ import org.usfirst.frc.team4468.robot.Subsystems.*;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
+	
+	
     public static RotatingLift rotatingLift;
     public static Constants    constants;
     public static Intake       intake;
 	public static Drivetrain   drive;
 	public static Shifter      shift;
 	public static OI           oi;
-
+	public static Run runFunction;
+	
+	public static double theta;
+	
+	SendableChooser<CommandGroup> autoChooser;
 	Command autonomousCommand;
+	Command liftCommand;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -36,8 +51,15 @@ public class Robot extends IterativeRobot {
 		shift        = new Shifter();
 		drive        = new Drivetrain();
 		oi           = new OI();
-		//chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
+		runFunction  = new Run();
+		
+		
+		autoChooser = new SendableChooser<CommandGroup>();
+		autonomousCommand = new Run();
+		theta = 90;
+		//liftCommand = new RotateAngle();
+		//liftCommand.start();
+		//autoChooser.addDefault("PID Tune", new Run());
 	}
 
 	/**
@@ -68,9 +90,17 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+		//autonomousCommand = autoChooser.getSelected();
+		System.out.println("Starting Auto");
+		if (autonomousCommand != null) {
+			System.out.println("In If Statement");
+			//autonomousCommand.start()
+			//runFunction.llama();
+		}
+		//liftCommand.start();
+
+		//new LeftDistance(2).start();
+		
 	}
 
 	/**
@@ -79,6 +109,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		System.out.println("In Periodic");
+		log();
 	}
 
 	@Override
@@ -89,6 +121,7 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		Scheduler.getInstance().removeAll();
 		drive.encoderReset();
 	}
 
@@ -98,10 +131,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		System.out.println("Right Encoder Distance:" + drive.pulsesToDistance(drive.getRightDistance()));
-		System.out.println("Left Encoer Distance:"   + drive.pulsesToDistance(drive.getLeftDistance()));
-		System.out.println("Right Encoder Ticks:" + drive.getRightDistance());
-        System.out.println("Left Encoer Ticks:"   + drive.getLeftDistance());
+		log();
 	}
 
 	/**
@@ -109,7 +139,25 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		rotatingLift.rotate(oi.ctrl.getY(Hand.kLeft));
-		intake.setSpeed(oi.ctrl.getY(Hand.kRight));
+		//.rotate(oi.ctrl.getY(Hand.kLeft));
+		//intake.setSpeed(oi.ctrl.getY(Hand.kRight));
+		log();
+	
+	}
+	
+	public void log() {
+		System.out.println("Right Encoder Distance:" + drive.pulsesToDistance(drive.getRightDistance()));
+		System.out.println("Left Encoer Distance:"   + drive.pulsesToDistance(drive.getLeftDistance()));
+		System.out.println("Right Encoder Ticks:" + drive.getRightDistance());
+        System.out.println("Left Encoer Ticks:"   + drive.getLeftDistance());
+        System.out.println("Controller 1" + oi.ctrl.getY(Hand.kLeft));
+        System.out.println("PID Rotate:" + rotatingLift.getAngle());
+        SmartDashboard.putNumber("LeftENC" , drive.getLeftDistance());
+        SmartDashboard.putNumber("RightENC", drive.getRightDistance());
+        SmartDashboard.putNumber("Petentiometer", rotatingLift.getAngle());
+        double why = 20.0;
+        double me = 360.0;
+        double hatehate= why/me;
+        System.out.println("I can't do math: " + (hatehate));
 	}
 }

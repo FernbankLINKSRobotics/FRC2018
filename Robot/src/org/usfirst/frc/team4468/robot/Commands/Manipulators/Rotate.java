@@ -13,25 +13,22 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class Rotate extends Command {
 
-    private boolean forward;
+    private double speed;
 	private RotatingLift rl = Robot.rotatingLift;
 	private OI u = Robot.oi;
 	
-    public Rotate(boolean in) {
+    public Rotate(double in) {
         requires(Robot.rotatingLift);
-        forward = in;
+        speed = in;
     }
     
     /* Called repeatedly when this Command is scheduled to run
      * (non-Javadoc)
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
+    
     protected void execute() {
-        if(forward) {
-            rl.rotate(0.2);
-        } else {
-            rl.rotate(-0.2);
-        }
+        rl.rotate(speed);
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -40,7 +37,7 @@ public class Rotate extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return !(u.ctrl.getAButton() || u.ctrl.getYButton());
+        return !(Robot.oi.ctrl.getAButton() || Robot.oi.ctrl.getYButton());
     }
 
     /* Called once after isFinished returns true
