@@ -62,7 +62,7 @@ public class Drivetrain extends Subsystem {
      * @see edu.wpi.first.wpilibj.command.Subsystem#initDefaultCommand()
      */
     public void initDefaultCommand() {
-        setDefaultCommand(new TeleOp());
+        setDefaultCommand(new TeleOp(true));
     }
     
     

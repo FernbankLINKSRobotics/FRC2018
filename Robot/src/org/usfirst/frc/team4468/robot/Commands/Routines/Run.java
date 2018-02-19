@@ -5,6 +5,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class Run extends CommandGroup {
     public Run() { 
-        addSequential(new StraightDistance(-7000)); 
+        addSequential(new StraightDistance(-3)); 
     }
 }

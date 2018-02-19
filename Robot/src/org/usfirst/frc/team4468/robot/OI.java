@@ -1,12 +1,16 @@
 package org.usfirst.frc.team4468.robot;
 
 import org.usfirst.frc.team4468.robot.Commands.Drive.Shift;
+import org.usfirst.frc.team4468.robot.Commands.Manipulators.ExpelCube;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.HoldingRotate;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.IntakeClamp;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.IntakeSpeed;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -16,31 +20,32 @@ public class OI {
     // Joystick allocation
     public XboxController drvr = new XboxController(Constants.driveController);
     public XboxController ctrl = new XboxController(Constants.operatorController);
-    
-    /* Sets up the triggers for different commands and other actions for when
-     * a new button is pressed and it ties together the commands and subsystems
+
+    /*
+     * Sets up the triggers for different commands and other actions for when a new
+     * button is pressed and it ties together the commands and subsystems
      */
     public OI() {
-        /*
-    		JoystickButton A = new JoystickButton(ctrl, 1); 
-    		JoystickButton Y = new JoystickButton(ctrl, 4); 
-    		JoystickButton X = new JoystickButton(ctrl, 3);
-    		JoystickButton B = new JoystickButton(ctrl, 2);
-    		JoystickButton LB = new JoystickButton(ctrl, 5);
-    		JoystickButton RB = new JoystickButton(ctrl, 6);
-    		JoystickButton ST = new JoystickButton(ctrl, 8);
-    		JoystickButton BK = new JoystickButton(ctrl, 7);
+        
+    		JoystickButton Trigger = new JoystickButton(ctrl, 1); 
+    		JoystickButton LeftButton = new JoystickButton(ctrl, 4); 
+    		JoystickButton CenterButton = new JoystickButton(ctrl, 3);
+    		JoystickButton BottomButton = new JoystickButton(ctrl, 2);
+    		JoystickButton RightButton = new JoystickButton(ctrl, 5);
+    		JoystickButton LeftTop = new JoystickButton(ctrl, 6);
+    		JoystickButton BottomLeft = new JoystickButton(ctrl, 8);
+    		JoystickButton LeftMiddle = new JoystickButton(ctrl, 7);
     		
-    		A.whenPressed(new RotateAngle(0.0));
-    		Y.whenPressed(new RotateAngle(-140.0));
-    		X.whenPressed(new RotateAngle(-120.0));
-    		B.whenPressed(new RotateAngle(-60.0));	
-    		LB.whenPressed(new IntakeClamp(Value.kReverse));
-    		RB.whenPressed(new IntakeClamp(Value.kForward));
-    		ST.whenPressed(new IntakeSpeed(0.7));
-    		BK.whenPressed(new IntakeSpeed(-.7));
-    	    */
-    		
+    		BottomButton.whenPressed(new HoldingRotate(-10.0));
+    		CenterButton.whenPressed(new HoldingRotate(-140.0));
+    		LeftButton.whenPressed(new HoldingRotate(-120.0));
+    		RightButton.whenPressed(new HoldingRotate(-60.0));	
+    		LeftMiddle.whenPressed(new IntakeClamp(Value.kReverse));
+    		LeftTop.whenPressed(new IntakeClamp(Value.kForward));
+    		BottomLeft.whenPressed(new IntakeSpeed(0.7));
+    		Trigger.whenPressed(new IntakeSpeed(-.7));
+    	    
+    		/*
         if (drvr.getTriggerAxis(Hand.kRight) == 1) {
             new Shift(Value.kForward).start();
         } else if (drvr.getTriggerAxis(Hand.kLeft) == 1) {
@@ -62,11 +67,12 @@ public class OI {
         } else if (drvr.getBumperPressed(Hand.kLeft)) {
             new IntakeClamp(Value.kReverse).start();
         }
-        
-        if (ctrl.getTriggerAxis(Hand.kRight) == 5) {
-            new IntakeSpeed(1).start();
-        } else if (ctrl.getTriggerAxis(Hand.kLeft) == -5 ) {
-            new IntakeSpeed(-1).start();
-        }
+        */
+        if (ctrl.getTriggerAxis(Hand.kRight) == 1) {
+            Scheduler.getInstance().add(new IntakeSpeed(0.7));
+        } 
+        //else if (ctrl.getTriggerAxis(Hand.kLeft) == -1 ) {
+        //    new IntakeSpeed(0.7).start();
+        //}
     }
 }

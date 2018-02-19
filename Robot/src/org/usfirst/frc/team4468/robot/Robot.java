@@ -140,13 +140,13 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void log() {
-		System.out.println("Right Encoder Distance:" + drive.pulsesToDistance(drive.getRightDistance()));
-		System.out.println("Left Encoer Distance:"   + drive.pulsesToDistance(drive.getLeftDistance()));
-		System.out.println("Right Encoder Ticks:" + drive.getRightDistance());
-        System.out.println("Left Encoer Ticks:"   + drive.getLeftDistance());
-        System.out.println("Controller 1" + oi.ctrl.getY(Hand.kLeft));
+	//	System.out.println("Right Encoder Distance:" + drive.pulsesToDistance(drive.getRightDistance()));
+	//	System.out.println("Left Encoer Distance:"   + drive.pulsesToDistance(drive.getLeftDistance()));
+	//	System.out.println("Right Encoder Ticks:" + drive.getRightDistance());
+      //  System.out.println("Left Encoer Ticks:"   + drive.getLeftDistance());
+        //System.out.println("Controller 1" + oi.ctrl.getY(Hand.kLeft));
         System.out.println("PID Rotate:" + rotatingLift.getAngle());
-        System.out.println("Angle:" + drive.getAngle());
+        //System.out.println("Angle:" + drive.getAngle());
         SmartDashboard.putNumber("LeftENC" , drive.getLeftDistance());
         SmartDashboard.putNumber("RightENC", drive.getRightDistance());
         SmartDashboard.putNumber("Petentiometer", rotatingLift.getAngle());
