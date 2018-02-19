@@ -32,8 +32,9 @@ public class OI {
     		JoystickButton RB = new JoystickButton(ctrl, 6);
     		JoystickButton ST = new JoystickButton(ctrl, 8);
     		JoystickButton BK = new JoystickButton(ctrl, 7);
+    		
     		A.whenPressed(new RotateAngle(0.0));
-    		Y.whenPressed(new RotateAngle(-160.0));
+    		Y.whenPressed(new RotateAngle(-140.0));
     		X.whenPressed(new RotateAngle(-120.0));
     		B.whenPressed(new RotateAngle(-60.0));	
     		LB.whenPressed(new IntakeClamp(Value.kReverse));

@@ -74,12 +74,11 @@ public class RotateAngle extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-    		if (rl.getAngle() >= 20.0) {
-    			return true;
-    		}
-    		else {
-    			return false;
-    		}
+        if(Robot.isTele == true) {
+    		    return false;
+        } else {
+            return pid.onTarget(rl.getAngle());
+        }
         //return pid.onTarget(rl.getAngle());
     		/*boolean isDone = (pid.getError() < .5);
 		SmartDashboard.putBoolean("Distance Reached Yet: ", isDone);

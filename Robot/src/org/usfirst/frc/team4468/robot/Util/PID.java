@@ -26,7 +26,7 @@ public class PID {
     
     
     //Used for calculating deltaE (A.R.C of the error)
-    private double previousError = 100;
+    private double previousError = Double.MAX_VALUE;
     private double previousTime = 0;
     private double previousMeasure = 0;
     private double previousVelocity = 0;
@@ -138,6 +138,10 @@ public class PID {
     public double getSetpoint() {
     	    return target;
     }
+    
+    public double getError() {
+        return previousError;
+}
     
     /**
      * Run a single PID calculation on the given inputs. This does not loop

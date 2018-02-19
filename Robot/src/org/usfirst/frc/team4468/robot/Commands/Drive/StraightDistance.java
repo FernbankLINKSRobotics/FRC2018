@@ -2,28 +2,24 @@ package org.usfirst.frc.team4468.robot.Commands.Drive;
 
 import org.usfirst.frc.team4468.robot.Constants;
 import org.usfirst.frc.team4468.robot.Robot;
-import org.usfirst.frc.team4468.robot.Util.PID;
 import org.usfirst.frc.team4468.robot.Subsystems.Drivetrain;
-
+import org.usfirst.frc.team4468.robot.Util.PID;
 import edu.wpi.first.wpilibj.command.Command;
 
-/**
- *
- */
-public class RightDistance extends Command {
+public class StraightDistance extends Command {
     private double distance;
     
     private Drivetrain dt = Robot.drive;
     private PID pid;
         
-    public RightDistance(double d) {
-    	System.out.println("PID Right Started");
+    public StraightDistance(double d) {
+        System.out.println("PID Right Started");
         requires(dt);
         distance = d;
             
-        pid = new PID(Constants.rightP, Constants.rightI, Constants.rightD);
+        pid = new PID(Constants.lineP, Constants.lineI, Constants.lineD);
         pid.setOutputRange(-1, 1);
-        pid.setPerTolerance(1);
+        pid.setAbsTolerance(500);
         pid.setPoint(distance);
     }
         
@@ -32,12 +28,12 @@ public class RightDistance extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-    		System.out.println("Inside Right execute");
-        System.out.println("Right Output: " + pid.calculate(dt.getLeftDistance()));
-        System.out.println("Right Error: " + pid.getError());
-        System.out.println("Right SetPoint: " + pid.getSetpoint());
-        dt.tank(0, pid.calculate(dt.getRightDistance()));
-    		//dt.setRight(1);
+        System.out.println("Inside Line execute");
+        System.out.println("Line Output: " + pid.calculate(dt.getLeftDistance()));
+        System.out.println("Line Error: " + pid.getError());
+        System.out.println("Line SetPoint: " + pid.getSetpoint());
+        System.out.println("Distance: " + dt.getDis());
+        dt.arcade(0, pid.calculate(dt.getDis()));
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -46,7 +42,7 @@ public class RightDistance extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return pid.onTarget(dt.getRightDistance());
+        return pid.onTarget(dt.getDis());
     }
 
     /* Called once after isFinished returns true

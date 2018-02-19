@@ -4,6 +4,8 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
 import org.usfirst.frc.team4468.robot.Constants;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import org.usfirst.frc.team4468.robot.Commands.Drive.TeleOp;
@@ -22,6 +24,8 @@ public class Drivetrain extends Subsystem {
             new VictorSP(Constants.rightPair),
             new VictorSP(Constants.rightBot)
     );
+    
+    private DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
     
     public Encoder leftEncoder = new Encoder(
             Constants.leftEnc1, 
@@ -64,28 +68,20 @@ public class Drivetrain extends Subsystem {
     
     
     //// Drive Motor Code
+    /* Sets the motors in for a arcade drive
+     * @param rot shows the rate of turning
+     * @param spd the average speed of the drive
+     */
+    public void arcade(double rot, double spd) {
+        drive.arcadeDrive(rot, spd, true);
+    }
+    
     /* Sets the motors in for a tank drive
      * @param left  the values to the left side of the drive train
      * @param right the right values to the right side
      */
-    public void drive(double ang, double spd) {
-        if(Math.abs(ang) < Constants.deadband) {
-            ang = 0;
-        }
-        if(Math.abs(spd) < Constants.deadband) {
-            spd = 0;
-        }
-        
-        leftMotors .set((spd + ang)/2);
-        rightMotors.set((spd - ang)/2);
-    }
-    
-    public void setLeft(double s) {
-    		leftMotors.set(s);
-    }
-    
-    public void setRight(double s) {
-    		rightMotors.set(s);
+    public void tank(double l, double r) {
+        drive.tankDrive(l, r, true);
     }
     
     /* Stops all of the motors

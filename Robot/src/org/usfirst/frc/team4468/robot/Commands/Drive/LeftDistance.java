@@ -55,8 +55,10 @@ public class LeftDistance extends Command {
      */
     protected void execute() {
     		System.out.println("Inside Left execute");
-    		System.out.println(pid.calculate(dt.getLeftDistance()));
-    		dt.setLeft(pid.calculate(dt.getLeftDistance()));
+    		System.out.println("Left Output: " + pid.calculate(dt.getLeftDistance()));
+    		System.out.println("Left Error: " + pid.getError());
+    		System.out.println("Left SetPoint: " + pid.getSetpoint());
+    		dt.tank(pid.calculate(dt.getLeftDistance()), 0);
     }
 
     /* Make this return true when this Command no longer needs to run execute()

@@ -31,15 +31,20 @@ public class Constants{
     // Left Side
 	public static int leftPair = 9;
 	public static int leftBot  = 8;
-	public static double leftP = .999999;
+	public static double leftP = 9.999999;
 	public static double leftI = 0;
 	public static double leftD = 0;
 	// Right Side
 	public static int rightPair = 7;
 	public static int rightBot  = 6;
-	public static double rightP = .999999;
+	public static double rightP = 9.999999;
 	public static double rightI = 0;
 	public static double rightD = 0;
+	// Both Sides
+	public static double lineP = 10.0;
+	public static double lineI = 0;
+	public static double lineD = 0;
+	
 
 	// IO
 	public static int driveController = 0;
@@ -60,7 +65,7 @@ public class Constants{
     
     // Gyro
     public static edu.wpi.first.wpilibj.I2C.Port gyroPort = I2C.Port.kOnboard;
-    public static double angleP = 1;
+    public static double angleP = 10;
     public static double angleI = 0;
     public static double angleD = 0;
     

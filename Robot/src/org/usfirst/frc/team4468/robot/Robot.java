@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team4468.robot.Commands.Drive.LeftDistance;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.RotateAngle;
+import org.usfirst.frc.team4468.robot.Commands.Routines.GyroTest;
 import org.usfirst.frc.team4468.robot.Commands.Routines.Run;
 import org.usfirst.frc.team4468.robot.Subsystems.*;
 import org.usfirst.frc.team4468.robot.Util.PID;
@@ -24,6 +25,7 @@ import org.usfirst.frc.team4468.robot.Util.PID;
  */
 public class Robot extends IterativeRobot {
 	
+    public static boolean isTele;
 	
     public static RotatingLift rotatingLift;
     public static Constants    constants;
@@ -37,7 +39,6 @@ public class Robot extends IterativeRobot {
 	
 	SendableChooser<CommandGroup> autoChooser;
 	Command autonomousCommand;
-	Command liftCommand;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -56,10 +57,10 @@ public class Robot extends IterativeRobot {
 		
 		autoChooser = new SendableChooser<CommandGroup>();
 		autonomousCommand = new Run();
-		theta = 90;
 		//liftCommand = new RotateAngle();
 		//liftCommand.start();
-		//autoChooser.addDefault("PID Tune", new Run());
+		autoChooser.addDefault("PID Tune", new GyroTest());
+		drive.encoderReset();
 	}
 
 	/**
@@ -90,17 +91,17 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//autonomousCommand = autoChooser.getSelected();
+	    drive.encoderReset();
+		autonomousCommand = autoChooser.getSelected();
+		
 		System.out.println("Starting Auto");
+		
 		if (autonomousCommand != null) {
 			System.out.println("In If Statement");
-			//autonomousCommand.start()
-			//runFunction.llama();
+			autonomousCommand.start();
 		}
-		//liftCommand.start();
-
-		//new LeftDistance(2).start();
 		
+		isTele = false;
 	}
 
 	/**
@@ -109,8 +110,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		System.out.println("In Periodic");
-		log();
+		SmartDashboard.putNumber("LeftENC" , drive.getLeftDistance());
+        SmartDashboard.putNumber("RightENC", drive.getRightDistance());
+        SmartDashboard.putNumber("Gyro", drive.getAngle());
 	}
 
 	@Override
@@ -120,9 +122,12 @@ public class Robot extends IterativeRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		if (autonomousCommand != null)
-			autonomousCommand.cancel();
+			autonomousCommand.free();
 		Scheduler.getInstance().removeAll();
 		drive.encoderReset();
+		drive.gyroReset();
+		
+		isTele = true;
 	}
 
 	/**
@@ -139,8 +144,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		//.rotate(oi.ctrl.getY(Hand.kLeft));
-		//intake.setSpeed(oi.ctrl.getY(Hand.kRight));
 		log();
 	
 	}
@@ -152,12 +155,9 @@ public class Robot extends IterativeRobot {
         System.out.println("Left Encoer Ticks:"   + drive.getLeftDistance());
         System.out.println("Controller 1" + oi.ctrl.getY(Hand.kLeft));
         System.out.println("PID Rotate:" + rotatingLift.getAngle());
+        System.out.println("Angle:" + drive.getAngle());
         SmartDashboard.putNumber("LeftENC" , drive.getLeftDistance());
         SmartDashboard.putNumber("RightENC", drive.getRightDistance());
         SmartDashboard.putNumber("Petentiometer", rotatingLift.getAngle());
-        double why = 20.0;
-        double me = 360.0;
-        double hatehate= why/me;
-        System.out.println("I can't do math: " + (hatehate));
 	}
 }
