@@ -125,14 +125,14 @@ public class Drivetrain extends Subsystem {
      * @return The number of pulses of the right side
      */
     public double getRightDistance() {
-        return rightEncoder.getDistance();
+        return rightEncoder.getDistance() * Constants.distancePerPulse;
     }
     
     /* gets the displacement of the left side
      * @return The number of pulses of the left side
      */
     public double getLeftDistance() {
-        return leftEncoder.getDistance();
+        return leftEncoder.getDistance() * Constants.distancePerPulse;
     }
     
     

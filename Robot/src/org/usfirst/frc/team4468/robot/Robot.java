@@ -9,12 +9,9 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team4468.robot.Commands.Drive.LeftDistance;
-import org.usfirst.frc.team4468.robot.Commands.Manipulators.RotateAngle;
-import org.usfirst.frc.team4468.robot.Commands.Routines.GyroTest;
-import org.usfirst.frc.team4468.robot.Commands.Routines.Run;
+import org.usfirst.frc.team4468.robot.Commands.Drive.StraightDistance;
+import org.usfirst.frc.team4468.robot.Commands.Routines.*;
 import org.usfirst.frc.team4468.robot.Subsystems.*;
-import org.usfirst.frc.team4468.robot.Util.PID;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,8 +21,6 @@ import org.usfirst.frc.team4468.robot.Util.PID;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	
-    public static boolean isTele;
 	
     public static RotatingLift rotatingLift;
     public static Constants    constants;
@@ -52,15 +47,14 @@ public class Robot extends IterativeRobot {
 		shift        = new Shifter();
 		drive        = new Drivetrain();
 		oi           = new OI();
-		runFunction  = new Run();
 		
 		
 		autoChooser = new SendableChooser<CommandGroup>();
-		autonomousCommand = new Run();
-		//liftCommand = new RotateAngle();
-		//liftCommand.start();
 		autoChooser.addDefault("PID Tune", new GyroTest());
-		drive.encoderReset();
+		autoChooser.addObject("Auto Run", new Run());
+		autoChooser.addObject("Straight forward switch", new LineScore());
+		
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
 	/**
@@ -100,8 +94,6 @@ public class Robot extends IterativeRobot {
 			System.out.println("In If Statement");
 			autonomousCommand.start();
 		}
-		
-		isTele = false;
 	}
 
 	/**
@@ -124,10 +116,9 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.free();
 		Scheduler.getInstance().removeAll();
+		
 		drive.encoderReset();
 		drive.gyroReset();
-		
-		isTele = true;
 	}
 
 	/**

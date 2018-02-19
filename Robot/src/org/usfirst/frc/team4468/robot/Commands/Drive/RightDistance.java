@@ -37,7 +37,6 @@ public class RightDistance extends Command {
         System.out.println("Right Error: " + pid.getError());
         System.out.println("Right SetPoint: " + pid.getSetpoint());
         dt.tank(0, pid.calculate(dt.getRightDistance()));
-    		//dt.setRight(1);
     }
 
     /* Make this return true when this Command no longer needs to run execute()

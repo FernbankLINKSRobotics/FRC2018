@@ -28,21 +28,7 @@ public class LeftDistance extends Command {
         pid = new PID(Constants.leftP, Constants.leftI, Constants.lifterD);
         pid.setOutputRange(-1, 1);
         pid.setPerTolerance(1);
-        pid.setPoint(distance);
-        
-           /*
-        PIDOutput pidOut = new PIDOutput() {
-			@Override
-			public void pidWrite(double d) {
-				dt.setLeft(d);
-			}
-		};
-		
-		pid = new PIDController(1, 0, 0, dt.leftEncoder, pidOut);
-		pid.setPercentTolerance(2);
-		pid.setOutputRange(-1, 1);
-		*/
-    		
+        pid.setPoint(distance); 		
     }
     
     protected void initialize() {

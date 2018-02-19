@@ -14,28 +14,16 @@ import edu.wpi.first.wpilibj.PIDOutput;
  * This uses the Pot attached to the rotating arm to move
  * to a specific angle.
  */
-public class RotateAngle extends Command {
+public class HoldingRotate extends Command {
 
     private RotatingLift rl = Robot.rotatingLift;
     private PID pid;
-    //PIDController pid;
-   // private PIDOutput pidOut;
     
     
-    public RotateAngle(double angle) {
+    public HoldingRotate(double angle) {
     		double theta = angle;
     		System.out.println("PID RotateAngle");
-    	
-    		/*PIDController pid;
-        requires(rl);
-    		pidOut = new PIDOutput() {
-			@Override
-			public void pidWrite(double d) {
-				rl.rotate(d);
-			}
-    		}; */
-			
-        
+
         pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD);
         pid.reset();
         
@@ -47,21 +35,12 @@ public class RotateAngle extends Command {
         pid.setPoint(theta);
         System.out.println("setpoint one: " + pid.getSetpoint());
         
-        /*
-        pid = new PIDController(0.005, 0, 0.01, Robot.drive.leftEncoder, pidOut);
-		pid.setPercentTolerance(5);
-		pid.setOutputRange(-1, 1);
-		pid.setInputRange(0, 180);
-		pid.setContinuous(); */
     }
     
     /* Called repeatedly when this Command is scheduled to run
      * (non-Javadoc)
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
-    /*protected void initialize() {
-		pid.enable();
-    } */
     protected void execute() {
     		System.out.println("Executed");
     		rl.rotate(pid.calculate(rl.getAngle()));
@@ -74,15 +53,10 @@ public class RotateAngle extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        if(Robot.isTele == true) {
-    		    return false;
-        } else {
-            return pid.onTarget(rl.getAngle());
-        }
-        //return pid.onTarget(rl.getAngle());
-    		/*boolean isDone = (pid.getError() < .5);
-		SmartDashboard.putBoolean("Distance Reached Yet: ", isDone);
-		return isDone; */
+        return !(Robot.oi.ctrl.getAButton() || 
+                 Robot.oi.ctrl.getBButton() || 
+                 Robot.oi.ctrl.getXButton() || 
+                 Robot.oi.ctrl.getYButton());
     }
 
     /* Called once after isFinished returns true

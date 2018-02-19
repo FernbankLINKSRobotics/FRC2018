@@ -1,15 +1,12 @@
 package org.usfirst.frc.team4468.robot;
 
 import org.usfirst.frc.team4468.robot.Commands.Drive.Shift;
+import org.usfirst.frc.team4468.robot.Commands.Manipulators.HoldingRotate;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.IntakeClamp;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.IntakeSpeed;
-import org.usfirst.frc.team4468.robot.Commands.Manipulators.Rotate;
-import org.usfirst.frc.team4468.robot.Commands.Manipulators.RotateAngle;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -24,6 +21,7 @@ public class OI {
      * a new button is pressed and it ties together the commands and subsystems
      */
     public OI() {
+        /*
     		JoystickButton A = new JoystickButton(ctrl, 1); 
     		JoystickButton Y = new JoystickButton(ctrl, 4); 
     		JoystickButton X = new JoystickButton(ctrl, 3);
@@ -41,41 +39,34 @@ public class OI {
     		RB.whenPressed(new IntakeClamp(Value.kForward));
     		ST.whenPressed(new IntakeSpeed(0.7));
     		BK.whenPressed(new IntakeSpeed(-.7));
-    	
+    	    */
     		
-        /*if (drvr.getTriggerAxis(Hand.kRight) == 1) {
-            new Shift(Value.kForward);
+        if (drvr.getTriggerAxis(Hand.kRight) == 1) {
+            new Shift(Value.kForward).start();
         } else if (drvr.getTriggerAxis(Hand.kLeft) == 1) {
-            new Shift(Value.kReverse);
+            new Shift(Value.kReverse).start();
         }
         
         if (ctrl.getAButtonPressed()) {
-            new RotateAngle(0);
+            new HoldingRotate(0).start();
         } else if (ctrl.getBButtonPressed()) {
-            new RotateAngle(60);
+            new HoldingRotate(60).start();
         } else if (ctrl.getXButtonPressed()) {
-            new RotateAngle(120);
+            new HoldingRotate(120).start();
         } else if (ctrl.getYButtonPressed()) {
-            new RotateAngle(180);
+            new HoldingRotate(140).start();
         }
             
         if (drvr.getBumperPressed(Hand.kRight)) {
-            new IntakeClamp(Value.kForward);
+            new IntakeClamp(Value.kForward).start();
         } else if (drvr.getBumperPressed(Hand.kLeft)) {
-            new IntakeClamp(Value.kReverse);
+            new IntakeClamp(Value.kReverse).start();
         }
         
-        if (ctrl.getTriggerAxis(Hand.kRight) > 5) {
-            new IntakeSpeed(1);
-        } else if (ctrl.getTriggerAxis(Hand.kLeft) < -5 ) {
-            new IntakeSpeed(-1);
+        if (ctrl.getTriggerAxis(Hand.kRight) == 5) {
+            new IntakeSpeed(1).start();
+        } else if (ctrl.getTriggerAxis(Hand.kLeft) == -5 ) {
+            new IntakeSpeed(-1).start();
         }
-        
-        if(drvr.getAButton()) {
-            new Rotate(false);
-        } else if(drvr.getYButton()){
-            new Rotate(true);
-        }
-        */
     }
 }

@@ -12,11 +12,15 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class TeleOp extends Command {
     
+    private boolean isArcade;
+    
     private Drivetrain dt = Robot.drive;
     private OI oi = Robot.oi;
 
-    public TeleOp() {
+    public TeleOp(boolean b) {
         requires(dt);
+        
+        isArcade = b;
     }
     
     /* Called repeatedly when this Command is scheduled to run
@@ -25,7 +29,11 @@ public class TeleOp extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        dt.drive(oi.drvr.getX(Hand.kLeft), -oi.drvr.getY(Hand.kRight));
+        if(isArcade) {
+            dt.arcade(oi.drvr.getX(Hand.kLeft), -oi.drvr.getY(Hand.kRight));
+        } else {
+            dt.tank(oi.drvr.getY(Hand.kLeft), -oi.drvr.getY(Hand.kRight));
+        }
     }
 
     /* It will NEVER end

@@ -33,7 +33,7 @@ public class TurnAngle extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        dt.drive(pid.calculate(dt.getAngle()), 0);
+        dt.arcade(pid.calculate(dt.getAngle()), 0);
     }
 
     /* Make this return true when this Command no longer needs to run execute()
