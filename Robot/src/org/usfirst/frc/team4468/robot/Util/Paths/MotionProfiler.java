@@ -371,23 +371,23 @@ public class MotionProfiler {
 			//recalculating velocity, just in case
 			if (squared<0) {
 				//Clamping
-				returnVelocity = Clamp(Double.NEGATIVE_INFINITY, max_velocity, -1.0*Math.sqrt(-squared));
+				returnVelocity = Clamp(Double.NEGATIVE_INFINITY, max_velocity, -1.0*Math.sqrt(-squared))-limit;
 			}
 			else {
-				returnVelocity = Clamp(Double.NEGATIVE_INFINITY, max_velocity, (Math.sqrt(squared)));
+				returnVelocity = Clamp(Double.NEGATIVE_INFINITY, max_velocity, (Math.sqrt(squared)))-limit;
 			}
 		}
 		else {
 			returnAccel = 0;
 			//velocity should stay the same if acceleration is 0
-			returnVelocity = clampVel[currentIndex];
+			returnVelocity = clampVel[currentIndex]-limit;
 		}
 		
 		//Returning values for a certain x,y pair
 		for (int i=0; i<x_values.length;i++) {
 		    if (x_values[i]==current_x && y_values[i] == current_y) {
 		        currentDistance = distance[i];
-		        currentVelocity = clampVel[i];
+		        currentVelocity = clampVel[i]-limit;
 		        currentAccel = acceleration[i];
 		    }
 		}
