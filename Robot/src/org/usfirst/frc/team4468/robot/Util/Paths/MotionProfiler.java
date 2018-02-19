@@ -44,7 +44,11 @@ public class MotionProfiler {
      * @param yvalues An array of all the y values the robot will cross
      * @param accel_distance The distance allotted for the robot to accelerate and decelerate
      * @param limitingFactor The amount you want to limit the max velocity to
+     * 
+     * ALERT: THIS ONLY WORKS FOR ARRAYS WITH AN EVEN NUMBER .length
+     * 
      */
+	
 	public MotionProfiler(double[] xvalues, double[] yvalues, double acceleration, double max, double limitingFactor, double maxAcceleration) {
 		ta = acceleration;
 		x_values = xvalues;
@@ -168,7 +172,6 @@ public class MotionProfiler {
 		double[] clampVel = new double[x_values.length+1];
 		double[] distance = new double[x_values.length];
 		double[] tempDistance = new double[x_values.length];
-		double[] timedDistance = new double[x_values.length];
 		double[] timeTaken = new double[x_values.length];
 
 		
@@ -201,6 +204,7 @@ public class MotionProfiler {
 		
 		maxVelocities[allValues] = 0;
 		
+		//Making the distance array cumulative
 		for (int i = 0; i< tempDistance.length;i++) {
 			distance[i] = arraySum(tempDistance, i);
 		}
@@ -258,6 +262,7 @@ public class MotionProfiler {
     		for (int i = (allValues-decelIndex); i < (allValues); i++) {
     			//Sets the deceleration values
     			double endDistance = distance[allValues-1]-distance[allValues-decelIndex-1];
+    			//making sure acceleration isn't greater than the max acceleration specified
     			acceleration[i] = (-1.0*Math.pow(maxVelocities[(allValues-decelIndex)],2))/(2*endDistance);
     			if (-acceleration[i]>max_acceleration) {
     				decelIndex++;
@@ -275,6 +280,7 @@ public class MotionProfiler {
     		maxVelocities[i] = Clamp(Double.NEGATIVE_INFINITY, max_velocity, Math.sqrt(Math.pow(maxVelocities[i-1], 2)+2*acceleration[i]*(distance[i]-distance[i-1])));
     	}
     	
+    	//Making sure the CHANGE of acceleration isn't greater than max acceleration specified
     	for (int i=1; i<allValues;i++) {
     		double l=1;
     		if (Math.abs(acceleration[i]-acceleration[i-1])>max_acceleration) {
@@ -285,7 +291,6 @@ public class MotionProfiler {
     		}
     		else {
     			//do nothing	
-    		
     		}
     	}
 		
@@ -314,6 +319,7 @@ public class MotionProfiler {
     	double returnDistance = 0;
     	double returnVelocity = 0;
     	double returnAccel = 0;
+    	//These are for if you wanted to find stuff based on current coordinates, not really used
     	double currentDistance = 0;
     	double currentVelocity = 0;
     	double currentAccel = 0;
@@ -328,7 +334,6 @@ public class MotionProfiler {
 			}
 			else {
 				if (l!=0) {
-					
 					currentIndex = l-1;
 				}
 				else {
@@ -339,7 +344,7 @@ public class MotionProfiler {
 		if (time > arraySum(timeTaken, timeTaken.length-1)) {
 			currentIndex = timeTaken.length-1;
 		}
-		
+		//Clamping velocity values
 		for (int i=0; i<maxVelocities.length; i++) {
     		clampVel[i] = Clamp(Double.NEGATIVE_INFINITY, max_velocity, maxVelocities[i]);
     	}
@@ -363,7 +368,9 @@ public class MotionProfiler {
 			returnAccel = acceleration[currentIndex];
 			//calculating predicted velocity that the robot is currently at based on change in distance covered
 			double squared = 2*returnAccel*velocityChange+Math.pow(clampVel[currentIndex], 2);
+			//recalculating velocity, just in case
 			if (squared<0) {
+				//Clamping
 				returnVelocity = Clamp(Double.NEGATIVE_INFINITY, max_velocity, -1.0*Math.sqrt(-squared));
 			}
 			else {
@@ -390,22 +397,33 @@ public class MotionProfiler {
 		return returnArray;
 	}
 	
+	/**
+     * Calculates velocities, acceleration based on current distance
+     * 
+     * This is probably the function that will be used during autonomous (for the 2D Motion Profiling)
+     * 
+     * @param currentDist The instantaneous distance
+     * 
+     * @return returnArray An array of the current Velocity, acceleration, and total distance that will be covered
+     */
 	public double[] getVelocity(double currentDist) {
+		//Getting max time to get to the end
 		double kale = execute2D(0, 0, 0)[3];
-		//System.out.println("kaleeee: " + kale);
 		double[] kaleDistance = new double[(int)(kale*100)+1];
 		double[] kaleVelocity = new double[(int)(kale*100)+1];
 		double[] kaleAcceleration = new double[(int)(kale*100)+1];
+		//going through time to create some sort of a timeline
 		for (double i=0; i<kale;i=i+.01) {
+			//Adding it to an array
 			kaleDistance[(int) (i*100)] = execute2D(i, 0, 0)[0];
 			kaleVelocity[(int) (i*100)] = execute2D(i, 0, 0)[1];
 			kaleAcceleration[(int) (i*100)] = execute2D(i, 0, 0)[2];
 		}
 		int l =0;
 		int currentIndex=0;
+		//Finding where on the timeline you are based on current distance
+		//utilizing time to find velocity and acceleration
 		for (int i = 0; i < kaleDistance.length; i++) {
-			//finding where in the path the robot currently is based on current time
-			//This is where the array function below is used
 			if (currentDist > kaleDistance[l]) {
 				l++;
 			}
@@ -418,6 +436,7 @@ public class MotionProfiler {
 				}
 			}
 		}
+		//returning the values as well as the target distance to help with debugging
 		double[] returnArray = {kaleVelocity[currentIndex], kaleAcceleration[currentIndex], kaleDistance[kaleDistance.length-2]};
 		return returnArray;
 	}
