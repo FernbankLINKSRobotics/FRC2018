@@ -26,8 +26,8 @@ public class LeftDistance extends Command {
         requires(dt);
         distance = d;
         pid = new PID(Constants.leftP, Constants.leftI, Constants.lifterD);
-        pid.setOutputRange(-1, 1);
-        pid.setPerTolerance(1);
+        pid.setOutputRange(-1.0, 1.0);
+        pid.setPerTolerance(1.0);
         pid.setPoint(distance); 		
     }
     
@@ -44,7 +44,7 @@ public class LeftDistance extends Command {
     		System.out.println("Left Output: " + pid.calculate(dt.getLeftDistance()));
     		System.out.println("Left Error: " + pid.getError());
     		System.out.println("Left SetPoint: " + pid.getSetpoint());
-    		dt.tank(pid.calculate(dt.getLeftDistance()), 0);
+    		dt.tank(pid.calculate(dt.getLeftDistance()), 0.0);
     }
 
     /* Make this return true when this Command no longer needs to run execute()
