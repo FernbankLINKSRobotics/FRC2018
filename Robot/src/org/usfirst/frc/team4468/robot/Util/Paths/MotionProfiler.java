@@ -406,7 +406,7 @@ public class MotionProfiler {
      * 
      * @return returnArray An array of the current Velocity, acceleration, and total distance that will be covered
      */
-	public double[] getVelocity(double currentDist) {
+	public double[] getVelocity(double currentDist, double increment) {
 		//Getting max time to get to the end
 		double kale = execute2D(0, 0, 0)[3];
 		double[] kaleDistance = new double[(int)(kale*100)+1];
@@ -437,7 +437,7 @@ public class MotionProfiler {
 			}
 		}
 		//returning the values as well as the target distance to help with debugging
-		double[] returnArray = {kaleVelocity[currentIndex], kaleAcceleration[currentIndex], kaleDistance[kaleDistance.length-2]};
+		double[] returnArray = {kaleDistance[currentIndex+(int)(increment*100)], kaleVelocity[currentIndex], kaleAcceleration[currentIndex]};
 		return returnArray;
 	}
 	

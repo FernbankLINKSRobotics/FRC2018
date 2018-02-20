@@ -41,6 +41,7 @@ public class AngleRotate extends Command {
      * 
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
+    
     protected void execute(double time) {
         System.out.println("Executed");
         rl.rotate(pid.calculate(onedMotion.execute1D(time)[0]));
