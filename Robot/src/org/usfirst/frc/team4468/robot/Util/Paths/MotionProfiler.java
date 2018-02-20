@@ -70,13 +70,13 @@ public class MotionProfiler {
 	    	double returnAcceleration;
 	    	double returnDistance;
 	    	//calculating acceleration distance considering what portion of the distance cruise velocity will be at
-	    	double accelDistance1 = (Math.pow(v_cruise, 2))/(2*a);
-	    	if (accelDistance1 < (endDistance/2)*(1-(cruiseRatio/2))) {
+	    	double accelDistance1 = (Math.pow(v_cruise, 2))/(2.0*a);
+	    	if (accelDistance1 < (endDistance/2.0)*(1.0-(cruiseRatio/2.0))) {
 	    		//below is only initiated if the acceleration distance allows for allotted cruise distance
 	    		//calculating time taken for each segment
-	    		double timeTakenAD = Math.sqrt((2*accelDistance1)/a);
-	    		double cruiseTime = (endDistance - 2*accelDistance1)/v_cruise;
-	    		totalTime = 2*timeTakenAD + cruiseTime;
+	    		double timeTakenAD = Math.sqrt((2.0*accelDistance1)/a);
+	    		double cruiseTime = (endDistance - 2.0*accelDistance1)/v_cruise;
+	    		totalTime = 2.0*timeTakenAD + cruiseTime;
 	    		
 	    		//returning values based on current time
 	    		if (time <= timeTakenAD) {
@@ -88,7 +88,7 @@ public class MotionProfiler {
 	    			double t = time - timeTakenAD;
 	    			returnDistance = accelDistance1 + t*v_cruise;
 	    			returnVelocity = v_cruise;
-	    			returnAcceleration = 0;
+	    			returnAcceleration = 0.0;
 	    		}
 	    		else {
 	    			//the same properties that go for the acceleration period also go for the deceleration period
@@ -102,10 +102,10 @@ public class MotionProfiler {
 	    		//lowers accel distance to fit the cruise ratio
 	    		double accelDistance2 = endDistance*((1-cruiseRatio)/2);
 	    		//setting a lower cruise velocity to account for the lower accel distance
-	    		double v_cruise1 = Math.sqrt(2*a*accelDistance2);
-	    		double timeTakenAD = Math.sqrt((2*accelDistance2)/a);
+	    		double v_cruise1 = Math.sqrt(2.0*a*accelDistance2);
+	    		double timeTakenAD = Math.sqrt((2.0*accelDistance2)/a);
 	    		double cruiseTime = (endDistance*cruiseRatio)/v_cruise1;
-	    		double totalTimet = timeTakenAD*2 + cruiseTime;
+	    		double totalTimet = timeTakenAD*2.0 + cruiseTime;
 	    		//Using the same calculations as before except with v_cruise1 instead of v_cruise
 	    		if (time <= timeTakenAD) {
 	    			returnDistance = (1.0/2.0)*a*Math.pow(time, 2.0);
@@ -116,7 +116,7 @@ public class MotionProfiler {
 	    			double t = time - timeTakenAD;
 	    			returnDistance = accelDistance2 + t*v_cruise1;
 	    			returnVelocity = v_cruise1;
-	    			returnAcceleration = 0;
+	    			returnAcceleration = 0.0;
 	    		}
 	    		else {
 	    			double t = time - (cruiseTime+timeTakenAD);
@@ -408,16 +408,16 @@ public class MotionProfiler {
      */
 	public double[] getVelocity(double currentDist, double increment) {
 		//Getting max time to get to the end
-		double kale = execute2D(0, 0, 0)[3];
+		double kale = execute2D(0.0, 0.0, 0.0)[3];
 		double[] kaleDistance = new double[(int)(kale*100)+1];
 		double[] kaleVelocity = new double[(int)(kale*100)+1];
 		double[] kaleAcceleration = new double[(int)(kale*100)+1];
 		//going through time to create some sort of a timeline
 		for (double i=0; i<kale;i=i+.01) {
 			//Adding it to an array
-			kaleDistance[(int) (i*100)] = execute2D(i, 0, 0)[0];
-			kaleVelocity[(int) (i*100)] = execute2D(i, 0, 0)[1];
-			kaleAcceleration[(int) (i*100)] = execute2D(i, 0, 0)[2];
+			kaleDistance[(int) (i*100)] = execute2D(i, 0.0, 0.0)[0];
+			kaleVelocity[(int) (i*100)] = execute2D(i, 0.0, 0.0)[1];
+			kaleAcceleration[(int) (i*100)] = execute2D(i, 0.0, 0.0)[2];
 		}
 		int l =0;
 		int currentIndex=0;

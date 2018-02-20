@@ -16,7 +16,7 @@ public class AngleRotate extends Command {
     
     public AngleRotate(double angle) {
         theta = angle;
-        if (angle<0) {
+        if (angle<0.0) {
         	negative = true;
         }
         else {
