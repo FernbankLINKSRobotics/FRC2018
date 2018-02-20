@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class IntakeSpeed extends Command {
     
     private Intake in = Robot.intake;
-    private double speed = 0;
+    private double speed = 0.0;
     
     public IntakeSpeed(double s) {
         requires(in);
