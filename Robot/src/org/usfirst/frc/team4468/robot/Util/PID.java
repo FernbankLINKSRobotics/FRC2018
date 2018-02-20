@@ -76,7 +76,7 @@ public class PID {
      */
     public void setPerTolerance(double percent) {
     	    perTolerance = true;
-    	    the_percent = percent/100;
+    	    the_percent = percent/100.0;
     }
     
     /**
@@ -86,12 +86,12 @@ public class PID {
      */
     public void setAbsTolerance(double distance) {
     	    absTolerance = true;
-    	    the_distance = distance/100;
+    	    the_distance = distance/100.0;
     }
     
     public boolean onTarget(double measure) {
         if(perTolerance) {
-            return Math.abs(measure - target) < Math.abs(target * (the_percent/ 100));
+            return Math.abs(measure - target) < Math.abs(target * (the_percent/ 100.0));
         } else if (absTolerance) {
             return Math.abs(measure - target) < target;
         } else {
@@ -158,31 +158,31 @@ public class PID {
     	    // Setting the tolerance
     	    if (perTolerance) {
     	        // Setting the percent tolerance
-    	        double percentDistance = Math.abs((the_percent/100)*target);
+    	        double percentDistance = Math.abs((the_percent/100.0)*target);
     	        if (Math.abs(previousError)<=percentDistance) {
-    	            error = 0;
+    	            error = 0.0;
     	        } else {
     	            error = target - measure;
             }
     	    } else if (absTolerance) {
     	        // Setting the absolute tolerance
     	        if (Math.abs(previousError)<=the_distance) {
-    	            error = 0;
+    	            error = 0.0;
     	        } else {
     	            error = target - measure;
     	        }
     	    } else if (disabled) {
     	        // Stop moving
-    	        error = 0;
+    	        error = 0.0;
     	    } else {
     	        // Setting the error without any tolerance
     	        error = target - measure;
     	    }
         
         // The operational values
-        double proportional = 0;
-        double integral = 0;
-        double derivative = 0;
+        double proportional = 0.0;
+        double integral = 0.0;
+        double derivative = 0.0;
         errorSum += error;
         double deltaE = previousError-error;
         double deltaT = Timer.getFPGATimestamp() - previousTime;
@@ -211,7 +211,7 @@ public class PID {
         previousError = error; // Set the previous error for the next cycle
         previousTime = Timer.getFPGATimestamp(); // Set the beginning time for the time measured between each output
         // Return
-        returnOutput = output/100;
+        returnOutput = output/100.0;
         if (setRangeO) {
             // Limit to the range if range is set
         	    return Clamp(minRangeO, maxRangeO, returnOutput);
@@ -240,7 +240,7 @@ public class PID {
     }
     
     public void reset() {
-    		target = 0;
+    		target = 0.0;
     }
 }
     

@@ -7,6 +7,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class GyroTest extends CommandGroup {
 
     public GyroTest() {
-        addSequential(new TurnAngle(90));
+        addSequential(new TurnAngle(90.0));
     }
 }

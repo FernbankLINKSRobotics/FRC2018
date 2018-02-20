@@ -22,9 +22,9 @@ public class TurnAngle extends Command {
         theta = t;
             
         pid = new PID(Constants.angleP, Constants.angleI, Constants.angleD);
-        pid.setInputRange(-180, 180);
-        pid.setAbsTolerance(1);
-        pid.setOutputRange(-1, 1);
+        pid.setInputRange(-180.0, 180.0);
+        pid.setAbsTolerance(1.0);
+        pid.setOutputRange(-1.0, 1.0);
         pid.setPoint(theta);
     }
         
@@ -33,7 +33,7 @@ public class TurnAngle extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        dt.arcade(pid.calculate(dt.getAngle()), 0);
+        dt.arcade(pid.calculate(dt.getAngle()), 0.0);
     }
 
     /* Make this return true when this Command no longer needs to run execute()

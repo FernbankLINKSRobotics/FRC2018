@@ -18,8 +18,8 @@ public class StraightDistance extends Command {
         distance = d;
             
         pid = new PID(Constants.lineP, Constants.lineI, Constants.lineD);
-        pid.setOutputRange(-1, 1);
-        pid.setAbsTolerance(500);
+        pid.setOutputRange(-1.0, 1.0);
+        pid.setAbsTolerance(500.0);
         pid.setPoint(distance);
     }
         

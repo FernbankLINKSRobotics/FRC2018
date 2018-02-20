@@ -17,8 +17,8 @@ public class Move extends CommandGroup {
     
     private double[] X = {};
     private double[] Y = {};
-    private double rightDis = 0;
-    private double leftDis = 0;
+    private double rightDis = 0.0;
+    private double leftDis = 0.0;
     
     public Move(double n, Waypoint w, Waypoint ... ws) {
         path = new PathGeneration(w, ws);

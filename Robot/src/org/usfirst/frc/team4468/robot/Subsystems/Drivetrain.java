@@ -44,9 +44,9 @@ public class Drivetrain extends Subsystem {
     private AHRS gyro = new AHRS(Constants.gyroPort);
     
     // Variable Declarations
-    private double leftPrevVel = 0;
-    private double rightPrevVel = 0;
-    private double prevAngularVel = 0;
+    private double leftPrevVel = 0.0;
+    private double rightPrevVel = 0.0;
+    private double prevAngularVel = 0.0;
     
     
     
@@ -148,7 +148,7 @@ public class Drivetrain extends Subsystem {
      * @return the average of two values
      */
     private double ave(double left, double right) {
-        return (left + right) / 2;
+        return (left + right) / 2.0;
     }
     
     

@@ -25,7 +25,7 @@ public class ExpelCube extends Command {
      */
     protected void execute() {
         in.clamp(clamp);
-        in.setSpeed(-1);
+        in.setSpeed(-1.0);
     }
 
     /* Make this return true when this Command no longer needs to run execute()

@@ -22,8 +22,8 @@ public class RightDistance extends Command {
         distance = d;
             
         pid = new PID(Constants.rightP, Constants.rightI, Constants.rightD);
-        pid.setOutputRange(-1, 1);
-        pid.setPerTolerance(1);
+        pid.setOutputRange(-1.0, 1.0);
+        pid.setPerTolerance(1.0);
         pid.setPoint(distance);
     }
         
