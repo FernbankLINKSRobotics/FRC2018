@@ -8,18 +8,20 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class StraightDistance extends Command {
     private double distance;
+    private double tolerance;
     
     private Drivetrain dt = Robot.drive;
     private PID pid;
         
-    public StraightDistance(double d) {
+    public StraightDistance(double d, double tol) {
         System.out.println("PID Right Started");
         requires(dt);
         distance = d;
+        tolerance = tol;
             
         pid = new PID(Constants.lineP, Constants.lineI, Constants.lineD);
         pid.setOutputRange(-1.0, 1.0);
-        pid.setAbsTolerance(500.0);
+        pid.setAbsTolerance(tolerance);
         pid.setPoint(distance);
     }
         
@@ -33,7 +35,7 @@ public class StraightDistance extends Command {
         System.out.println("Line Error: " + pid.getError());
         System.out.println("Line SetPoint: " + pid.getSetpoint());
         System.out.println("Distance: " + dt.getDis());
-        dt.arcade(0, pid.calculate(dt.getDis()));
+        dt.arcade(0.0, pid.calculate(dt.getDis()));
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -42,6 +44,7 @@ public class StraightDistance extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
+        System.out.println("pid target" + pid.onTarget(dt.getDis()));
         return pid.onTarget(dt.getDis());
     }
 
@@ -50,6 +53,7 @@ public class StraightDistance extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#end()
      */
     protected void end() {
+        System.out.println("End");
         dt.stop();
     }
 

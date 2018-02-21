@@ -23,7 +23,7 @@ public class Move extends CommandGroup {
     public Move(double n, Waypoint w, Waypoint ... ws) {
         path = new PathGeneration(w, ws);
         calculatePairs(n, path.getX().size());
-        prof = new MotionProfiler(X, Y, 2, 1, 1); // I REALLY HAVE NO IDEA ABOUT THE ACCEL_DISTANCE
+        prof = new MotionProfiler(X, Y, 2, 1, 1, 1); // I REALLY HAVE NO IDEA ABOUT THE ACCEL_DISTANCE
         
         for(int i=0; i < n-1; i++) {
             double x = i/path.getX().size();

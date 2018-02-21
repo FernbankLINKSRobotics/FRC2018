@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.I2C;
 public class Constants{
     //// System Units
     // General
-	public static double angleOffset = 1066.615;
+	public static double angleOffset = 1082.0;
     public static double weight = 59.0; // Placeholder
     // Wheel
     public static double distanceBetweenWheels = 27.0;
@@ -41,9 +41,9 @@ public class Constants{
 	public static double rightI = 0.0;
 	public static double rightD = 0.0;
 	// Both Sides
-	public static double lineP = 10.0;
-	public static double lineI = 0.0;
-	public static double lineD = 0.0;
+	public static double lineP = 45.0;
+	public static double lineI = 0.01;
+	public static double lineD = 0.01;
 	
 
 	// IO
@@ -65,9 +65,9 @@ public class Constants{
     
     // Gyro
     public static edu.wpi.first.wpilibj.I2C.Port gyroPort = I2C.Port.kOnboard;
-    public static double angleP = 10.0;
-    public static double angleI = 0.0;
-    public static double angleD = 0.0;
+    public static double angleP = 0.8;
+    public static double angleI = 0.01;
+    public static double angleD = 0.012;
     
     // Shifter
     public static int shifterPort1 = 1;

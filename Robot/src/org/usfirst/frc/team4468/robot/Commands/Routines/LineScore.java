@@ -13,7 +13,7 @@ public class LineScore extends CommandGroup {
 
     public LineScore() {
         System.out.println("IN RUN");
-        addSequential(new StraightDistance(-2.5));
+        addSequential(new StraightDistance(-2.75, 0.03));
         addSequential(new AngleRotate(140.0));
         addParallel(new HoldingRotate(140.0));
         addParallel(new IntakeSpeed(-1.0));

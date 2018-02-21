@@ -45,7 +45,7 @@ public class RotatingLift extends Subsystem {
      * @returns the angle in the form of a double
      */
     public double getAngle() {
-        return pot.get()-218.5;
+        return pot.get() - Constants.angleOffset;
     }
 }
 

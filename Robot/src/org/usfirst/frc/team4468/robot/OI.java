@@ -43,7 +43,7 @@ public class OI {
     		LeftMiddle.whenPressed(new IntakeClamp(Value.kReverse));
     		LeftTop.whenPressed(new IntakeClamp(Value.kForward));
     		BottomLeft.whenPressed(new IntakeSpeed(0.7));
-    		Trigger.whenPressed(new IntakeSpeed(-.7));
+    		Trigger.whenPressed(new IntakeSpeed(-.5));
     	    
     		/*
         if (drvr.getTriggerAxis(Hand.kRight) == 1) {

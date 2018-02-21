@@ -98,7 +98,7 @@ public class Drivetrain extends Subsystem {
      * @return The average distance between the motors
      */
     public double getDis() {
-        return ave(leftEncoder.getDistance(), rightEncoder.getDistance());
+        return ave(getLeftDistance(), getRightDistance());
     }
     
     /* Gets the velocity of the robot

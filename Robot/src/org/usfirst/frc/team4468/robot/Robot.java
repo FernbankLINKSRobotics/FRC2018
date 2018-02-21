@@ -2,6 +2,7 @@
 package org.usfirst.frc.team4468.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -10,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team4468.robot.Commands.Drive.StraightDistance;
+import org.usfirst.frc.team4468.robot.Commands.Drive.TurnAngle;
 import org.usfirst.frc.team4468.robot.Commands.Routines.*;
 import org.usfirst.frc.team4468.robot.Subsystems.*;
 
@@ -50,11 +52,12 @@ public class Robot extends IterativeRobot {
 		
 		
 		autoChooser = new SendableChooser<CommandGroup>();
-		autoChooser.addDefault("PID Tune", new GyroTest());
+		autoChooser.addDefault("PID Tune", new Run());
 		autoChooser.addObject("Auto Run", new Run());
 		autoChooser.addObject("Straight forward switch", new LineScore());
 		
 		SmartDashboard.putData("Auto Chooser", autoChooser);
+		//CameraServer.getInstance().startAutomaticCapture("Camera", "/dev/video0");
 	}
 
 	/**
@@ -86,12 +89,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 	    drive.encoderReset();
-		autonomousCommand = autoChooser.getSelected();
-		
-		System.out.println("Starting Auto");
+	    drive.gyroReset();
+		autonomousCommand = autoChooser.getSelected();  //TurnAngle(90);
 		
 		if (autonomousCommand != null) {
-			System.out.println("In If Statement");
+		    System.out.println("Starting Auto");
 			autonomousCommand.start();
 		}
 	}
@@ -102,9 +104,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("LeftENC" , drive.getLeftDistance());
-        SmartDashboard.putNumber("RightENC", drive.getRightDistance());
-        SmartDashboard.putNumber("Gyro", drive.getAngle());
+		//SmartDashboard.putNumber("LeftENC" , drive.getLeftDistance());
+        //SmartDashboard.putNumber("RightENC", drive.getRightDistance());
+        //SmartDashboard.putNumber("Gyro", drive.getAngle());
 	}
 
 	@Override
@@ -145,7 +147,7 @@ public class Robot extends IterativeRobot {
 	//	System.out.println("Right Encoder Ticks:" + drive.getRightDistance());
       //  System.out.println("Left Encoer Ticks:"   + drive.getLeftDistance());
         //System.out.println("Controller 1" + oi.ctrl.getY(Hand.kLeft));
-        System.out.println("PID Rotate:" + rotatingLift.getAngle());
+        //System.out.println("PID Rotate:" + rotatingLift.getAngle());
         //System.out.println("Angle:" + drive.getAngle());
         SmartDashboard.putNumber("LeftENC" , drive.getLeftDistance());
         SmartDashboard.putNumber("RightENC", drive.getRightDistance());

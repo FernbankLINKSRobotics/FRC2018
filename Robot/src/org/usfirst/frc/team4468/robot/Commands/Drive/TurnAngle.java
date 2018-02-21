@@ -13,17 +13,19 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TurnAngle extends Command {
     
     private double theta;
+    private double tolerance;
         
     private Drivetrain dt = Robot.drive;
     private PID pid;
         
-    public TurnAngle(double t) {
+    public TurnAngle(double t, double tol) {
         requires(dt);
         theta = t;
+        tolerance = tol;
             
         pid = new PID(Constants.angleP, Constants.angleI, Constants.angleD);
         pid.setInputRange(-180.0, 180.0);
-        pid.setAbsTolerance(1.0);
+        pid.setAbsTolerance(tolerance);
         pid.setOutputRange(-1.0, 1.0);
         pid.setPoint(theta);
     }
@@ -33,6 +35,8 @@ public class TurnAngle extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
+        System.out.println("Angle:" + dt.getAngle());
+        System.out.println("Motor Out:" + pid.calculate(dt.getAngle()));
         dt.arcade(pid.calculate(dt.getAngle()), 0.0);
     }
 
@@ -42,6 +46,7 @@ public class TurnAngle extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
+        System.out.println("Isfinished: " + pid.onTarget(dt.getAngle()));
         return pid.onTarget(dt.getAngle());
     }
 
@@ -50,6 +55,7 @@ public class TurnAngle extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#end()
      */
     protected void end() {
+        System.out.println("END");
         dt.stop();
     }
 
@@ -59,6 +65,7 @@ public class TurnAngle extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#interrupted()
      */
     protected void interrupted() {
+        System.out.println("INTER");
         dt.stop();
     }
 }

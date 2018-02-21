@@ -53,10 +53,10 @@ public class HoldingRotate extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return !(Robot.oi.ctrl.getAButton() || 
-                 Robot.oi.ctrl.getBButton() || 
-                 Robot.oi.ctrl.getXButton() || 
-                 Robot.oi.ctrl.getYButton());
+        return !(Robot.oi.ctrl.getRawButton(5) ||
+                Robot.oi.ctrl.getRawButton(2) ||
+                Robot.oi.ctrl.getRawButton(3) ||
+                Robot.oi.ctrl.getRawButton(4));
     }
 
     /* Called once after isFinished returns true
