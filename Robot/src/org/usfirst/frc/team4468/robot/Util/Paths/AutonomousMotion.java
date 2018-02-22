@@ -11,6 +11,12 @@ public class AutonomousMotion {
 	static double limit;
 	static double max_acceleration;
 	
+	/**
+     * Constructor for calling the 2d motion profiling
+     * 
+     * @param inc The increment, which is how far in advance you want to call the distance value
+     * @param all of the parameters that are used in the 2d motion profiling constructor
+     */
 	public AutonomousMotion(double inc, double[] xvalues, double[] yvalues, double acceleration, double max, double limitingFactor, double maxAcceleration) {
 		//increment can be accurate up to three decimal places
 		//the increment is measured in distance
@@ -26,9 +32,40 @@ public class AutonomousMotion {
 	
 	private static MotionProfiler motionProfile = new MotionProfiler(x_values, y_values, accel, max_velocity, limit, max_acceleration);
 	
-	//returning distance at current distance+the increment (how far in the future the distance is
-	public double execute(double distance) {
-		return motionProfile.getVelocity(distance, increment)[0];
+	/**
+     * Calling the motion profiling function in regard to current distance
+     * 
+     * @param distance Current distance
+     * @return value Distance at current distance+the increment
+     */
+	public double executeDistance(double distance) {
+		double value = motionProfile.getVelocity(distance, increment)[0]-distance;
+		if (value<0.0) {
+			value = 0.0;
+		}
+		else {
+			//do nothing
+		}
+		return value;
+	}
+	
+	/**
+     * Calling the motion profiling function in regard to current time
+     * 
+     * @param distance Current distance
+     * @param time Current time
+     * @return value Distance based on current time
+     */
+	public double executeTime(double time, double distance) {
+		//This does not require the increment, but it does require distance
+		double value = motionProfile.execute2D(time, 0.0, 0.0)[0]-distance;
+		if (value<0.0) {
+			value = 0.0;
+		}
+		else {
+			//do nothing
+		}
+		return value;
 	}
 
 	

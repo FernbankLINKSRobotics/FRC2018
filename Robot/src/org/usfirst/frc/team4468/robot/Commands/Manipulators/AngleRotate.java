@@ -44,8 +44,8 @@ public class AngleRotate extends Command {
     
     protected void execute(double time) {
         System.out.println("Executed");
-        rl.rotate(pid.calculate(onedMotion.execute1D(time)[0]));
-        System.out.println("Calculated Distance:" + pid.calculate(onedMotion.execute1D(time)[0]));
+        rl.rotate(pid.calculate(onedMotion.execute1D(time)[0]-rl.getAngle()));
+        System.out.println("Calculated Distance:" + pid.calculate(onedMotion.execute1D(time)[0]-rl.getAngle()));
     }
 
     /*
