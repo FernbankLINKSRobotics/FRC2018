@@ -13,8 +13,9 @@ public class AngleRotate extends Command {
 	boolean negative;
     private RotatingLift rl = Robot.rotatingLift;
     private PID pid;
+    double inc;
     
-    public AngleRotate(double angle) {
+    public AngleRotate(double angle, double increment) {
         theta = angle;
         if (angle<0.0) {
         	negative = true;
@@ -32,6 +33,7 @@ public class AngleRotate extends Command {
         System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
         System.out.println("setpoint one: " + pid.getSetpoint());
+        inc = increment;
     }
     
     private MotionProfiler onedMotion = new MotionProfiler(3.0, 5.0, 3.0, 0.1, theta, negative);
@@ -42,10 +44,17 @@ public class AngleRotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     
-    protected void execute(double time) {
+    protected void execute() {
         System.out.println("Executed");
-        rl.rotate(pid.calculate(onedMotion.execute1D(time)[0]-rl.getAngle()));
-        System.out.println("Calculated Distance:" + pid.calculate(onedMotion.execute1D(time)[0]-rl.getAngle()));
+        double value;
+        if (onedMotion.getDistance(rl.getAngle(), inc)[0]>theta) {
+        	value = 0.0;
+        }
+        else {
+        	value = onedMotion.getDistance(rl.getAngle(), inc)[0]-rl.getAngle();
+        }
+        rl.rotate(pid.calculate(value));
+        System.out.println("Calculated Distance:" + pid.calculate(value));
     }
 
     /*

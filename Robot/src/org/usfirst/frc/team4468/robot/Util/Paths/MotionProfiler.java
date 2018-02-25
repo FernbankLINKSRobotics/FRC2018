@@ -66,7 +66,7 @@ public class MotionProfiler {
 	public double[] execute1D(double time) {
 	    	// The cruise ratio is the MINIMUM distance needed to be at cruise velocity
 	    	double returnVelocity;
-	    	double totalTime;
+	    	double total;
 	    	double returnAcceleration;
 	    	double returnDistance;
 	    	//calculating acceleration distance considering what portion of the distance cruise velocity will be at
@@ -76,7 +76,8 @@ public class MotionProfiler {
 	    		//calculating time taken for each segment
 	    		double timeTakenAD = Math.sqrt((2.0*accelDistance1)/a);
 	    		double cruiseTime = (endDistance - 2.0*accelDistance1)/v_cruise;
-	    		totalTime = 2.0*timeTakenAD + cruiseTime;
+	    		double totalTime = 2.0*timeTakenAD + cruiseTime;
+	    		total = totalTime;
 	    		
 	    		//returning values based on current time
 	    		if (time <= timeTakenAD) {
@@ -106,6 +107,7 @@ public class MotionProfiler {
 	    		double timeTakenAD = Math.sqrt((2.0*accelDistance2)/a);
 	    		double cruiseTime = (endDistance*cruiseRatio)/v_cruise1;
 	    		double totalTimet = timeTakenAD*2.0 + cruiseTime;
+	    		total = totalTimet;
 	    		//Using the same calculations as before except with v_cruise1 instead of v_cruise
 	    		if (time <= timeTakenAD) {
 	    			returnDistance = (1.0/2.0)*a*Math.pow(time, 2.0);
@@ -128,10 +130,58 @@ public class MotionProfiler {
 	    	if (negative) {
 	    		returnVelocity = returnVelocity * -1;
 	    	}
+	    	double distanceR;
+	    	if (returnDistance>endDistance) {
+	    		distanceR = endDistance;
+	    	}
+	    	else {
+	    		distanceR = returnDistance;
+	    	}
 	    	//returning the current distance, velocity, and acceleration
-	    	double[] array = {returnDistance, returnVelocity, returnAcceleration};
+	    	double[] array = {distanceR, returnVelocity, returnAcceleration, total};
 	    	return array;
 	    }
+	
+	/**
+     * Calculates velocities, acceleration based on current distance
+     * 
+     * This is probably the function that will be used during autonomous (for the 2D Motion Profiling)
+     * 
+     * @param currentDist The instantaneous angle
+     * @param increment How far in the future to pull the angle
+     * 
+     * @return returnArray An array of the next angle, velocity, acceleration, and total angle that will be covered
+     */
+	public double[] getDistance(double currentDist, double increment) {
+		double kale = execute1D(0.0)[3];
+		double[] kaleDistance = new double[(int)(kale*100)+1];
+		double[] kaleVelocity = new double[(int)(kale*100)+1];
+		double[] kaleAcceleration = new double[(int)(kale*100)+1];
+		for (double i=0; i<kale;i=i+.01) {
+			kaleDistance[(int) (i*100)] = execute1D(i)[0];
+			kaleVelocity[(int) (i*100)] = execute1D(i)[1];
+			kaleAcceleration[(int) (i*100)] = execute1D(i)[2];
+		}
+		int l =0;
+		int currentIndex=0;
+		for (int i = 0; i < kaleDistance.length; i++) {
+			//finding where in the path the robot currently is based on current time
+			//This is where the array function below is used
+			if (currentDist > kaleDistance[l]) {
+				l++;
+			}
+			else {
+				if (l!=0) {
+					currentIndex = l-1;
+				}
+				else {
+					currentIndex = 0;
+				}
+			}
+		}
+		double[] returnArray = {kaleDistance[currentIndex+(int)(increment*100)], kaleVelocity[currentIndex], kaleAcceleration[currentIndex], kaleDistance[kaleDistance.length-2]};
+		return returnArray;
+	}
 	
 	/**
      * Calculates values depending on the curvature of a three-point arc
@@ -282,16 +332,23 @@ public class MotionProfiler {
     	
     	//Making sure the CHANGE of acceleration isn't greater than max acceleration specified
     	for (int i=1; i<allValues;i++) {
-    		double l=1;
-    		if (Math.abs(acceleration[i]-acceleration[i-1])>max_acceleration) {
-    			l=l+1;
-    			for (int k=i; k<(l+1); k++) {
-    				acceleration[k] = ((acceleration[i]-acceleration[i-1])/l)+acceleration[k-1];
+    		double check;
+    		if (acceleration[i]<acceleration[i-1]) {
+    			check = Math.abs(acceleration[i-1]-acceleration[i]);
+    		}
+    		else {
+    			check = Math.abs(acceleration[i]-acceleration[i-1]);
+    		}
+    		if (check>max_acceleration) {
+    			for (int k=i; k<(i+1); k++) {
+    				acceleration[k] = (check/i)-acceleration[k-1];
     			}
     		}
     		else {
     			//do nothing	
+    		
     		}
+
     	}
 		
     	//Setting time
@@ -403,8 +460,9 @@ public class MotionProfiler {
      * This is probably the function that will be used during autonomous (for the 2D Motion Profiling)
      * 
      * @param currentDist The instantaneous distance
+     * @param increment How far in the future to pull the distance
      * 
-     * @return returnArray An array of the current Velocity, acceleration, and total distance that will be covered
+     * @return returnArray An array of the next distance, velocity, acceleration, and total distance that will be covered
      */
 	public double[] getVelocity(double currentDist, double increment) {
 		//Getting max time to get to the end
@@ -437,7 +495,7 @@ public class MotionProfiler {
 			}
 		}
 		//returning the values as well as the target distance to help with debugging
-		double[] returnArray = {kaleDistance[currentIndex+(int)(increment*100)], kaleVelocity[currentIndex], kaleAcceleration[currentIndex]};
+		double[] returnArray = {kaleDistance[currentIndex+(int)(increment*100)], kaleVelocity[currentIndex], kaleAcceleration[currentIndex], kaleDistance[kaleDistance.length-2]};
 		return returnArray;
 	}
 	

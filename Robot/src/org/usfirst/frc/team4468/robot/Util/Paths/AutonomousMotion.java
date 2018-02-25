@@ -39,12 +39,16 @@ public class AutonomousMotion {
      * @return value Distance at current distance+the increment
      */
 	public double executeDistance(double distance) {
-		double value = motionProfile.getVelocity(distance, increment)[0]-distance;
-		if (value<0.0) {
+		double value;
+		double check = motionProfile.getVelocity(distance, increment)[0]-distance;
+		if (check<0.0) {
+			value = 0.0;
+		}
+		else if ((check+distance)>motionProfile.getVelocity(0.0, 0.0)[3]) {
 			value = 0.0;
 		}
 		else {
-			//do nothing
+			value = check;
 		}
 		return value;
 	}
@@ -58,12 +62,16 @@ public class AutonomousMotion {
      */
 	public double executeTime(double time, double distance) {
 		//This does not require the increment, but it does require distance
-		double value = motionProfile.execute2D(time, 0.0, 0.0)[0]-distance;
-		if (value<0.0) {
+		double check = motionProfile.execute2D(time, 0.0, 0.0)[0]-distance;
+		double value;
+		if (check<0.0) {
+			value = 0.0;
+		}
+		else if ((check+distance)>motionProfile.getVelocity(0.0, 0.0)[3]) {
 			value = 0.0;
 		}
 		else {
-			//do nothing
+			value = check;
 		}
 		return value;
 	}
