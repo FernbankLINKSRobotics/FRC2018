@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team4468.robot.Commands.Drive.StraightDistance;
 import org.usfirst.frc.team4468.robot.Commands.Drive.TurnAngle;
+import org.usfirst.frc.team4468.robot.Commands.Manipulators.AngleRotate;
 import org.usfirst.frc.team4468.robot.Commands.Routines.*;
 import org.usfirst.frc.team4468.robot.Subsystems.*;
 
@@ -31,6 +32,7 @@ public class Robot extends IterativeRobot {
 	public static Shifter      shift;
 	public static OI           oi;
 	public static Run runFunction;
+	public static AngleRotate angleRotate;
 	
 	public static double theta;
 	
@@ -51,13 +53,14 @@ public class Robot extends IterativeRobot {
 		oi           = new OI();
 		
 		
+		
 		autoChooser = new SendableChooser<CommandGroup>();
 		autoChooser.addDefault("PID Tune", new Run());
 		autoChooser.addObject("Auto Run", new Run());
 		autoChooser.addObject("Straight forward switch", new LineScore());
 		
 		SmartDashboard.putData("Auto Chooser", autoChooser);
-		//CameraServer.getInstance().startAutomaticCapture("Camera", "/dev/video0");
+		CameraServer.getInstance().startAutomaticCapture("Camera", "/dev/video0");
 	}
 
 	/**
@@ -88,14 +91,19 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		
+		Scheduler.getInstance().removeAll();
+		
 	    drive.encoderReset();
 	    drive.gyroReset();
-		autonomousCommand = autoChooser.getSelected();  //TurnAngle(90);
+		autonomousCommand = autoChooser.getSelected(); 
 		
 		if (autonomousCommand != null) {
 		    System.out.println("Starting Auto");
 			autonomousCommand.start();
 		}
+		
+		//angleRotate = new AngleRotate(-140.0, -.01);
 	}
 
 	/**
@@ -116,7 +124,7 @@ public class Robot extends IterativeRobot {
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		if (autonomousCommand != null)
-			autonomousCommand.free();
+			autonomousCommand.cancel();
 		Scheduler.getInstance().removeAll();
 		
 		drive.encoderReset();

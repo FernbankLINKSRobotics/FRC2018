@@ -28,7 +28,7 @@ public class AngleRotate extends Command {
         pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD);
         pid.reset();
         pid.setOutputRange(-1.0, 1.0);
-        pid.setPerTolerance(.5);
+        pid.setPerTolerance(.75);
 
         System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
@@ -45,13 +45,16 @@ public class AngleRotate extends Command {
      */
     
     protected void execute() {
+    	
         System.out.println("Executed");
         double value;
         if (onedMotion.getDistance(rl.getAngle(), inc)[0]>theta) {
-        	value = 0.0;
+        	value = rl.getAngle();
+        	System.out.println("We out jere");
         }
         else {
         	value = onedMotion.getDistance(rl.getAngle(), inc)[0]-rl.getAngle();
+        	System.out.println("value: " + value);
         }
         rl.rotate(pid.calculate(value));
         System.out.println("Calculated Distance:" + pid.calculate(value));

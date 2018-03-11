@@ -91,10 +91,10 @@ public class PID {
     
     public boolean onTarget(double measure) {
         if(perTolerance) {
-            System.out.println("per tol: " + (Math.abs(measure - target) < Math.abs(target * (the_percent/ 100))));
+            //System.out.println("per tol: " + (Math.abs(measure - target) < Math.abs(target * (the_percent/ 100))));
             return Math.abs(measure - target) < Math.abs(target * (the_percent /100));
         } else if (absTolerance) {
-            System.out.println("abs tol: " + (Math.abs(measure - target) < the_distance));
+            //System.out.println("abs tol: " + (Math.abs(measure - target) < the_distance));
             return Math.abs(measure - target) < the_distance;
         } else {
             throw new IllegalArgumentException("Please set a tolerance");

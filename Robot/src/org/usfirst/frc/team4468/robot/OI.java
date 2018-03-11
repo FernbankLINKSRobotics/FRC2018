@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4468.robot;
 
 import org.usfirst.frc.team4468.robot.Commands.Drive.Shift;
+import org.usfirst.frc.team4468.robot.Commands.Manipulators.AngleRotate;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.ExpelCube;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.HoldingRotate;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.IntakeClamp;
@@ -36,10 +37,10 @@ public class OI {
     		JoystickButton BottomLeft = new JoystickButton(ctrl, 8);
     		JoystickButton LeftMiddle = new JoystickButton(ctrl, 7);
     		
-    		BottomButton.whenPressed(new HoldingRotate(-10.0));
-    		CenterButton.whenPressed(new HoldingRotate(-140.0));
-    		LeftButton.whenPressed(new HoldingRotate(-120.0));
-    		RightButton.whenPressed(new HoldingRotate(-60.0));	
+    		BottomButton.whenPressed(new AngleRotate(-10.0, -.01));
+    		CenterButton.whenPressed(new AngleRotate(-140.0, -.01));
+    		LeftButton.whenPressed(new AngleRotate(-100.0, -.01));
+    		RightButton.whenPressed(new AngleRotate(-60.0, -.01));	
     		LeftMiddle.whenPressed(new IntakeClamp(Value.kReverse));
     		LeftTop.whenPressed(new IntakeClamp(Value.kForward));
     		BottomLeft.whenPressed(new IntakeSpeed(0.7));

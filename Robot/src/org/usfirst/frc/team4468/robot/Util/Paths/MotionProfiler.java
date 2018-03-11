@@ -153,34 +153,55 @@ public class MotionProfiler {
      * @return returnArray An array of the next angle, velocity, acceleration, and total angle that will be covered
      */
 	public double[] getDistance(double currentDist, double increment) {
-		double kale = execute1D(0.0)[3];
-		double[] kaleDistance = new double[(int)(kale*100)+1];
-		double[] kaleVelocity = new double[(int)(kale*100)+1];
-		double[] kaleAcceleration = new double[(int)(kale*100)+1];
-		for (double i=0; i<kale;i=i+.01) {
-			kaleDistance[(int) (i*100)] = execute1D(i)[0];
-			kaleVelocity[(int) (i*100)] = execute1D(i)[1];
-			kaleAcceleration[(int) (i*100)] = execute1D(i)[2];
+		double help = execute1D(0.0)[3];
+		double kale;
+		if (help>0.0) {
+			kale=help;
 		}
-		int l =0;
-		int currentIndex=0;
-		for (int i = 0; i < kaleDistance.length; i++) {
+		else {
+			kale =0.0;
+		}
+		if (kale == 0.0) {
+			double[] returnArray = {0.0,0.0,0.0,0.0};
+			return returnArray;
+		}
+		else {
+			double[] kaleDistance = new double[(int)(kale*100)+1];
+			double[] kaleVelocity = new double[(int)(kale*100)+1];
+			double[] kaleAcceleration = new double[(int)(kale*100)+1];
+			for (double i=0; i<kale;i=i+.01) {
+				kaleDistance[(int) (i*100)] = execute1D(i)[0];
+				kaleVelocity[(int) (i*100)] = execute1D(i)[1];
+				kaleAcceleration[(int) (i*100)] = execute1D(i)[2];
+			}
+			int l =0;
+			int currentIndex=0;
+				for (int i = 0; i < kaleDistance.length; i++) {
 			//finding where in the path the robot currently is based on current time
 			//This is where the array function below is used
-			if (currentDist > kaleDistance[l]) {
-				l++;
-			}
-			else {
-				if (l!=0) {
-					currentIndex = l-1;
+					if (currentDist > kaleDistance[l]) {
+						l++;
+					}
+					else {
+						if (l!=0) {
+							currentIndex = l-1;
+						}
+						else {
+							currentIndex = 0;
+						}
+					}
+				}
+				int index;
+				if ((currentIndex+(int)(increment*100))>((kale*100)+1)) {
+					index = (int) (kale*100);
 				}
 				else {
-					currentIndex = 0;
+					index = (currentIndex+(int)(increment*100));
 				}
-			}
+				double[] returnArray = {kaleDistance[index], kaleVelocity[currentIndex], kaleAcceleration[currentIndex], kaleDistance[kaleDistance.length-2]};
+				return returnArray;
 		}
-		double[] returnArray = {kaleDistance[currentIndex+(int)(increment*100)], kaleVelocity[currentIndex], kaleAcceleration[currentIndex], kaleDistance[kaleDistance.length-2]};
-		return returnArray;
+		
 	}
 	
 	/**

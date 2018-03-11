@@ -2,7 +2,9 @@ package org.usfirst.frc.team4468.robot.Commands.Drive;
 
 import org.usfirst.frc.team4468.robot.Constants;
 import org.usfirst.frc.team4468.robot.Robot;
+import org.usfirst.frc.team4468.robot.Commands.Manipulators.AngleRotate;
 import org.usfirst.frc.team4468.robot.Subsystems.Drivetrain;
+import org.usfirst.frc.team4468.robot.Subsystems.RotatingLift;
 import org.usfirst.frc.team4468.robot.Util.PID;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -12,6 +14,9 @@ public class StraightDistance extends Command {
     
     private Drivetrain dt = Robot.drive;
     private PID pid;
+    
+    private RotatingLift rl = Robot.rotatingLift;
+    private AngleRotate angleRotate;
         
     public StraightDistance(double d, double tol) {
         System.out.println("PID Right Started");
@@ -23,6 +28,7 @@ public class StraightDistance extends Command {
         pid.setOutputRange(-1.0, 1.0);
         pid.setAbsTolerance(tolerance);
         pid.setPoint(distance);
+        angleRotate =new AngleRotate(rl.getAngle(), 0.0);
     }
         
     /* Called repeatedly when this Command is scheduled to run
@@ -30,11 +36,13 @@ public class StraightDistance extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
+    		/*
         System.out.println("Inside Line execute");
         System.out.println("Line Output: " + pid.calculate(dt.getLeftDistance()));
         System.out.println("Line Error: " + pid.getError());
         System.out.println("Line SetPoint: " + pid.getSetpoint());
         System.out.println("Distance: " + dt.getDis());
+        */
         dt.arcade(0.0, pid.calculate(dt.getDis()));
     }
 
@@ -45,6 +53,7 @@ public class StraightDistance extends Command {
      */
     protected boolean isFinished() {
         System.out.println("pid target" + pid.onTarget(dt.getDis()));
+        System.out.println("Is Done");
         return pid.onTarget(dt.getDis());
     }
 
