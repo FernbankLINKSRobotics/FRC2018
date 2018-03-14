@@ -15,8 +15,8 @@ public class StraightDistance extends Command {
     private Drivetrain dt = Robot.drive;
     private PID pid;
     
-    private RotatingLift rl = Robot.rotatingLift;
-    private AngleRotate angleRotate;
+    //private RotatingLift rl = Robot.rotatingLift;
+    //private AngleRotate angleRotate;
         
     public StraightDistance(double d, double tol) {
         System.out.println("PID Right Started");
@@ -28,7 +28,7 @@ public class StraightDistance extends Command {
         pid.setOutputRange(-1.0, 1.0);
         pid.setAbsTolerance(tolerance);
         pid.setPoint(distance);
-        angleRotate =new AngleRotate(rl.getAngle(), 0.0);
+        //angleRotate =new AngleRotate(rl.getAngle(), 0.0);
     }
         
     /* Called repeatedly when this Command is scheduled to run
@@ -52,8 +52,8 @@ public class StraightDistance extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        System.out.println("pid target" + pid.onTarget(dt.getDis()));
-        System.out.println("Is Done");
+        System.out.println("pid target " + pid.onTarget(dt.getDis()));
+        //System.out.println("Is Done");
         return pid.onTarget(dt.getDis());
     }
 

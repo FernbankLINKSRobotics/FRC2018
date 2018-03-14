@@ -23,7 +23,6 @@ public class IntakeSpeed extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-    		System.out.println("WE HEREE");
         in.setSpeed(speed);
     }
 

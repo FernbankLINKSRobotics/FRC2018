@@ -7,6 +7,7 @@ import org.usfirst.frc.team4468.robot.Subsystems.RotatingLift;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 
@@ -44,7 +45,7 @@ public class HoldingRotate extends Command {
     protected void execute() {
     		System.out.println("Executed");
     		rl.rotate(pid.calculate(rl.getAngle()));
-    		System.out.println("Calculated Distance:" + pid.calculate(rl.getAngle()));
+    		//System.out.println("Calculated Distance:" + pid.calculate(rl.getAngle()));
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -53,10 +54,14 @@ public class HoldingRotate extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return !(Robot.oi.ctrl.getRawButton(5) ||
-                Robot.oi.ctrl.getRawButton(2) ||
-                Robot.oi.ctrl.getRawButton(3) ||
-                Robot.oi.ctrl.getRawButton(4));
+    	if(DriverStation.getInstance().isAutonomous()) {
+    		return false;
+    	} else {
+    		return !(Robot.oi.ctrl.getRawButton(5) ||
+    				 Robot.oi.ctrl.getRawButton(2) ||
+    				 Robot.oi.ctrl.getRawButton(3) ||
+    				 Robot.oi.ctrl.getRawButton(4));
+        }
     }
 
     /* Called once after isFinished returns true

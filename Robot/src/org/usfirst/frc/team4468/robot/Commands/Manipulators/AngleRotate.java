@@ -47,17 +47,16 @@ public class AngleRotate extends Command {
     protected void execute() {
     	
         System.out.println("Executed");
-        double value;
+        /*double value;
         if (onedMotion.getDistance(rl.getAngle(), inc)[0]>theta) {
         	value = rl.getAngle();
-        	System.out.println("We out jere");
         }
         else {
         	value = onedMotion.getDistance(rl.getAngle(), inc)[0]-rl.getAngle();
         	System.out.println("value: " + value);
-        }
-        rl.rotate(pid.calculate(value));
-        System.out.println("Calculated Distance:" + pid.calculate(value));
+        }*/
+        rl.rotate(pid.calculate(rl.getAngle()));
+        System.out.println("Calculated Distance:" + pid.calculate(rl.getAngle()));
     }
 
     /*

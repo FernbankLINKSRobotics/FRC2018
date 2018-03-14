@@ -55,7 +55,7 @@ public class Robot extends IterativeRobot {
 		
 		
 		autoChooser = new SendableChooser<CommandGroup>();
-		autoChooser.addDefault("PID Tune", new Run());
+		autoChooser.addDefault("PID Tune", new LineScore());
 		autoChooser.addObject("Auto Run", new Run());
 		autoChooser.addObject("Straight forward switch", new LineScore());
 		
