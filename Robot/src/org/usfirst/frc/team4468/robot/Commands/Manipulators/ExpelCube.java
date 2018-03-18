@@ -14,7 +14,7 @@ public class ExpelCube extends Command {
     
     private Value clamp;
     
-    public ExpelCube(Value v) {
+    public ExpelCube(Value v, double speed) {
         requires(in);
         clamp = v;
     }
@@ -23,9 +23,9 @@ public class ExpelCube extends Command {
      * (non-Javadoc)
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
-    protected void execute() {
+    protected void execute(double speed) {
         in.clamp(clamp);
-        in.setSpeed(-1.0);
+        in.setSpeed(speed);
     }
 
     /* Make this return true when this Command no longer needs to run execute()

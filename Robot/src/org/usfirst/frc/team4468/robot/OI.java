@@ -37,6 +37,7 @@ public class OI {
     		JoystickButton BottomLeft = new JoystickButton(ctrl, 8);
     		JoystickButton LeftMiddle = new JoystickButton(ctrl, 7);
     		
+    		
     		BottomButton.whenPressed(new HoldingRotate(-10.0));
     		CenterButton.whenPressed(new HoldingRotate(-140.0));
     		LeftButton.whenPressed(new AngleRotate(-100.0, -.01));
@@ -44,8 +45,8 @@ public class OI {
     		LeftMiddle.whenPressed(new IntakeClamp(Value.kReverse));
     		LeftTop.whenPressed(new IntakeClamp(Value.kForward));
     		BottomLeft.whenPressed(new IntakeSpeed(0.7));
-    		Trigger.whenPressed(new IntakeSpeed(-.5));
-    	    
+    		Trigger.whenPressed(new ExpelCube(Value.kReverse, ctrl.getRawAxis(3)));
+    		
     		/*
         if (drvr.getTriggerAxis(Hand.kRight) == 1) {
             new Shift(Value.kForward).start();
