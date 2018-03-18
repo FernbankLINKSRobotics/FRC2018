@@ -15,19 +15,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class CenterAuto extends CommandGroup {
 
 	
-    public CenterAuto() {
+    public CenterAuto(double mult) {
         addSequential(new IntakeClamp(Value.kReverse));
-        addParallel(new AngleRotate(-140.0,20));
+        addParallel(new AngleRotate(-140.0,20, 0.1));
         addSequential(new StraightDistance(-1.0, .5)); //initial movement forward
-        if(DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'L') {
-        		addSequential(new TurnAngle(-90, 5)); //Assuming turning left is negative, -90 degrees
-        		addSequential(new StraightDistance(-1.0, .05)); //-1.0 is distance from center to middle of our colored side of switch
-        		addSequential(new TurnAngle(90,5)); //Assuming turning right is positive, +90 degrees
-        } else if (DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'R') {
-        		addSequential(new TurnAngle(90,5));
-        		addSequential(new StraightDistance(-1.0, 5));
-        		addSequential(new TurnAngle(90,5));
-        }
+        addSequential(new TurnAngle(mult*90, 5)); //Assuming turning left is negative, -90 degrees
+        addSequential(new StraightDistance(-1.0, .05)); //-1.0 is distance from center to middle of our colored side of switch
+        addSequential(new TurnAngle(-mult*90,5)); //Assuming turning right is positive, +90 degrees
         addSequential(new StraightDistance(-3.00, .5)); 
         //Assuming distance needed to travel left is 3 (distance from alliance wall to switch is 4.27m according to game manual)
         addSequential(new IntakeSpeed(-.7));
@@ -35,21 +29,4 @@ public class CenterAuto extends CommandGroup {
     }
 }
 
-
-/* SUDO CODE
- * Clamo
- * Move to angle x
- * Go froward -x distance (starting facing wall)
-if(DriverStation.getdata.charat(0) == 'L' {
-turn negative -90
-go y distance
-turn positive 90
-go forward z distance
-deposit cube (unclamo, rev intake)
-} else if(all that stuff prior except for right) {
-do everything again only for right side
-}
-
-
-see line 48 of OI.java for another change
- */
+// Right auto is a positive mult and the op for left

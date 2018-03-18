@@ -157,7 +157,7 @@ public class MotionProfiler {
 		double[] kaleDistance = new double[(int)(kale*100)+1];
 		double[] kaleVelocity = new double[(int)(kale*100)+1];
 		double[] kaleAcceleration = new double[(int)(kale*100)+1];
-		for (double i=0; i<kale;i=i+.01) {
+		for (double i=0; i<kale;i+=.01) {
 			kaleDistance[(int) (i*100)] = execute1D(i)[0];
 			kaleVelocity[(int) (i*100)] = execute1D(i)[1];
 			kaleAcceleration[(int) (i*100)] = execute1D(i)[2];
