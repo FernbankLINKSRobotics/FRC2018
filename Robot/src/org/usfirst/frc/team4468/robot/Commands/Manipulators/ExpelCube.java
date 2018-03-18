@@ -13,17 +13,18 @@ public class ExpelCube extends Command {
     private Intake in = Robot.intake;
     
     private Value clamp;
-    
-    public ExpelCube(Value v, double speed) {
+    private double speed = 0.0;
+    public ExpelCube(Value v, double s) {
         requires(in);
         clamp = v;
+        speed = s;
     }
     
     /* Called repeatedly when this Command is scheduled to run
      * (non-Javadoc)
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
-    protected void execute(double speed) {
+    protected void execute() {
         in.clamp(clamp);
         in.setSpeed(speed);
     }
