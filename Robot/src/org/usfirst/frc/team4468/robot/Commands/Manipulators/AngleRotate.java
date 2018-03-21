@@ -15,25 +15,25 @@ public class AngleRotate extends Command {
     private PID pid;
     double inc;
     
-    public AngleRotate(double angle, double increment) {
+    public AngleRotate(double angle, double tol) {
         theta = angle;
         if (angle<0.0) {
-        	negative = true;
+        		negative = true;
         }
         else {
-        	negative = false;
+        		negative = false;
         }
         System.out.println("PID RotateAngle");
 
         pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD);
         pid.reset();
         pid.setOutputRange(-1.0, 1.0);
-        pid.setPerTolerance(.75);
+        pid.setPerTolerance(tol);
 
         System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
-        System.out.println("setpoint one: " + pid.getSetpoint());
-        inc = increment;
+        //System.out.println("setpoint one: " + pid.getSetpoint());
+        //inc = increment;
     }
     
     private MotionProfiler onedMotion = new MotionProfiler(3.0, 5.0, 3.0, 0.1, theta, negative);

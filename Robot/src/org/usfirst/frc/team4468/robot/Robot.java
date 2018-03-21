@@ -2,7 +2,10 @@
 package org.usfirst.frc.team4468.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -36,6 +39,15 @@ public class Robot extends IterativeRobot {
 	
 	public static double theta;
 	
+	private boolean doingSide;
+	private boolean doingRun;
+	private boolean doingSwitch;
+	
+	private boolean isRight;
+	private boolean isCenter;
+	private boolean isLeft;
+	//private boolean isSide;
+	
 	SendableChooser<CommandGroup> autoChooser;
 	Command autonomousCommand;
 	
@@ -53,14 +65,22 @@ public class Robot extends IterativeRobot {
 		oi           = new OI();
 		
 		
-		
+		/*
 		autoChooser = new SendableChooser<CommandGroup>();
 		autoChooser.addDefault("PID Tune", new LineScore());
 		autoChooser.addObject("Auto Run", new Run());
 		autoChooser.addObject("Straight forward switch", new LineScore());
+		*/
 		
-		SmartDashboard.putData("Auto Chooser", autoChooser);
-		CameraServer.getInstance().startAutomaticCapture("Camera", "/dev/video0");
+		SmartDashboard.putBoolean("doingLine", doingSwitch);
+		SmartDashboard.putBoolean("doingSide", doingSide);
+		SmartDashboard.putBoolean("doingRun", doingRun);
+		SmartDashboard.putBoolean("isLeft", isLeft);
+		SmartDashboard.putBoolean("isRight", isRight);
+		SmartDashboard.putBoolean("isCenter", isCenter);
+		//SmartDashboard.putData("Auto Chooser", autoChooser);
+		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture("Camera", "/dev/video0");
+		cam.setVideoMode(VideoMode.PixelFormat.kMJPEG, 256, 144, 30);
 	}
 
 	/**
@@ -96,12 +116,33 @@ public class Robot extends IterativeRobot {
 		
 	    drive.encoderReset();
 	    drive.gyroReset();
-		autonomousCommand = autoChooser.getSelected(); 
-		
-		if (autonomousCommand != null) {
-		    System.out.println("Starting Auto");
-			autonomousCommand.start();
-		}
+	    if(SmartDashboard.getBoolean("doingRun", false)) {
+	    	new Run().start();
+	    } else if (SmartDashboard.getBoolean("doingSide", false) 
+	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'R' 
+	    		&& SmartDashboard.getBoolean("isRight", false)) {
+	    	new RightDeposit().start();
+	    } else if (SmartDashboard.getBoolean("doingSide", false) 
+	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'L' 
+	    		&& SmartDashboard.getBoolean("isLeft", false)) {
+	    	new LeftDeposit().start();
+	    } else if (SmartDashboard.getBoolean("doingSwitch", false) 
+	    		&& SmartDashboard.getBoolean("isLeft", false) 
+	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='L') {
+	    	new LineScore().start();
+	    } else if (SmartDashboard.getBoolean("doingSwitch", false) 
+	    		&& SmartDashboard.getBoolean("isRight", false) 
+	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='R') {
+	    	new LineScore().start();
+	    } else if (SmartDashboard.getBoolean("isCenter", false) 
+	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='L') {
+	    	new CenterAuto(-1).start();
+	    } else if (SmartDashboard.getBoolean("isCenter", false) 
+	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='R') {
+	    	new CenterAuto(1).start();
+	    } else {
+	    	new Run().start();
+	    }
 		
 		//angleRotate = new AngleRotate(-140.0, -.01);
 	}
