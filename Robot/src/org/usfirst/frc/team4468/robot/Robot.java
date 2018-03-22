@@ -136,10 +136,10 @@ public class Robot extends IterativeRobot {
 	    	new LineScore().start();
 	    } else if (SmartDashboard.getBoolean("isCenter", false) 
 	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='L') {
-	    	new CenterAuto(-1).start();
+	    	new CenterAuto().start();
 	    } else if (SmartDashboard.getBoolean("isCenter", false) 
 	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='R') {
-	    	new CenterAuto(1).start();
+	    	new CenterAuto().start();
 	    } else {
 	    	new Run().start();
 	    }
