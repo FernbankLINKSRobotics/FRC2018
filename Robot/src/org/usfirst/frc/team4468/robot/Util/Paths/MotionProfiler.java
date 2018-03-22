@@ -1,5 +1,31 @@
 package org.usfirst.frc.team4468.robot.Util.Paths;
 
+
+/*THESE ARE THE COORDINATES
+ * static double[] xvalues = {
+			0,
+			0.0254,
+			0.0762,
+			0.4572,
+			0.80645,
+			1.143,
+			1.362075,
+			1.520825,
+			1.597025
+	};
+	static double[] yvalues = {
+			0,
+			0.4064,
+			0.688975,
+			1.057275,
+			1.400175,
+			1.755775,
+			2.066925,
+			2.5019,
+			3.01625
+	};
+ */
+
 public class MotionProfiler {
 	double endDistance;
 	double v_cruise;
@@ -19,7 +45,7 @@ public class MotionProfiler {
 	boolean left_two;
 	boolean back_two;
 	
-	double robot_width = .1;
+	double robot_width = .6;
 	
 	
 	/**
@@ -238,97 +264,152 @@ public class MotionProfiler {
 		double y_den = (onecompa*twocompb)-(twocompa*onecompb);
 		double y = y_num/y_den;
 		
-		double radius_right;
-		double radius_left;
-		boolean short_right;
-		double radius_short = Math.hypot((x_current-x), (y_current-y))-(robot_width/2.0);
-		double radius_long = Math.hypot((x_current-x), (y_current-y))+(robot_width/2.0);
-		double distance_right;
-		double distance_left;
-		double chord_length_one_left;
-		double chord_length_two_left;
-		double chord_length_one_right;
-		double chord_length_two_right;
-		if (Math.abs(x_curve-x_inter)>Math.abs(y_curve-y_inter)) {
-			if (x_curve>x_inter) {
-				chord_length_one_left = (Math.hypot(x_curve-x_current, y_curve-y_current))-robot_width;
-				chord_length_two_left = Math.hypot(x_end-x_curve, y_end-y_curve)-robot_width;
-				chord_length_one_right = (Math.hypot(x_curve-x_current, y_curve-y_current))+robot_width;
-				chord_length_two_right = Math.hypot(x_end-x_curve, y_end-y_curve)+robot_width;
-				short_right= false;
-			}
-			else {
-				chord_length_one_left = (Math.hypot(x_curve-x_current, y_curve-y_current))+robot_width;
-				chord_length_two_left = Math.hypot(x_end-x_curve, y_end-y_curve)+robot_width;
-				chord_length_one_right = (Math.hypot(x_curve-x_current, y_curve-y_current))-robot_width;
-				chord_length_two_right = Math.hypot(x_end-x_curve, y_end-y_curve)-robot_width;
-				short_right = true;
-			}
+		double[] vector_curve = {(x_curve-x), (y_curve-y)};
+		double[] vector_current = {(x_current-x), (y_current-y)};
+		double[] vector_end = {(x_end-x), (y_end-y)};
+		double[] vector_horizontal = {5, 0};
+		double angle_current;
+		double angle_curve;
+		double angle_end;
+		double test2 = Math.acos((vector_curve[0]*vector_horizontal[0]+vector_curve[1]*vector_horizontal[1])/(Math.sqrt(Math.pow(vector_curve[0], 2)+Math.pow(vector_curve[1], 2))*Math.sqrt(Math.pow(vector_horizontal[0], 2)+Math.pow(vector_horizontal[1], 2))));
+		double test1 = Math.acos((vector_current[0]*vector_horizontal[0]+vector_current[1]*vector_horizontal[1])/(Math.sqrt(Math.pow(vector_current[0], 2)+Math.pow(vector_current[1], 2))*Math.sqrt(Math.pow(vector_horizontal[0], 2)+Math.pow(vector_horizontal[1], 2))));
+		double test3 = Math.acos((vector_end[0]*vector_horizontal[0]+vector_end[1]*vector_horizontal[1])/(Math.sqrt(Math.pow(vector_end[0], 2)+Math.pow(vector_end[1], 2))*Math.sqrt(Math.pow(vector_horizontal[0], 2)+Math.pow(vector_horizontal[1], 2))));
+		if (test1>(Math.PI/2)) {
+			//angle_current = Math.PI-test1;
+			//System.out.println("here");
+			angle_current = Math.PI-test1;
+		} else {
+			angle_current = test1;
+		} if (test2>(Math.PI/2)) {
+			angle_curve = Math.PI-test2;
+			//System.out.println("here");
+		} else {
+			angle_curve = test2;
+		} if (test3>(Math.PI/2)) {
+			angle_end = Math.PI-test3;
+			//System.out.println("here");
+		} else {
+			angle_end = test3;
+		}
+		double x_reduce_current = (robot_width/2.0)*Math.sin(angle_current);
+		double y_reduce_current;
+		if (Math.pow((robot_width/2.0), 2)-Math.pow(x_reduce_current, 2)<0) {
+			y_reduce_current = -Math.sqrt(Math.abs(Math.pow((robot_width/2.0), 2)-Math.pow(x_reduce_current, 2)));
+		} else {
+			y_reduce_current = Math.sqrt(Math.pow((robot_width/2.0), 2)-Math.pow(x_reduce_current, 2));
+		}
+		double x_reduce_curve = (robot_width/2.0)*Math.sin(angle_curve);
+		double y_reduce_curve;
+		if (Math.pow((robot_width/2.0), 2)-Math.pow(x_reduce_curve, 2)<0) {
+			y_reduce_curve = -Math.sqrt(Math.abs(Math.pow((robot_width/2.0), 2)-Math.pow(x_reduce_curve, 2)));
+		} else {
+			y_reduce_curve = Math.sqrt(Math.pow((robot_width/2.0), 2)-Math.pow(x_reduce_curve, 2));
+		}
+		double x_reduce_end = (robot_width/2.0)*Math.sin(angle_end);
+		double y_reduce_end;
+		if (Math.pow((robot_width/2.0), 2)-Math.pow(x_reduce_end, 2)<0) {
+			y_reduce_end = -Math.sqrt(Math.abs(Math.pow((robot_width/2.0), 2)-Math.pow(x_reduce_end, 2)));
+		} else {
+			y_reduce_end = Math.sqrt(Math.pow((robot_width/2.0), 2)-Math.pow(x_reduce_end, 2));
+		}
+		double ax_rt;
+		double ay_rt;
+		double bx_rt;
+		double by_rt;
+		double cx_rt;
+		double cy_rt;
+		double ax_lf;
+		double ay_lf;
+		double bx_lf;
+		double by_lf;
+		double cx_lf;
+		double cy_lf;
+		//y inc and x inc
+		if (y_end>y_current && x_end>x_current) {
+			//System.out.println(angle_current*(180/Math.PI) +  ", " + angle_curve*(180/Math.PI) + ", " + angle_end*(180/Math.PI));
+			//subtract x, add y for left
+			ax_lf = ax-x_reduce_current;
+			ay_lf = ay+y_reduce_current;
+			bx_lf = bx-x_reduce_curve;
+			by_lf = by+y_reduce_curve;
+			cx_lf = cx-x_reduce_end;
+			cy_lf = cy+y_reduce_end;
+			//opposite for right
+			ax_rt = ax+x_reduce_current;
+			ay_rt = ay-y_reduce_current;
+			bx_rt = bx+x_reduce_curve;
+			by_rt = by-y_reduce_curve;
+			cx_rt = cx+x_reduce_end;
+			cy_rt = cy-y_reduce_end;
+		}
+		//y inc and x dec
+		else if (y_end>y_current && x_current>x_end) {
+			ax_lf = ax-x_reduce_current;
+			ay_lf = ay-y_reduce_current;
+			bx_lf = bx-x_reduce_curve;
+			by_lf = by-y_reduce_curve;
+			cx_lf = cx-x_reduce_end;
+			cy_lf = cy-y_reduce_end;
+			//opposite for right
+			ax_rt = ax+x_reduce_current;
+			ay_rt = ay+y_reduce_current;
+			bx_rt = bx+x_reduce_curve;
+			by_rt = by+y_reduce_curve;
+			cx_rt = cx+x_reduce_end;
+			cy_rt = cy+y_reduce_end;
+		}
+		//y dec and x inc
+		else if (y_current>y_end && x_end>x_current) {
+			ax_lf = ax+x_reduce_current;
+			ay_lf = ay+y_reduce_current;
+			bx_lf = bx+x_reduce_curve;
+			by_lf = by+y_reduce_curve;
+			cx_lf = cx+x_reduce_end;
+			cy_lf = cy+y_reduce_end;
+			//opposite for right
+			ax_rt = ax-x_reduce_current;
+			ay_rt = ay-y_reduce_current;
+			bx_rt = bx-x_reduce_curve;
+			by_rt = by-y_reduce_curve;
+			cx_rt = cx-x_reduce_end;
+			cy_rt = cy-y_reduce_end;
+		}
+		else if (y_current>y_end && x_current>x_end) {
+			ax_lf = ax+x_reduce_current;
+			ay_lf = ay-y_reduce_current;
+			bx_lf = bx+x_reduce_curve;
+			by_lf = by-y_reduce_curve;
+			cx_lf = cx+x_reduce_end;
+			cy_lf = cy-y_reduce_end;
+			//opposite for right
+			ax_rt = ax-x_reduce_current;
+			ay_rt = ay+y_reduce_current;
+			bx_rt = bx-x_reduce_curve;
+			by_rt = by+y_reduce_curve;
+			cx_rt = cx-x_reduce_end;
+			cy_rt = cy+y_reduce_end;
 		}
 		else {
-			if (y_curve>y_inter) {
-				chord_length_one_left = (Math.hypot(x_curve-x_current, y_curve-y_current))-robot_width;
-				chord_length_two_left = Math.hypot(x_end-x_curve, y_end-y_curve)-robot_width;
-				chord_length_one_right = (Math.hypot(x_curve-x_current, y_curve-y_current))+robot_width;
-				chord_length_two_right = Math.hypot(x_end-x_curve, y_end-y_curve)+robot_width;
-				short_right= false;
-			}
-			else {
-				chord_length_one_left = (Math.hypot(x_curve-x_current, y_curve-y_current))+robot_width;
-				chord_length_two_left = Math.hypot(x_end-x_curve, y_end-y_curve)+robot_width;
-				chord_length_one_right = (Math.hypot(x_curve-x_current, y_curve-y_current))-robot_width;
-				chord_length_two_right = Math.hypot(x_end-x_curve, y_end-y_curve)-robot_width;
-				short_right = true;
-			}
+			System.out.println("change coordinates");
+			ax_lf = ax;
+			ay_lf = ay;
+			bx_lf = bx;
+			by_lf = by;
+			cx_lf = cx;
+			cy_lf = cy;
+			//opposite for right
+			ax_rt = ax;
+			ay_rt = ay;
+			bx_rt = bx;
+			by_rt = by;
+			cx_rt = cx;
+			cy_rt = cy;
 		}
-		
-		if (short_right) {
-			radius_right = radius_short;
-			radius_left = radius_long;
-		}
-		else {
-			radius_right = radius_long;
-			radius_left = radius_short;
-		}
-		
-		//RIGHT
-		double angle_one_right = Math.acos(((2*Math.pow(radius_right, 2))-Math.pow(chord_length_one_right, 2))/(2*Math.pow(radius_right, 2)));
-			//(2.0*radius*Math.asin(chord_length_one/(2.0*radius)))/(circ);
-		double angle_two_right = Math.acos(((2*Math.pow(radius_right, 2))-Math.pow(chord_length_two_right, 2))/(2*Math.pow(radius_right, 2)));
-		double distance_one_right = angle_one_right*radius_right;
-		double distance_two_right = angle_two_right*radius_right;
-		distance_right = distance_one_right+distance_two_right;
-		//LEFT
-		double angle_one_left = Math.acos(((2*Math.pow(radius_left, 2))-Math.pow(chord_length_one_left, 2))/(2*Math.pow(radius_left, 2)));
-		//(2.0*radius*Math.asin(chord_length_one/(2.0*radius)))/(circ);
-		double angle_two_left = Math.acos(((2*Math.pow(radius_left, 2))-Math.pow(chord_length_two_left, 2))/(2*Math.pow(radius_left, 2)));
-		double distance_one_left = angle_one_left*radius_left;
-		double distance_two_left = angle_two_left*radius_left;
-		distance_left = distance_one_left+distance_two_left;
-		double maxVelocity_right = Math.sqrt(radius_right*9.81);
-		double maxVelocity_left = Math.sqrt(radius_left*9.81);
-		
-		
-		/*if (x_curve>x_current) {
-			left_one = false;
-		} else {
-			left_one = true;
-		} if (y_curve>y_current) {
-			back_one = false;
-		} else {
-			back_two = true;
-		} if (x_end>x_curve) {
-			left_two = true;
-		} else {
-			left_two = false;
-		} if (y_end>y_curve) {
-			back_two = true;
-		} else {
-			back_two = false;
-		}*/
-		
-		
-		
+		double distance_right = form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt)[0];
+		//System.out.println(ax_lf + ", " + ay_lf + ", " + bx_lf + ", " + by_lf + ", " + cx_lf + ", " + cy_lf);
+		double maxVelocity_right = form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt)[1];
+		double distance_left = form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf)[0];
+		double maxVelocity_left = form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf)[1];
 		double[] returnArray = {maxVelocity_right, maxVelocity_left, distance_right, distance_left};
 		return returnArray;
 
@@ -348,6 +429,8 @@ public class MotionProfiler {
 		double[] acceleration_right = new double[x_values.length+1];
 		double[] maxVelocities_left = new double[x_values.length+1];
 		double[] maxVelocities_right = new double[x_values.length+1];
+		double[] actualmax_left = new double[x_values.length+1];
+		double[] actualmax_right = new double[x_values.length+1];
 		double[] clampVel_left = new double[x_values.length+1];
 		double[] clampVel_right = new double[x_values.length+1];
 		double[] distance_left = new double[x_values.length];
@@ -365,46 +448,38 @@ public class MotionProfiler {
 				//Sets the max velocity according to the next two points
 				//Limit the max velocity by the limiting factor so one side of the robot doesn't go more than max speed
 				if (i < allValues-1) {
-					maxVelocities_left[i+1] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[1]-limit));
-					maxVelocities_right[i+1] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit));
+					actualmax_left[i+1] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[1]-limit));
+					actualmax_right[i+1] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit));
 					//Shows distance that WAS accomplished, why we add +1 to i
 					tempDistance_left[i+1] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[3])/2;
 					tempDistance_right[i+1] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[2])/2;
 					if (i < (allValues-2)) {
-						maxVelocities_left[i] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[1]-limit));
-						maxVelocities_right[i] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit));
+						actualmax_left[i] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[1]-limit));
+						actualmax_right[i] = Clamp(0, max_velocity, (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[0]-limit));
 						tempDistance_left[i] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[3])/2;
 						tempDistance_right[i] = (getMaxVelocity(x_values[i], y_values[i], x_values[i+1], y_values[i+1], x_values[i+2], y_values[i+2])[2])/2;
 					}
 					//Use if statements so we don't get an error about array size
 					else {
-						maxVelocities_left[i] = Clamp(0, max_velocity, getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[1]);
-						maxVelocities_right[i] = Clamp(0, max_velocity, getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[0]);
+						actualmax_left[i] = Clamp(0, max_velocity, getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[1]);
+						actualmax_right[i] = Clamp(0, max_velocity, getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[0]);
 						tempDistance_left[i] = (getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[3])/2;
 						tempDistance_right[i] = (getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[2])/2;
 					}
 				}
 				else {
-					maxVelocities_left[i] = Clamp(0, max_velocity, getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[1]);
-					maxVelocities_right[i] = Clamp(0, max_velocity, getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[0]);
+					actualmax_left[i] = Clamp(0, max_velocity, getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[1]);
+					actualmax_right[i] = Clamp(0, max_velocity, getMaxVelocity(x_values[i-2], y_values[i-2], x_values[i-1], y_values[i-1], x_values[i], y_values[i])[0]);
 				}
-				maxVelocities_left[allValues]=0;
-				maxVelocities_right[allValues]=0;
-				
+				actualmax_left[allValues]=0;
+				actualmax_right[allValues]=0;
+				tempDistance_left[allValues-1] = (getMaxVelocity(x_values[allValues-3], y_values[allValues-3], x_values[allValues-2], y_values[allValues-2], x_values[allValues-1], y_values[allValues-1])[3])/2;
+				tempDistance_right[allValues-1] = (getMaxVelocity(x_values[allValues-3], y_values[allValues-3], x_values[allValues-2], y_values[allValues-2], x_values[allValues-1], y_values[allValues-1])[2])/2;
 				
 		}
-
-		double max_left = 0.0;
-		double max_right = 0.0;
-    	for (int i=0; i<allValues;i++) {
-    		if (maxVelocities_left[i]>max_left && maxVelocities_left[i]<max_velocity) {
-    			max_left = maxVelocities_left[i];
-    		}
-    		if (maxVelocities_right[i]>max_right && maxVelocities_right[i]<max_velocity) {
-    			max_right = maxVelocities_right[i];
-    		}
-    	}
 		
+		
+    
 		//Making the distance array cumulative
 		for (int i = 0; i< tempDistance_left.length;i++) {
 			distance_left[i] = arraySum(tempDistance_left, i);
@@ -414,14 +489,14 @@ public class MotionProfiler {
 		//Sets acceleration depending on if two velocities are different
 		//Acceleration period will most likely happen once every three points
 		for (int i = 1; i < x_values.length; i++) {
-			if (maxVelocities_left[i-1] != maxVelocities_left[i]) {
+			if (actualmax_left[i-1] != actualmax_left[i]) {
 				double tdistance = distance_left[i]-distance_left[i-1];
-				acceleration_left[i-1] = Clamp(Double.NEGATIVE_INFINITY, max_acceleration, (Math.pow(maxVelocities_left[i], 2)-Math.pow(maxVelocities_left[i-1], 2))/(2*tdistance));
+				acceleration_left[i-1] = Clamp(Double.NEGATIVE_INFINITY, max_acceleration, (Math.pow(actualmax_left[i], 2)-Math.pow(actualmax_left[i-1], 2))/(2*tdistance));
 				//acceleration is set for the current to the next point
 			}
-			if (maxVelocities_right[i-1] != maxVelocities_right[i]) {
+			if (actualmax_right[i-1] != actualmax_right[i]) {
 				double tdistance = distance_right[i]-distance_right[i-1];
-				acceleration_right[i-1] = Clamp(Double.NEGATIVE_INFINITY, max_acceleration, (Math.pow(maxVelocities_right[i], 2)-Math.pow(maxVelocities_right[i-1], 2))/(2*tdistance));
+				acceleration_right[i-1] = Clamp(Double.NEGATIVE_INFINITY, max_acceleration, (Math.pow(actualmax_right[i], 2)-Math.pow(actualmax_right[i-1], 2))/(2*tdistance));
 				//acceleration is set for the current to the next point
 			}
 		}
@@ -440,23 +515,36 @@ public class MotionProfiler {
 			double v_left = Math.sqrt(2*ta*distance_left[y]);
 			double v_right = Math.sqrt(2*ta*distance_right[z]);
 			//Checking if that velocity is significantly less than the maxVelocity set for that distance
-			if (v_left < maxVelocities_left[y]) {
+			if (v_left < actualmax_left[y]) {
 				y = y + 1;
 			}
 			else {
 				//Subtracting one because we don't want the accelerated velocity to be OVER max velocity
-				accelIndex_left = y-1;
+				if (accelIndex_left<=((allValues+1)/2.0)) {
+					accelIndex_left = z-1;
+				} else {
+					accelIndex_left = (int)(allValues/2.0);
+				}
 			}
-			if (v_right < maxVelocities_right[z]) {
+			if (v_right < actualmax_right[z]) {
 				z = z + 1;
 			}
 			else {
 				//Subtracting one because we don't want the accelerated velocity to be OVER max velocity
-				accelIndex_right = z-1;
+				if (accelIndex_right<=((allValues+1)/2.0)) {
+					accelIndex_right = z-1;
+				} else {
+					accelIndex_right = (int)(allValues/2.0);
+				}
 			}
 		}
+		
+		
+		
+    	
 		if (accelIndex_left==0 || accelIndex_right==0) {
-			System.out.println("lower distance between points or increase acceleration");
+			//System.out.println(maxVelocities_left[1] + ", " + (Math.sqrt(2*ta*distance_left[1])));
+			System.out.println("lower distance between points or lower acceleration");
 		}  
 		//SETTING ACCELERATION
 		for (int i = 0; i < (accelIndex_left+1); i++) {
@@ -475,6 +563,10 @@ public class MotionProfiler {
 				//do nothing
 			}
 		}
+		maxVelocities_right[0]=0;
+		maxVelocities_left[0]=0;
+		double max_left = Math.sqrt(2*acceleration_left[0]*(distance_left[accelIndex_left]));
+		double max_right = Math.sqrt(2*acceleration_right[0]*(distance_right[accelIndex_right]));
 		
 		
 		//The velocities set below will override those previously set in the maxVelocities array based on acceleration, effectively clamping them
@@ -485,206 +577,97 @@ public class MotionProfiler {
     	
     	//SETTING DECELERATION
     	//We want this to be an overapproximation instead of an underapproximation so it fully goes to 0
-    	int decelIndex_left= accelIndex_left+1;
-    	int decelIndex_right= accelIndex_right+1;
-    	for (int j=0; j<allValues; j++) {
-    		for (int i = (allValues-decelIndex_left); i < (allValues); i++) {
-    			//Sets the deceleration values
-    			double endDistance = distance_left[allValues-1]-distance_left[allValues-decelIndex_left-1];
-    			//making sure acceleration isn't greater than the max acceleration specified
-    			acceleration_left[i] = (-1.0*Math.pow(maxVelocities_left[(allValues-decelIndex_left)],2))/(2*endDistance);
-    			if (-acceleration_left[i]>max_acceleration) {
-    				decelIndex_left++;
+		int decelIndex_left= (int)(allValues/2.0);
+    	int decelIndex_right= (int)(allValues/2.0);
+    	double testing_left = (-Math.pow(max_left, 2))/(2*(distance_left[allValues-1]-distance_left[accelIndex_left]));
+    	double yellow_left=.1;
+    	boolean scuse = false;
+    	double[] test_accel_left = new double[allValues];
+    	if (-testing_left>max_acceleration) {
+    		for (int m=0; m<1000; m++) {
+    			for (int i=0; i<(accelIndex_left);i++) {
+    				if (!scuse) {
+    					test_accel_left[i] = acceleration_left[i]-yellow_left;
+    				}
+    			}
+    			double max_left_test = Math.sqrt(2*test_accel_left[0]*(distance_left[accelIndex_left]));
+    			double decel_test = (-Math.pow(max_left_test, 2))/(2*(distance_left[allValues-1]-distance_left[accelIndex_left+1]));
+    			if (-decel_test>max_acceleration) {
+    				yellow_left = yellow_left+.01;
     			}
     			else {
-    				//do nothing
+    				scuse = true;
+    				for (int h=0; h<(accelIndex_left); h++) {
+    					acceleration_left[h] = test_accel_left[0];
+    					
+    				}
+    				for (int h=accelIndex_left+1; h<allValues;h++) {
+    					acceleration_left[h] = decel_test;
+    				}
+    				acceleration_left[accelIndex_left] = 0;
     			}
     		}
-    		for (int i = (allValues-decelIndex_right); i < (allValues); i++) {
-    			//Sets the deceleration values
-    			double endDistance = distance_right[allValues-1]-distance_right[allValues-decelIndex_right-1];
-    			//making sure acceleration isn't greater than the max acceleration specified
-    			acceleration_right[i] = (-1.0*Math.pow(maxVelocities_right[(allValues-decelIndex_right)],2))/(2*endDistance);
-    			if (-acceleration_right[i]>max_acceleration) {
-    				decelIndex_right++;
+    	}
+    	double testing_right = (-Math.pow(max_right, 2))/(2*(distance_right[allValues-1]-distance_right[accelIndex_right]));
+    	double yellow_right=.1;
+    	boolean yum = false;;
+    	double[] test_accel_right = new double[allValues];
+    	if (-testing_right>max_acceleration) {
+    		for (int m=0; m<1000; m++) {
+    			for (int i=0; i<(accelIndex_right);i++) {
+    				if (!yum) {
+    					test_accel_right[i] = acceleration_right[i]-yellow_right;
+    				}
+    			}
+    			double max_right_test = Math.sqrt(2*test_accel_right[0]*(distance_right[accelIndex_right]));
+    			double decel_test = (-Math.pow(max_right_test, 2))/(2*(distance_right[allValues-1]-distance_right[accelIndex_right+1]));
+    			if (-decel_test>max_acceleration) {
+    				yellow_right = yellow_right+.01;
     			}
     			else {
-    				//do nothing
+    				yum= true;
+    				for (int h=0; h<(accelIndex_right); h++) {
+    					acceleration_right[h] = test_accel_right[h];
+    				}
+    				for (int h=accelIndex_right+1; h<allValues;h++) {
+    					acceleration_right[h] = decel_test;
+    				}
+    				acceleration_right[accelIndex_right] = 0;
+    				
     			}
     		}
     	}
-
     	
     	
-    	//Changes the current velocity during the deceleration period
-    	if ((allValues-decelIndex_left)==0) {
-    		decelIndex_left = decelIndex_left-1;
+    	
+    	maxVelocities_left[0]=0;
+    	maxVelocities_right[0]=0;
+    	for (int i=1; i<allValues;i++) {
+    		maxVelocities_left[i] = Math.sqrt(Math.pow(maxVelocities_left[i-1], 2)+2*acceleration_left[i-1]*(distance_left[i]-distance_left[i-1]));
+    		
     	}
-    	if ((allValues-decelIndex_right)==0) {
-    		decelIndex_right = decelIndex_right-1;
-    	}
-    	for (int i = (allValues-decelIndex_left-1); i < (allValues); i++) {
+    	
+    	for (int i = 1; i < (allValues); i++) {
     		maxVelocities_left[i] = Clamp(Double.NEGATIVE_INFINITY, max_left, Math.sqrt(Math.pow(maxVelocities_left[i-1], 2)+2*acceleration_left[i-1]*(distance_left[i]-distance_left[i-1])));
-    		//System.out.println(maxVelocities[i]);
+    		
     	}
-    	for (int i = (allValues-decelIndex_right-1); i < (allValues); i++) {
+    	for (int i =1; i < (allValues); i++) {
     		maxVelocities_right[i] = Clamp(Double.NEGATIVE_INFINITY, max_right, Math.sqrt(Math.pow(maxVelocities_right[i-1], 2)+2*acceleration_right[i-1]*(distance_right[i]-distance_right[i-1])));
-    		//System.out.println(maxVelocities[i]);
+    	}
+    	if (maxVelocities_right[allValues-1]<0) {
+    		//do nothing
+    	} else {
+    		acceleration_right[allValues-1] = (-Math.pow(maxVelocities_right[allValues-2], 2))/(2*(distance_right[allValues-1]-distance_right[allValues-2]));
+    		maxVelocities_right[allValues-1] = 0;
+    	}
+    	if (maxVelocities_left[allValues-1]<0) {
+    		//do nothing
+    	} else {
+    		acceleration_left[allValues-1] = (-Math.pow(maxVelocities_left[allValues-2], 2))/(2*(distance_left[allValues-1]-distance_left[allValues-2]));
+    		maxVelocities_left[allValues-1] = 0;
     	}
     	
-    	
-    	//Making sure the CHANGE of acceleration isn't greater than max acceleration specified
-    	for (int i=1; i<allValues;i++) {
-    		double check_left = acceleration_left[i]-acceleration_left[i-1];
-    		
-    		if (Math.abs(check_left)>max_acceleration) {
-    			int h=i-1;
-    			boolean hm = false;
-    			for (int m=0; m<allValues;m++) {
-    				for (int b=(h); b<(i+1);b++) {
-    					acceleration_left[b] = check_left/h;
-    					if (Math.abs(acceleration_left[b]-acceleration_left[i-1])>max_acceleration) {
-    						hm = true;
-    					}
-    					else {
-    						hm = false;
-    					}
-    				} if (hm) {
-						h=h-1;
-					}
-    			}
-    		}
-    		
-    	}
-    	for (int i=1; i<allValues;i++) {
-    		double check_right = acceleration_right[i]-acceleration_right[i-1];
-    		if (Math.abs(check_right)>max_acceleration) {
-    			int h=i-1;
-    			boolean hm = false;
-    			for (int m=0; m<allValues;m++) {
-    				for (int b=(h); b<(i+1);b++) {
-    					acceleration_right[b] = check_right/h;
-    					if (Math.abs(acceleration_right[b]-acceleration_right[i-1])>max_acceleration) {
-    						hm = true;
-    					}
-    					else {
-    						hm = false;
-    					}
-    				} if (hm) {
-						h=h-1;
-					}
-    			}
-    		}
-    	}
-    	
-    	
-    	double[] velocitiestwo_left = new double[allValues];
-    	double[] velocitiestwo_right = new double[allValues];
-    	double[] newAccel_left = new double[allValues];
-    	double[] newAccel_right = new double[allValues];
-    	velocitiestwo_left[0]=0;
-    	velocitiestwo_right[0]=0;
-    	if (maxVelocities_left[allValues-1]>0) {
-    		int l=1;
-    		double red = 0.0;
-    		for (int r=0; r<1000;r++) {
-    			for (int i=allValues-l; i<allValues; i++) {
-    			//(Math.abs((acceleration[i]-red)-acceleration[i-1])<max_acceleration) && 
-    				if (Math.abs((acceleration_left[i]-red)-acceleration_left[i-1])<max_acceleration && Math.abs(acceleration_left[i]-red)<max_acceleration) {
-    					newAccel_left[i]=acceleration_left[i]-red;  	
-    				}
-    				else {
-    					if (newAccel_left[i] < 100) {
-    						newAccel_left[i] = newAccel_left[i];
-    					}
-    					else {
-    						newAccel_left[i] = acceleration_left[i];
-    					}
-    				}
-    			}	
-    			for (int i=0; i<allValues-l;i++) {
-    				newAccel_left[i] = acceleration_left[i];
-    			}
-    			for (int m = 1; m < (allValues); m++) {
-    				velocitiestwo_left[m] = Clamp(Double.NEGATIVE_INFINITY, max_left, Math.sqrt(Math.pow(velocitiestwo_left[m-1], 2)+2*newAccel_left[m-1]*(distance_left[m]-distance_left[m-1])));
-    			}
-    			if (velocitiestwo_left[allValues-1]>.1) {
-    				if (l<(allValues-1)) {
-    					l=l+1;
-    				}
-    				else {
-    					red = red+.01;
-    					//l=1;
-    				}
-    				
-    			}
-    			else if (velocitiestwo_left[allValues-1]<=.1) {
-    				
-    			}
-    			else {
-    				red=red-.001;
-    			}
-    		}
-    	}
-    	
-    	
-    	
-    	if (maxVelocities_right[allValues-1]>0) {
-    		int l=1;
-    		double red = 0.0;
-    		for (int r=0; r<1000;r++) {
-    			for (int i=allValues-l; i<allValues; i++) {
-    			//(Math.abs((acceleration[i]-red)-acceleration[i-1])<max_acceleration) && 
-    				if (Math.abs((acceleration_right[i]-red)-acceleration_right[i-1])<max_acceleration && Math.abs(acceleration_right[i]-red)<max_acceleration) {
-    					newAccel_right[i]=acceleration_right[i]-red;  	
-    				}
-    				else {
-    					if (newAccel_right[i] < 100) {
-    						newAccel_right[i] = newAccel_right[i];
-    					}
-    					else {
-    						newAccel_right[i] = acceleration_right[i];
-    					}
-    				}
-    			}	
-    			for (int i=0; i<allValues-l;i++) {
-    				newAccel_right[i] = acceleration_right[i];
-    			}
-    			for (int m = 1; m < (allValues); m++) {
-    				velocitiestwo_right[m] = Clamp(Double.NEGATIVE_INFINITY, max_right, Math.sqrt(Math.pow(velocitiestwo_right[m-1], 2)+2*newAccel_right[m-1]*(distance_right[m]-distance_right[m-1])));
-    			}
-    			if (velocitiestwo_right[allValues-1]>.1) {
-    				if (l<(allValues-1)) {
-    					l=l+1;
-    				}
-    				else {
-    					red = red+.01;
-    					//l=1;
-    				}
-    				
-    			}
-    			else if (velocitiestwo_right[allValues-1]<=.1) {
-
-    			}
-    			else {
-    				red=red-.001;
-    			}
-    		}
-    	}
-    	
-    	for (int i=0; i<velocitiestwo_right.length;i++) {
-    		maxVelocities_left[i] = velocitiestwo_left[i];
-    		acceleration_right[i] = newAccel_right[i];
-    		maxVelocities_right[i] = velocitiestwo_right[i];
-    		acceleration_left[i] = newAccel_left[i];
-    	}
-    	
-    	
-    	/*for (int i=1; i<allValues; i++) {
-    		maxVelocities[i] = Clamp(Double.NEGATIVE_INFINITY, max_velocity, Math.sqrt(Math.pow(maxVelocities[i-1], 2)+2*acceleration[i-1]*(distance[i]-distance[i-1])));
-    		
-    	}*/
-		
+    	 
     	
     	//Clamping velocity values
     	for (int i=0; i<allValues; i++) {
@@ -692,8 +675,7 @@ public class MotionProfiler {
     	    clampVel_right[i] = Clamp(Double.NEGATIVE_INFINITY, max_right, maxVelocities_right[i]);
     	}
     	
-    	
-		
+		 
 	
     	//Setting time
 		timeTaken_left[0] = 0;
@@ -757,7 +739,7 @@ public class MotionProfiler {
     					velocitiesthree[u] = velocitiesthree[u]-blue;
     				}
     			}
-    			for (int u=0; u<allValues; u++) {
+    			for (int u=1; u<allValues; u++) {
     				double temp_right = distance_right[u] - distance_right[u-1];
     				if (u<(allValues)) {
     					if (acceleration_right[u-1] != 0) {
@@ -771,18 +753,16 @@ public class MotionProfiler {
     			}
     			if (Math.abs(arraySum(timeTaken_right, timeTaken_right.length-1)-arraySum(timeTaken_left, timeTaken_left.length-1))>.01) {
     				green = green+.01;
-    				System.out.println(green);
     			}
     			else if (velocitiesthree[allValues-1]>.01) {
     				
     				blue = blue+.01;
     			}	
     			else {
-    				for (int k=0; k<allValues;k++) {
-    					double tempTime = timeTaken_right[k+1]-timeTaken_right[k];
+    				for (int k=0; k<(allValues-1);k++) {
+    					double tempTime = timeTaken_right[k+1];
     					double tempDistance = distance_right[k+1]-distance_right[k];
     					accelerationthree[k] = (2.0*(tempDistance-velocitiesthree[k]*tempTime))/Math.pow(tempTime, 2);
-    					System.out.println(k + ": " + timeTaken_right[k]);
     					
     				}
     			}
@@ -915,20 +895,7 @@ public class MotionProfiler {
 		if (time > arraySum(timeTaken_right, timeTaken_right.length-1)) {
 			currentIndex_right = timeTaken_right.length-1;
 		}
-		
-		
-		/*tempTestDistance[0]=0;
-		for (int i=1; i<allValues; i++) {
-			double timeDiff = timeTaken[i];
-			tempTestDistance[i] = (1.0/2.0)*acceleration[i-1]*Math.pow(timeDiff, 2)+clampVel[i-1]*timeDiff;
-		}
-		for (int i=0; i<allValues; i++) {
-			testDistance[i] = arraySum(tempTestDistance, i);
-			if (i==(allValues-1)) {
-				//System.out.println(Math.abs(distance[distance.length-1]-testDistance[i]) + " and " + testDistance[i]);
-			}
-			
-		}*/
+	
 		
 		
 		double tempAccel_left = newAcceleration_left[currentIndex_left];
@@ -1086,8 +1053,42 @@ public class MotionProfiler {
     	    }
     	    return value;
     }
+
+    
+    public double[] form_circle(double ax, double ay, double bx, double by, double cx, double cy) {
+    	double onecompa = 2.0*(cx-ax);
+		double onecompb = 2.0*(cy-ay);
+		double onecompc = -(Math.pow(ay, 2)+Math.pow(ax, 2)-Math.pow(cy, 2)-Math.pow(cx, 2));
+		
+		double twocompa = 2.0*(bx-ax);
+		double twocompb = 2.0*(by-ay);
+		double twocompc = -(Math.pow(ay, 2)+Math.pow(ax, 2)-Math.pow(by, 2)-Math.pow(bx, 2));
+		
+		double x_num = (onecompc*twocompb)-(twocompc*onecompb);
+		double x_den = (onecompa*twocompb)-(twocompa*onecompb);
+		double x = x_num/x_den;
+		
+		
+		double y_num = (onecompa*twocompc)-(twocompa*onecompc);
+		double y_den = (onecompa*twocompb)-(twocompa*onecompb);
+		double y = y_num/y_den;
+		
+		double radius = Math.hypot((ax-x), (ay-y));
+		double chord_length_one = Math.hypot((cx-bx), (cy-by));
+		double chord_length_two = Math.hypot((bx-ax), (by-ay));
+		
+		double angle_one = Math.acos(((2*Math.pow(radius, 2))-Math.pow(chord_length_one, 2))/(2*Math.pow(radius, 2)));
+		double angle_two = Math.acos(((2*Math.pow(radius, 2))-Math.pow(chord_length_two, 2))/(2*Math.pow(radius, 2)));
+		double distance_one = angle_one*radius;
+		double distance_two = angle_two*radius;
+		double distance = distance_one+distance_two;
+		
+		double maxVelocity = Math.sqrt(radius*9.81);
+		//System.out.println(radius + ": " + ax + ", " + ay + ", " + bx + ", " + by + ", " + cx + ", "+ cy);
+		double[] returnArray = {distance, maxVelocity};
+		return returnArray;
+    }
 	 
     
  
 }
-
