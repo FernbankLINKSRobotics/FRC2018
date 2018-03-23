@@ -2,6 +2,7 @@ package org.usfirst.frc.team4468.robot.Subsystems;
 
 import org.usfirst.frc.team4468.robot.Constants;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -10,6 +11,9 @@ public class Intake extends Subsystem {
 	//// Declarations
 	private VictorSP left = new VictorSP(Constants.intakePort1);
 	private VictorSP right = new VictorSP(Constants.intakePort2);
+	
+	private DigitalInput photogate = new DigitalInput(Constants.intakeSensorPort);
+	
 	private DoubleSolenoid clamp = new DoubleSolenoid(Constants.intakeClampPort1, Constants.intakeClampPort2);
 	
 	
@@ -52,5 +56,10 @@ public class Intake extends Subsystem {
 	 */
 	public Value getState() {
 	    return clamp.get();
+	}
+	
+	//// Sensor
+	public boolean photoGet() {
+	    return photogate.get();
 	}
 }

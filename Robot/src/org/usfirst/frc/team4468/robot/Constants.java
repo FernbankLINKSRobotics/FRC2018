@@ -26,6 +26,7 @@ public class Constants{
     public static double maxVelocity = 6.0;
     // Driver Input
     public static double deadband = 0.1;
+    public static double turnMultiplier = 0.9;
     
     ///// Drivetrain
     // Left Side
@@ -70,20 +71,23 @@ public class Constants{
     public static double angleD = 0.012;
     
     // Shifter
-    public static int shifterPort1 = 1;
-    public static int shifterPort2 = 2;
+    public static int shifterPort1 = 0;
+    public static int shifterPort2 = 4;
     
     // Intake
     public static int intakePort1 = 5;
     public static int intakePort2 = 4;
-    public static int intakeClampPort1 = 3;
-    public static int intakeClampPort2 = 4;
+    public static int intakeClampPort1 = 5;
+    public static int intakeClampPort2 = 3;
+    public static int photoGatePort = 5;
     
     // Lifter
     public static int lifterPort1 = 3;
     public static double lifterP  = 5.0;
     public static double lifterI  = 0.0;
     public static double lifterD  = .12;
+    public static int BreakClampPort1 = 1;
+    public static int BreakClampPort2 = 2;
     
     // Potentiometer
     public static int potPort = 3; // Placeholder

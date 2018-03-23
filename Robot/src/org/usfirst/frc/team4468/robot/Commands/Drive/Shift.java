@@ -3,12 +3,12 @@ package org.usfirst.frc.team4468.robot.Commands.Drive;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team4468.robot.Robot;
-import org.usfirst.frc.team4468.robot.Subsystems.Shifter;
+import org.usfirst.frc.team4468.robot.Subsystems.Drivetrain;
 
 public class Shift extends Command {
 
 	public Value target;
-	public Shifter sf = Robot.shift;
+	public Drivetrain sf = Robot.drive;
 	
 	public Shift(Value i) {
 		requires(sf);

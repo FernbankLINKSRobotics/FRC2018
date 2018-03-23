@@ -1,8 +1,11 @@
 package org.usfirst.frc.team4468.robot.Subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -43,6 +46,8 @@ public class Drivetrain extends Subsystem {
     
     private AHRS gyro = new AHRS(Constants.gyroPort);
     
+    private DoubleSolenoid shift = new DoubleSolenoid(Constants.shifterPort1, Constants.shifterPort2);
+    
     // Variable Declarations
     private double leftPrevVel = 0.0;
     private double rightPrevVel = 0.0;
@@ -73,7 +78,7 @@ public class Drivetrain extends Subsystem {
      * @param spd the average speed of the drive
      */
     public void arcade(double rot, double spd) {
-        drive.arcadeDrive(rot, spd, true);
+        drive.arcadeDrive(rot, (spd * Constants.turnMultiplier), true); // The turn was a little to strong
     }
     
     /* Sets the motors in for a tank drive
@@ -175,6 +180,21 @@ public class Drivetrain extends Subsystem {
         double angularVel = gyro.getRate();
         prevAngularVel = angularVel;
         return angularVel - prevAngularVel;
+    }
+    
+    
+    
+    //// Shifter
+    /* sets the shifter to a state
+    */
+    public void set(Value v) {
+        shift.set(v);
+    }
+    
+    /* Returns the status of the shifter, as high gear being true or false @return
+    */
+    public Value getState() {
+        return shift.get();
     }
     
     

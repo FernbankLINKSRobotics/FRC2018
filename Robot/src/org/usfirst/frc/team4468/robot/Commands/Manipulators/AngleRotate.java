@@ -6,6 +6,7 @@ import org.usfirst.frc.team4468.robot.Subsystems.RotatingLift;
 import org.usfirst.frc.team4468.robot.Util.PID;
 import org.usfirst.frc.team4468.robot.Util.Paths.MotionProfiler;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class AngleRotate extends Command {
@@ -32,8 +33,10 @@ public class AngleRotate extends Command {
 
         System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
-        //System.out.println("setpoint one: " + pid.getSetpoint());
+        
+        //// Comment back in these in for added functionality
         //inc = increment;
+        //rl.clamp(Value.kReverse);
     }
     
     private MotionProfiler onedMotion = new MotionProfiler(3.0, 5.0, 3.0, 0.1, theta, negative);
@@ -77,6 +80,7 @@ public class AngleRotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#end()
      */
     protected void end() {
+        //rl.clamp(Value.kForward);
         rl.stop();
     }
 

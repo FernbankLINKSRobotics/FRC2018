@@ -60,7 +60,6 @@ public class Robot extends IterativeRobot {
 		rotatingLift = new RotatingLift();
 		constants    = new Constants();
 		intake       = new Intake();
-		shift        = new Shifter();
 		drive        = new Drivetrain();
 		oi           = new OI();
 		
