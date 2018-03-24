@@ -214,12 +214,7 @@ public class MotionProfiler {
      * @return An array of maximum velocity depending on curvature, distance covered (arc length), and the length of the chord between the arc
      */
 	public double[] getMaxVelocity(double x_current, double y_current, double x_curve, double y_curve, double x_end, double y_end, boolean first) {
-		
-		double left;
-		double right;
-		
-		double x_inter = (x_end-x_current)/2.0;
-		double y_inter = (y_end-y_current)/2.0;
+
 		
 		double ax = x_current;
 		double ay = y_current;
@@ -314,7 +309,6 @@ public class MotionProfiler {
 		double cy_lf;
 		//y inc and x inc
 		if (y_end>y_current && x_end>x_current) {
-			//System.out.println(angle_current*(180/Math.PI) +  ", " + angle_curve*(180/Math.PI) + ", " + angle_end*(180/Math.PI));
 			//subtract x, add y for left
 			ax_lf = ax-x_reduce_current;
 			ay_lf = ay+y_reduce_current;
@@ -403,19 +397,20 @@ public class MotionProfiler {
 		else {
 			add_right = true;
 		}
-		double distance_right = form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt, ah)[0];
+		double distance_right = form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt, ah, x, y)[0];
 		//System.out.println(ax_lf + ", " + ay_lf + ", " + bx_lf + ", " + by_lf + ", " + cx_lf + ", " + cy_lf);
-		double maxVelocity_right = form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt, ah)[1];
-		double distance_left = form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf, ah)[0];
-		double maxVelocity_left = form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf, ah)[1];
+		double maxVelocity_right = form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt, ah, x, y)[1];
+		double distance_left = form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf, ah, x,y)[0];
+		double maxVelocity_left = form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf, ah,x,y)[1];
 		if (first) {
 			if (add_left) {
-				distance_left = distance_left+form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf, ah)[2];
-				distance_right = distance_right-form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt, ah)[2];
+				distance_left = distance_left+form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf, ah,x,y)[2];
+				distance_right = distance_right-form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt, ah,x,y)[2];
+
 			}
 			if (add_right) {
-				distance_right = distance_right+form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt, ah)[2];
-				distance_left = distance_left-form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf, ah)[2];
+				distance_right = distance_right+form_circle(ax_rt, ay_rt, bx_rt, by_rt, cx_rt, cy_rt, ah,x,y)[2];
+				distance_left = distance_left-form_circle(ax_lf, ay_lf, bx_lf, by_lf, cx_lf, cy_lf, ah,x,y)[2];
 			}
 		}
 		double[] returnArray = {maxVelocity_right, maxVelocity_left, distance_right, distance_left};
@@ -498,13 +493,18 @@ public class MotionProfiler {
 				tempDistance_right[allValues-1] = (getMaxVelocity(x_values[allValues-3], y_values[allValues-3], x_values[allValues-2], y_values[allValues-2], x_values[allValues-1], y_values[allValues-1], false)[2])/2;
 				
 		}
-		
-		
-    
+		double[] uh_left = new double[allValues];
+		double[] rut_right = new double[allValues];
+		uh_left[0]=0;
+		rut_right[0]=0;
+        for (int i=1; i<allValues;i++) {
+        	uh_left[i] = tempDistance_left[i-1];
+        	rut_right[i] = tempDistance_right[i-1];
+        }
 		//Making the distance array cumulative
 		for (int i = 0; i< tempDistance_left.length;i++) {
-			distance_left[i] = arraySum(tempDistance_left, i);
-			distance_right[i] = arraySum(tempDistance_right, i);
+			distance_left[i] = arraySum(uh_left, i);
+			distance_right[i] = arraySum(rut_right, i);
 		}
 		
 		//Sets acceleration depending on if two velocities are different
@@ -523,8 +523,7 @@ public class MotionProfiler {
 		}
 		
 		//the start distance and max velocity will be zero
-		distance_left[0] = 0;
-		distance_right[0] = 0;
+		
 		
 		//Calculating acceleration DISTANCE
 		int y = 1;
@@ -541,8 +540,8 @@ public class MotionProfiler {
 			}
 			else {
 				//Subtracting one because we don't want the accelerated velocity to be OVER max velocity
-				if (accelIndex_left<=((allValues+1)/2.0)) {
-					accelIndex_left = z-1;
+				if (y<=((allValues+1)/2.0)) {
+					accelIndex_left = y-1;
 				} else {
 					accelIndex_left = (int)(allValues/2.0);
 				}
@@ -552,17 +551,14 @@ public class MotionProfiler {
 			}
 			else {
 				//Subtracting one because we don't want the accelerated velocity to be OVER max velocity
-				if (accelIndex_right<=((allValues+1)/2.0)) {
+				if (z<=((allValues+1)/2.0)) {
 					accelIndex_right = z-1;
 				} else {
 					accelIndex_right = (int)(allValues/2.0);
 				}
 			}
 		}
-		
-		
-		
-    	
+
 		if (accelIndex_left==0 || accelIndex_right==0) {
 			//System.out.println(maxVelocities_left[1] + ", " + (Math.sqrt(2*ta*distance_left[1])));
 			System.out.println("lower distance between points or lower acceleration");
@@ -589,23 +585,15 @@ public class MotionProfiler {
 		double max_left = Math.sqrt(2*acceleration_left[0]*(distance_left[accelIndex_left]));
 		double max_right = Math.sqrt(2*acceleration_right[0]*(distance_right[accelIndex_right]));
 		
-		
-		//The velocities set below will override those previously set in the maxVelocities array based on acceleration, effectively clamping them
-    	/*for (int i = 1; i < (accelIndex+1); i++) {
-    		//Sets the current velocity during the start acceleration period
-    		maxVelocities[i] = Clamp(Double.NEGATIVE_INFINITY, max_velocity, Math.sqrt(Math.pow(maxVelocities[i-1], 2)+2*acceleration[i-1]*(distance[i]-distance[i-1])));
-    	}*/
     	
     	//SETTING DECELERATION
     	//We want this to be an overapproximation instead of an underapproximation so it fully goes to 0
-		int decelIndex_left= (int)(allValues/2.0);
-    	int decelIndex_right= (int)(allValues/2.0);
-    	double testing_left = (-Math.pow(max_left, 2))/(2*(distance_left[allValues-1]-distance_left[accelIndex_left]));
+		
+    	//double testing_left = (-Math.pow(max_left, 2))/(2*(distance_left[allValues-1]-distance_left[accelIndex_left]));
     	double yellow_left=.1;
     	boolean scuse = false;
     	double[] test_accel_left = new double[allValues];
-    	if (-testing_left>max_acceleration) {
-    		for (int m=0; m<1000; m++) {
+    		for (int m=0; m<90000; m++) {
     			for (int i=0; i<(accelIndex_left);i++) {
     				if (!scuse) {
     					test_accel_left[i] = acceleration_left[i]-yellow_left;
@@ -613,27 +601,25 @@ public class MotionProfiler {
     			}
     			double max_left_test = Math.sqrt(2*test_accel_left[0]*(distance_left[accelIndex_left]));
     			double decel_test = (-Math.pow(max_left_test, 2))/(2*(distance_left[allValues-1]-distance_left[accelIndex_left+1]));
+    			
     			if (-decel_test>max_acceleration) {
-    				yellow_left = yellow_left+.01;
+    				yellow_left = yellow_left+.0001;
     			}
     			else {
     				scuse = true;
     				for (int h=0; h<(accelIndex_left); h++) {
     					acceleration_left[h] = test_accel_left[0];
-    					
-    				}
-    				for (int h=accelIndex_left+1; h<allValues;h++) {
+    				} for (int h=accelIndex_left+1; h<allValues;h++) {
     					acceleration_left[h] = decel_test;
     				}
     				acceleration_left[accelIndex_left] = 0;
     			}
-    		}
     	}
-    	double testing_right = (-Math.pow(max_right, 2))/(2*(distance_right[allValues-1]-distance_right[accelIndex_right]));
-    	double yellow_right=.1;
-    	boolean yum = false;;
+    	//double testing_right = (-Math.pow(max_right, 2))/(2*(distance_right[allValues-1]-distance_right[accelIndex_right]));
+    	double yellow_right=0;
+    	boolean yum = false;
     	double[] test_accel_right = new double[allValues];
-    	if (-testing_right>max_acceleration) {
+
     		for (int m=0; m<1000; m++) {
     			for (int i=0; i<(accelIndex_right);i++) {
     				if (!yum) {
@@ -641,24 +627,26 @@ public class MotionProfiler {
     				}
     			}
     			double max_right_test = Math.sqrt(2*test_accel_right[0]*(distance_right[accelIndex_right]));
-    			double decel_test = (-Math.pow(max_right_test, 2))/(2*(distance_right[allValues-1]-distance_right[accelIndex_right+1]));
+    			double decel_test = (-Math.pow(max_right_test, 2))/(2*(distance_right[allValues-1]-distance_right[accelIndex_right]+1));
+    			//double distance_test = (Math.pow(clampVel_right[accelIndex_right-1], 2))/(2*test_accel_right[0]);
     			if (-decel_test>max_acceleration) {
-    				yellow_right = yellow_right+.01;
+    				yellow_right = yellow_right+.001;
     			}
+    			
     			else {
     				yum= true;
     				for (int h=0; h<(accelIndex_right); h++) {
     					acceleration_right[h] = test_accel_right[h];
-    				}
-    				for (int h=accelIndex_right+1; h<allValues;h++) {
+    				} for (int h=accelIndex_right+1; h<allValues;h++) {
     					acceleration_right[h] = decel_test;
     				}
     				acceleration_right[accelIndex_right] = 0;
-    				
     			}
-    		}
+    		
     	}
-    	
+    	for (int i=0; i<allValues; i++) {
+    		//System.out.println(acceleration_right[i]);
+    	}
     	
     	
     	maxVelocities_left[0]=0;
@@ -705,26 +693,21 @@ public class MotionProfiler {
     		//Change in distance
     		//LEFT
     		double temp_left = distance_left[i] - distance_left[i-1];
+    		
     		double temp_right = distance_right[i] - distance_right[i-1];
     		if (i<(allValues)) {
- 
     			if (acceleration_left[i-1] != 0) {
     				//the timeTaken array measures time COMPLETED whereas the velocity and acceleration array outputs FUTURE values (for the next increment)
     				//This is why we subtract i by 1 for velocity and acceleration
-    				timeTaken_left[i] = (2*temp_left)/(clampVel_left[i-1]+clampVel_left[i]);
-    			}
-    			
-    			else {
+    				timeTaken_left[i] = (2*temp_left)/(clampVel_left[i-1]+clampVel_left[i]);		
+    			} else {
     				//a reformat of d = v*t; there is no acceleration
     				timeTaken_left[i] = temp_left/clampVel_left[i];
-    			}
-    			if (acceleration_right[i-1] != 0) {
+    			} if (acceleration_right[i-1] != 0) {
     				//the timeTaken array measures time COMPLETED whereas the velocity and acceleration array outputs FUTURE values (for the next increment)
     				//This is why we subtract i by 1 for velocity and acceleration
     				timeTaken_right[i] = (2*temp_right)/(clampVel_right[i-1]+clampVel_right[i]);
-    			}
-    			
-    			else {
+    			} else {
     				//a reformat of d = v*t; there is no acceleration
     				timeTaken_right[i] = temp_right/clampVel_right[i];
     			}
@@ -742,44 +725,90 @@ public class MotionProfiler {
     	double[] accelerationthree_left=new double[allValues];
     	double[] accelerationthree_right=new double[allValues];
     	double[] newTime=new double[allValues];
-    	boolean left = false;
-    	for (int i=0; i<allValues; i++) {
+    	//COME BACK TO THIS SECTION LATER
+    	for (int i=1; i<allValues; i++) {
     		if (timeTaken_left[i]>timeTaken_right[i]) {
-    			newTime[i] = timeTaken_left[i];
+    			double tempTime = timeTaken_left[i];
+    			accelerationthree_left[i] = (maxVelocities_left[i]-maxVelocities_left[i-1])/tempTime;
+    			accelerationthree_right[i] = (maxVelocities_right[i]-maxVelocities_right[i-1])/tempTime;
+    			if (Math.abs(accelerationthree_left[i])>max_acceleration||Math.abs(accelerationthree_right[i])>max_acceleration) {
+    				newTime[i] = tempTime+.1;
+    			}
+    			else {
+    				newTime[i] = tempTime;
+    			}
+    			
     			
 	    	}
 	    	else {
-	    		newTime[i] = timeTaken_right[i];
+	    		double tempTime = timeTaken_right[i];
+	    		accelerationthree_left[i] = (maxVelocities_left[i]-maxVelocities_left[i-1])/tempTime;
+    			accelerationthree_right[i] = (maxVelocities_right[i]-maxVelocities_right[i-1])/tempTime;
+    			if (Math.abs(accelerationthree_left[i])>max_acceleration||Math.abs(accelerationthree_right[i])>max_acceleration) {
+    				newTime[i] = tempTime+.25;
+    			}
+    			else {
+    				newTime[i] = tempTime;
+    			}
 	    		
 	    	}
     	}
+    	
+    	double[] test_vel_left = new double[allValues];
+    	double[] test_vel_right = new double[allValues];
+    	test_vel_left[0]=0;
+    	test_vel_right[0]=0;
+    	
     	velocitiesthree_left[0] = 0;
     	velocitiesthree_right[0] = 0;
     	velocitiesthree_left[allValues-1] = 0;
     	velocitiesthree_right[allValues-1] = 0;
-    	for (int i=1; i<(allValues-1);i++) {
-    		double tempDistance = distance_left[i+1]-distance_left[i];
-    		double tempTime = newTime[i+1];
-    		velocitiesthree_left[i] = (tempDistance/tempTime)-(acceleration_left[i]*tempTime)/(2);
-    		//System.out.println(velocitiesthree_left[i] + ", " + i);
-    	}
+    	
     	for (int k=0; k<(allValues-1);k++) {
 			double tempTime = newTime[k+1];
-			double tempDistance = distance_left[k+1]-distance_left[k];
-			accelerationthree_left[k] = (2.0*(tempDistance-velocitiesthree_left[k]*tempTime))/Math.pow(tempTime, 2);
+			//accelerationthree_left[k] = (2.0*(tempDistance-velocitiesthree_left[k]*tempTime))/Math.pow(tempTime, 2);
+			//accelerationthree_left[k] = (Math.pow(maxVelocities_left[k+1], 2)-Math.pow(maxVelocities_left[k], 2))/(2*(distance_left[k+1]-distance_left[k]));
+			accelerationthree_left[k] = (maxVelocities_left[k+1]-maxVelocities_left[k])/tempTime;
 			//System.out.println(accelerationthree_left[k] + ", " + k);
 		}
-    	for (int i=1; i<(allValues-1);i++) {
-    		double tempDistance = distance_right[i+1]-distance_right[i];
-    		double tempTime = newTime[i+1];
-    		velocitiesthree_right[i] = (tempDistance/tempTime)-(acceleration_right[i]*tempTime)/(2);
-    		//System.out.println(velocitiesthree_left[i]);
+    	for (int i=1; i<(allValues);i++) {
+    		double tempTime = newTime[i];
+    		velocitiesthree_left[i] = velocitiesthree_left[i-1]+accelerationthree_left[i-1]*tempTime;
+    		//velocitiesthree_left[i] = (tempDistance/tempTime)-(accelerationthree_left[i]*tempTime)/(2);
+    		
     	}
+    	
     	for (int k=0; k<(allValues-1);k++) {
 			double tempTime = newTime[k+1];
-			double tempDistance = distance_right[k+1]-distance_right[k];
-			accelerationthree_right[k] = (2.0*(tempDistance-velocitiesthree_right[k]*tempTime))/Math.pow(tempTime, 2);
-		}
+			accelerationthree_right[k] = (maxVelocities_right[k+1]-maxVelocities_right[k])/tempTime;
+		
+    	}
+    	for (int i=1; i<(allValues);i++) {
+    		double tempTime = newTime[i];
+    		velocitiesthree_right[i] = velocitiesthree_right[i-1]+accelerationthree_right[i-1]*tempTime;
+    		
+    		//System.out.println(velocitiesthree_left[i]);
+    	}
+    	
+    	
+    	double[] temporary_left = new double[allValues];
+    	double[] temporary_right = new double[allValues];
+    	for (int i=1; i<allValues;i++) {
+    		double tempTime = newTime[i];
+    		temporary_left[i] = (.5)*accelerationthree_left[i-1]*Math.pow(tempTime, 2)+velocitiesthree_left[i-1]*tempTime;
+    		temporary_right[i] = (.5)*accelerationthree_right[i-1]*Math.pow(tempTime, 2)+velocitiesthree_right[i-1]*tempTime;
+    		
+    	}
+    	double error_left = Math.abs(distance_left[allValues-1]-arraySum(temporary_left, allValues-1));
+    	double error_right = Math.abs(distance_right[allValues-1]-arraySum(temporary_right, allValues-1));
+    	//System.out.println((error_left/arraySum(temporary_left, allValues-1))*100 + ", " + (error_right/arraySum(temporary_right, allValues-1))*100);
+    	double[] new_distance_left = new double[allValues];
+    	double[] new_distance_right = new double[allValues];
+    	for (int i=0; i<allValues;i++) {
+    		//System.out.println(temporary_right[i] + ": " + Math.abs(rut_right[i]-temporary_right[i]) + ", " + x_values[i]);
+    		new_distance_left[i] = arraySum(temporary_left, i);
+    		new_distance_right[i] = arraySum(temporary_right, i);
+    	}
 		double[] newVelocities_left = new double[allValues];
 		double[] newVelocities_right = new double[allValues];
 		double[] newAcceleration_left = new double[allValues];
@@ -788,10 +817,11 @@ public class MotionProfiler {
     		for (int i=0; i<(allValues);i++) {
     			if (i<(allValues-1)) {
     				newAcceleration_left[i] = accelerationthree_left[i];
+    				newAcceleration_right[i] = accelerationthree_right[i];
     			}
     			newVelocities_left[i] = velocitiesthree_left[i];
     			newVelocities_right[i] = velocitiesthree_right[i];
-    			newAcceleration_right[i] = accelerationthree_right[i];
+    			
     		}
 
     	//System.out.println(arraySum(timeTaken_left, timeTaken_left.length-1));
@@ -836,24 +866,22 @@ public class MotionProfiler {
 		
 		//LEFT
 		//calculating the different in time and distance (between current position and last increment)
-		double timeDifference_left = time - arraySum(timeTaken_left, currentIndex);
+		double timeDifference_left = time - arraySum(newTime, currentIndex);
 		double distanceChange_left = Math.abs(tempVel_left*timeDifference_left+(0.5)*tempAccel_left*Math.pow(timeDifference_left, 2));
-		//System.out.println("distance change: " + maxVelocities[currentIndex] + "; second part: " + (0.5)*acceleration[currentIndex]*Math.pow(timeDifference, 2));
-		double velocityChange_left = Math.abs(tempVel_left*timeDifference_left+(0.5)*tempAccel_left*Math.pow(timeDifference_left, 2));
 		//calculating total distance covered
-		returnDistance_left = distance_left[currentIndex]+distanceChange_left;
+		returnDistance_left = new_distance_left[currentIndex]+distanceChange_left;
+		//System.out.println(time + ", " + tempVel_left + ", " + tempAccel_left);
 
 		//RIGHT
 		double timeDifference_right = time - arraySum(newTime, currentIndex);
 		double distanceChange_right = Math.abs(tempVel_right*timeDifference_right+(0.5)*tempAccel_right*Math.pow(timeDifference_right, 2));
-		double velocityChange_right = Math.abs(tempVel_right*timeDifference_right+(0.5)*tempAccel_right*Math.pow(timeDifference_right, 2));
-		returnDistance_right = distance_right[currentIndex]+distanceChange_right;
+		returnDistance_right = new_distance_right[currentIndex]+distanceChange_right;
 		
 		//LEFT
 		if (tempAccel_left!=0.0) {
 			returnAccel_left = newAcceleration_left[currentIndex];
 			//calculating predicted velocity that the robot is currently at based on change in distance covered
-			double squared = 2*returnAccel_left*velocityChange_left+Math.pow(tempVel_left, 2);
+			double squared = 2*returnAccel_left*distanceChange_left+Math.pow(tempVel_left, 2);
 			//recalculating velocity, just in case
 			if (squared<0) {
 				//Clamping
@@ -861,6 +889,7 @@ public class MotionProfiler {
 			}
 			else {
 				returnVelocity_left = Clamp(Double.NEGATIVE_INFINITY, max_left, (Math.sqrt(squared)))-limit;
+				//System.out.println(max_left);
 			}
 		}
 		else {
@@ -877,7 +906,7 @@ public class MotionProfiler {
 		if (tempAccel_right!=0.0) {
 			returnAccel_right = newAcceleration_right[currentIndex];
 			//calculating predicted velocity that the robot is currently at based on change in distance covered
-			double squared = 2*returnAccel_right*velocityChange_right+Math.pow(tempVel_right, 2);
+			double squared = 2*returnAccel_right*distanceChange_right+Math.pow(tempVel_right, 2);
 			//recalculating velocity, just in case
 			if (squared<0) {
 				//Clamping
@@ -914,25 +943,31 @@ public class MotionProfiler {
      * 
      * @return returnArray An array of the current Velocity, acceleration, and total distance that will be covered
      */
-	public double[] getVelocity(double currentDist, double increment) {
+	public double[] getVelocity(double currentDist_left, double increment) {
 		//Getting max time to get to the end
 		double kale = execute2D(0.0, 0.0, 0.0)[3];
-		double[] kaleDistance = new double[(int)(kale*100)+1];
-		double[] kaleVelocity = new double[(int)(kale*100)+1];
-		double[] kaleAcceleration = new double[(int)(kale*100)+1];
+		double[] kaleDistance_left = new double[(int)(kale*100)+1];
+		double[] kaleVelocity_left = new double[(int)(kale*100)+1];
+		double[] kaleAcceleration_left = new double[(int)(kale*100)+1];
+		double[] kaleDistance_right = new double[(int)(kale*100)+1];
+		double[] kaleVelocity_right = new double[(int)(kale*100)+1];
+		double[] kaleAcceleration_right = new double[(int)(kale*100)+1];
 		//going through time to create some sort of a timeline
 		for (double i=0; i<kale;i=i+.01) {
 			//Adding it to an array
-			kaleDistance[(int) (i*100)] = execute2D(i, 0.0, 0.0)[0];
-			kaleVelocity[(int) (i*100)] = execute2D(i, 0.0, 0.0)[1];
-			kaleAcceleration[(int) (i*100)] = execute2D(i, 0.0, 0.0)[2];
+			kaleDistance_left[(int) (i*100)] = execute2D(i, 0.0, 0.0)[0];
+			kaleVelocity_left[(int) (i*100)] = execute2D(i, 0.0, 0.0)[1];
+			kaleAcceleration_left[(int) (i*100)] = execute2D(i, 0.0, 0.0)[2];
+			kaleDistance_right[(int) (i*100)] = execute2D(i, 0.0, 0.0)[4];
+			kaleVelocity_right[(int) (i*100)] = execute2D(i, 0.0, 0.0)[5];
+			kaleAcceleration_right[(int) (i*100)] = execute2D(i, 0.0, 0.0)[6];
 		}
 		int l =0;
 		int currentIndex=0;
 		//Finding where on the timeline you are based on current distance
 		//utilizing time to find velocity and acceleration
-		for (int i = 0; i < kaleDistance.length; i++) {
-			if (currentDist > kaleDistance[l]) {
+		for (int i = 0; i < kaleDistance_left.length; i++) {
+			if (currentDist_left > kaleDistance_left[l]) {
 				l++;
 			}
 			else {
@@ -945,7 +980,7 @@ public class MotionProfiler {
 			}
 		}
 		//returning the values as well as the target distance to help with debugging
-		double[] returnArray = {kaleDistance[currentIndex+(int)(increment*100)], kaleVelocity[currentIndex], kaleAcceleration[currentIndex], kaleDistance[kaleDistance.length-2]};
+		double[] returnArray = {kaleDistance_left[currentIndex+(int)(increment*100)], kaleDistance_right[currentIndex+(int)(increment*100)]};
 		return returnArray;
 	}
 	
@@ -984,23 +1019,10 @@ public class MotionProfiler {
     }
 
     
-    public double[] form_circle(double ax, double ay, double bx, double by, double cx, double cy, double prev_angle) {
-    	double onecompa = 2.0*(cx-ax);
-		double onecompb = 2.0*(cy-ay);
-		double onecompc = -(Math.pow(ay, 2)+Math.pow(ax, 2)-Math.pow(cy, 2)-Math.pow(cx, 2));
-		
-		double twocompa = 2.0*(bx-ax);
-		double twocompb = 2.0*(by-ay);
-		double twocompc = -(Math.pow(ay, 2)+Math.pow(ax, 2)-Math.pow(by, 2)-Math.pow(bx, 2));
-		
-		double x_num = (onecompc*twocompb)-(twocompc*onecompb);
-		double x_den = (onecompa*twocompb)-(twocompa*onecompb);
-		double x = x_num/x_den;
-		
-		
-		double y_num = (onecompa*twocompc)-(twocompa*onecompc);
-		double y_den = (onecompa*twocompb)-(twocompa*onecompb);
-		double y = y_num/y_den;
+    public double[] form_circle(double ax, double ay, double bx, double by, double cx, double cy, double prev_angle, double center_x, double center_y) {
+    	
+    	double x=center_x;
+    	double y=center_y;
 		
 		double radius = Math.hypot((ax-x), (ay-y));
 		double chord_length_one = Math.hypot((cx-bx), (cy-by));
