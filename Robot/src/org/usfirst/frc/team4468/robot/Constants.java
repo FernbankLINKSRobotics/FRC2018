@@ -66,9 +66,9 @@ public class Constants{
     
     // Gyro
     public static edu.wpi.first.wpilibj.I2C.Port gyroPort = I2C.Port.kOnboard;
-    public static double angleP = 0.8;
-    public static double angleI = 0.01;
-    public static double angleD = 0.012;
+    public static double angleP = 1.0;
+    public static double angleI = 0.0;
+    public static double angleD = 0.0;
     
     // Shifter
     public static int shifterPort1 = 0;
@@ -86,8 +86,8 @@ public class Constants{
     public static double lifterP  = 5.0;
     public static double lifterI  = 0.0;
     public static double lifterD  = .12;
-    public static int BreakClampPort1 = 1;
-    public static int BreakClampPort2 = 2;
+    public static int BreakClampPort1 = 6;
+    public static int BreakClampPort2 = 7;
     
     // Potentiometer
     public static int potPort = 3; // Placeholder

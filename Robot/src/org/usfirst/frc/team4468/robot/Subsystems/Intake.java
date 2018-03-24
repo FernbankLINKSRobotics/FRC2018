@@ -12,7 +12,7 @@ public class Intake extends Subsystem {
 	private VictorSP left = new VictorSP(Constants.intakePort1);
 	private VictorSP right = new VictorSP(Constants.intakePort2);
 	
-	private DigitalInput photogate = new DigitalInput(Constants.intakeSensorPort);
+	private DigitalInput photogate = new DigitalInput(Constants.photoGatePort);
 	
 	private DoubleSolenoid clamp = new DoubleSolenoid(Constants.intakeClampPort1, Constants.intakeClampPort2);
 	
@@ -21,7 +21,7 @@ public class Intake extends Subsystem {
 	//// Constructor and Command
 	public Intake() {
 		//  The left motor needs to spin clockwise so it needs to be the inverse of the other motor, which is counter clockwise
-		left.setInverted(true);
+		right.setInverted(true);
 	}
 	
 	protected void initDefaultCommand() {}

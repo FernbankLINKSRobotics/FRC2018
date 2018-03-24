@@ -1,5 +1,6 @@
 package org.usfirst.frc.team4468.robot;
 
+import org.usfirst.frc.team4468.robot.Commands.Drive.Clamp;
 import org.usfirst.frc.team4468.robot.Commands.Drive.Shift;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.AngleRotate;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.ExpelCube;
@@ -27,7 +28,6 @@ public class OI {
      * button is pressed and it ties together the commands and subsystems
      */
     public OI() {
-        
     		JoystickButton Trigger = new JoystickButton(ctrl, 1); 
     		JoystickButton LeftButton = new JoystickButton(ctrl, 4); 
     		JoystickButton CenterButton = new JoystickButton(ctrl, 3);
@@ -36,16 +36,20 @@ public class OI {
     		JoystickButton LeftTop = new JoystickButton(ctrl, 6);
     		JoystickButton BottomLeft = new JoystickButton(ctrl, 8);
     		JoystickButton LeftMiddle = new JoystickButton(ctrl, 7);
+    		JoystickButton RightTop = new JoystickButton(ctrl, 11);
+    		JoystickButton RightBottom = new JoystickButton(ctrl, 10);
     		
     		
     		BottomButton.whenPressed(new HoldingRotate(-10.0));
     		CenterButton.whenPressed(new HoldingRotate(-140.0));
-    		LeftButton.whenPressed(new AngleRotate(-100.0, -.01));
-    		RightButton.whenPressed(new AngleRotate(-60.0, -.01));	
+    		LeftButton.whenPressed(new AngleRotate(-100.0, 20));
+    		RightButton.whenPressed(new AngleRotate(-60.0, 20));	
     		LeftMiddle.whenPressed(new IntakeClamp(Value.kReverse));
     		LeftTop.whenPressed(new IntakeClamp(Value.kForward));
     		BottomLeft.whenPressed(new IntakeSpeed(0.7));
-    		Trigger.whenPressed(new ExpelCube(Value.kReverse, ctrl.getRawAxis(3)));
+    		Trigger.whenPressed(new ExpelCube(Value.kReverse, -1));
+    		RightTop.whenReleased(new Clamp(Value.kForward));
+    		RightBottom.whenPressed(new Clamp(Value.kReverse));
     		
     		/*
         if (drvr.getTriggerAxis(Hand.kRight) == 1) {

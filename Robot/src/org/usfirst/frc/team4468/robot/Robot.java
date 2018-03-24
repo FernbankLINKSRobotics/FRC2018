@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
@@ -32,7 +33,6 @@ public class Robot extends IterativeRobot {
     public static Constants    constants;
     public static Intake       intake;
 	public static Drivetrain   drive;
-	public static Shifter      shift;
 	public static OI           oi;
 	public static Run runFunction;
 	public static AngleRotate angleRotate;
@@ -152,6 +152,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		log();
 		//SmartDashboard.putNumber("LeftENC" , drive.getLeftDistance());
         //SmartDashboard.putNumber("RightENC", drive.getRightDistance());
         //SmartDashboard.putNumber("Gyro", drive.getAngle());
@@ -186,7 +187,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		log();
-	
 	}
 	
 	public void log() {
@@ -200,5 +200,6 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("LeftENC" , drive.getLeftDistance());
         SmartDashboard.putNumber("RightENC", drive.getRightDistance());
         SmartDashboard.putNumber("Petentiometer", rotatingLift.getAngle());
+        SmartDashboard.putNumber("TurnAngle",drive.getAngle() );
 	}
 }

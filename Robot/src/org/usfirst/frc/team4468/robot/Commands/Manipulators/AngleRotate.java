@@ -29,14 +29,13 @@ public class AngleRotate extends Command {
         pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD);
         pid.reset();
         pid.setOutputRange(-1.0, 1.0);
-        pid.setPerTolerance(tol);
+        pid.setAbsTolerance(tol);
 
         System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
         
         //// Comment back in these in for added functionality
         //inc = increment;
-        //rl.clamp(Value.kReverse);
     }
     
     private MotionProfiler onedMotion = new MotionProfiler(3.0, 5.0, 3.0, 0.1, theta, negative);
@@ -46,6 +45,12 @@ public class AngleRotate extends Command {
      * 
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
+    
+    protected void initialize() {
+    	if(rl.getState() != Value.kForward) {
+        	rl.clamp(Value.kForward);
+        }
+    }
     
     protected void execute() {
     	
@@ -80,7 +85,7 @@ public class AngleRotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#end()
      */
     protected void end() {
-        //rl.clamp(Value.kForward);
+        rl.clamp(Value.kReverse);
         rl.stop();
     }
 
@@ -91,6 +96,7 @@ public class AngleRotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#interrupted()
      */
     protected void interrupted() {
+    	rl.clamp(Value.kReverse);
         rl.stop();
     }
 }
