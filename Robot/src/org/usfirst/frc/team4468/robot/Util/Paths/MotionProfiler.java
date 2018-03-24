@@ -593,7 +593,7 @@ public class MotionProfiler {
     	double yellow_left=.1;
     	boolean scuse = false;
     	double[] test_accel_left = new double[allValues];
-    		for (int m=0; m<90000; m++) {
+    		for (int m=0; m<1000; m++) {
     			for (int i=0; i<(accelIndex_left);i++) {
     				if (!scuse) {
     					test_accel_left[i] = acceleration_left[i]-yellow_left;
@@ -603,7 +603,7 @@ public class MotionProfiler {
     			double decel_test = (-Math.pow(max_left_test, 2))/(2*(distance_left[allValues-1]-distance_left[accelIndex_left+1]));
     			
     			if (-decel_test>max_acceleration) {
-    				yellow_left = yellow_left+.0001;
+    				yellow_left = yellow_left+.01;
     			}
     			else {
     				scuse = true;
@@ -630,7 +630,7 @@ public class MotionProfiler {
     			double decel_test = (-Math.pow(max_right_test, 2))/(2*(distance_right[allValues-1]-distance_right[accelIndex_right]+1));
     			//double distance_test = (Math.pow(clampVel_right[accelIndex_right-1], 2))/(2*test_accel_right[0]);
     			if (-decel_test>max_acceleration) {
-    				yellow_right = yellow_right+.001;
+    				yellow_right = yellow_right+.01;
     			}
     			
     			else {
@@ -732,7 +732,7 @@ public class MotionProfiler {
     			accelerationthree_left[i] = (maxVelocities_left[i]-maxVelocities_left[i-1])/tempTime;
     			accelerationthree_right[i] = (maxVelocities_right[i]-maxVelocities_right[i-1])/tempTime;
     			if (Math.abs(accelerationthree_left[i])>max_acceleration||Math.abs(accelerationthree_right[i])>max_acceleration) {
-    				newTime[i] = tempTime+.1;
+    				newTime[i] = tempTime+.15;
     			}
     			else {
     				newTime[i] = tempTime;
@@ -745,7 +745,7 @@ public class MotionProfiler {
 	    		accelerationthree_left[i] = (maxVelocities_left[i]-maxVelocities_left[i-1])/tempTime;
     			accelerationthree_right[i] = (maxVelocities_right[i]-maxVelocities_right[i-1])/tempTime;
     			if (Math.abs(accelerationthree_left[i])>max_acceleration||Math.abs(accelerationthree_right[i])>max_acceleration) {
-    				newTime[i] = tempTime+.25;
+    				newTime[i] = tempTime+.15;
     			}
     			else {
     				newTime[i] = tempTime;
