@@ -59,7 +59,10 @@ public class Move extends CommandGroup {
     	
     	
     }
-    public void getDistance(double second) {
+    long startTime = System.currentTimeMillis();
+    public void getDistance() {
+    	long endTime = System.currentTimeMillis();
+    	double second = (endTime-startTime)/1000.0;
     	double distance_left = maintwo.execute2D(second,0,0)[0];
     	double distance_right = maintwo.execute2D(second, 0, 0)[4];
     	left = new LeftDistance(distance_left);

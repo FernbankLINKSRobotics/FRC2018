@@ -732,7 +732,14 @@ public class MotionProfiler {
     			accelerationthree_left[i] = (maxVelocities_left[i]-maxVelocities_left[i-1])/tempTime;
     			accelerationthree_right[i] = (maxVelocities_right[i]-maxVelocities_right[i-1])/tempTime;
     			if (Math.abs(accelerationthree_left[i])>max_acceleration||Math.abs(accelerationthree_right[i])>max_acceleration) {
-    				newTime[i] = tempTime+.15;
+    				newTime[i] = tempTime+.1;
+    				for (int g=0; g<100; g++) {
+    					accelerationthree_left[i] = (maxVelocities_left[i]-maxVelocities_left[i-1])/newTime[i];
+    		    		accelerationthree_right[i] = (maxVelocities_right[i]-maxVelocities_right[i-1])/newTime[i];
+    		    		if (Math.abs(accelerationthree_left[i])>max_acceleration||Math.abs(accelerationthree_right[i])>max_acceleration) {
+    		    			newTime[i] = newTime[i]+.1;
+    		    		}
+    				}
     			}
     			else {
     				newTime[i] = tempTime;
@@ -745,7 +752,14 @@ public class MotionProfiler {
 	    		accelerationthree_left[i] = (maxVelocities_left[i]-maxVelocities_left[i-1])/tempTime;
     			accelerationthree_right[i] = (maxVelocities_right[i]-maxVelocities_right[i-1])/tempTime;
     			if (Math.abs(accelerationthree_left[i])>max_acceleration||Math.abs(accelerationthree_right[i])>max_acceleration) {
-    				newTime[i] = tempTime+.15;
+    				newTime[i] = tempTime+.1;
+    				for (int g=0; g<100; g++) {
+    					accelerationthree_left[i] = (maxVelocities_left[i]-maxVelocities_left[i-1])/newTime[i];
+    		    		accelerationthree_right[i] = (maxVelocities_right[i]-maxVelocities_right[i-1])/newTime[i];
+    		    		if (Math.abs(accelerationthree_left[i])>max_acceleration||Math.abs(accelerationthree_right[i])>max_acceleration) {
+    		    			newTime[i] = newTime[i]+.1;
+    		    		}
+    				}
     			}
     			else {
     				newTime[i] = tempTime;
