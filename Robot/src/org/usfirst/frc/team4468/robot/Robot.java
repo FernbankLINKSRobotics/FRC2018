@@ -39,14 +39,17 @@ public class Robot extends IterativeRobot {
 	
 	public static double theta;
 	
+	// Routine option
 	private boolean doingSide;
 	private boolean doingRun;
 	private boolean doingSwitch;
-	
+	// Robot positions
 	private boolean isRight;
 	private boolean isCenter;
 	private boolean isLeft;
-	//private boolean isSide;
+	// Testing
+	private boolean testingGyro;
+	private boolean testingStraight;
 	
 	SendableChooser<CommandGroup> autoChooser;
 	Command autonomousCommand;
@@ -63,20 +66,18 @@ public class Robot extends IterativeRobot {
 		drive        = new Drivetrain();
 		oi           = new OI();
 		
-		
-		/*
-		autoChooser = new SendableChooser<CommandGroup>();
-		autoChooser.addDefault("PID Tune", new LineScore());
-		autoChooser.addObject("Auto Run", new Run());
-		autoChooser.addObject("Straight forward switch", new LineScore());
-		*/
-		
+		// The Dashboard Routines
 		SmartDashboard.putBoolean("doingLine", doingSwitch);
 		SmartDashboard.putBoolean("doingSide", doingSide);
 		SmartDashboard.putBoolean("doingRun", doingRun);
+		// the positions
 		SmartDashboard.putBoolean("isLeft", isLeft);
 		SmartDashboard.putBoolean("isRight", isRight);
 		SmartDashboard.putBoolean("isCenter", isCenter);
+		// testing
+		SmartDashboard.putBoolean("testingGyro", testingGyro);
+		SmartDashboard.putBoolean("testingStraight", testingStraight);
+		
 		//SmartDashboard.putData("Auto Chooser", autoChooser);
 		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture("Camera", "/dev/video0");
 		cam.setVideoMode(VideoMode.PixelFormat.kMJPEG, 256, 144, 30);
@@ -116,31 +117,35 @@ public class Robot extends IterativeRobot {
 	    drive.encoderReset();
 	    drive.gyroReset();
 	    if(SmartDashboard.getBoolean("doingRun", false)) {
-	    	new Run().start();
+	    	    new Run().start();
 	    } else if (SmartDashboard.getBoolean("doingSide", false) 
 	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'R' 
 	    		&& SmartDashboard.getBoolean("isRight", false)) {
-	    	new RightDeposit().start();
+	    	    new RightDeposit().start();
 	    } else if (SmartDashboard.getBoolean("doingSide", false) 
 	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'L' 
 	    		&& SmartDashboard.getBoolean("isLeft", false)) {
-	    	new LeftDeposit().start();
+	    	    new LeftDeposit().start();
 	    } else if (SmartDashboard.getBoolean("doingSwitch", false) 
 	    		&& SmartDashboard.getBoolean("isLeft", false) 
 	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='L') {
-	    	new LineScore().start();
+	        new LineScore().start();
 	    } else if (SmartDashboard.getBoolean("doingSwitch", false) 
 	    		&& SmartDashboard.getBoolean("isRight", false) 
 	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='R') {
-	    	new LineScore().start();
+	    	    new LineScore().start();
 	    } else if (SmartDashboard.getBoolean("isCenter", false) 
 	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='L') {
-	    	new CenterAuto().start();
+	    	    new CenterAuto().start();
 	    } else if (SmartDashboard.getBoolean("isCenter", false) 
 	    		&& DriverStation.getInstance().getGameSpecificMessage().charAt(0)=='R') {
-	    	new CenterAuto().start();
+	    	    new CenterAuto().start();
+	    } else if (SmartDashboard.getBoolean("testingGyro", false)) {
+	        new GyroTest().start();
+	    } else if (SmartDashboard.getBoolean("tesingStraight", false)) {
+	        new Run().start();
 	    } else {
-	    	new Run().start();
+	        new Run().start();
 	    }
 		
 		//angleRotate = new AngleRotate(-140.0, -.01);

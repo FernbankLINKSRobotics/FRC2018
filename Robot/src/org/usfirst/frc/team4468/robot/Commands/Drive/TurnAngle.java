@@ -35,8 +35,8 @@ public class TurnAngle extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        System.out.println("Angle:" + dt.getAngle());
-        System.out.println("Motor Out:" + pid.calculate(dt.getAngle()));
+        //System.out.println("Angle:" + dt.getAngle());
+        //System.out.println("Motor Out:" + pid.calculate(dt.getAngle()));
         dt.arcade(pid.calculate(dt.getAngle()), 0.0);
     }
 
@@ -46,7 +46,7 @@ public class TurnAngle extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        System.out.println("Isfinished: " + pid.onTarget(dt.getAngle()));
+        //System.out.println("Isfinished: " + pid.onTarget(dt.getAngle()));
         return pid.onTarget(dt.getAngle());
     }
 
