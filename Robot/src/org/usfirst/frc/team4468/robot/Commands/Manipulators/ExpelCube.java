@@ -25,7 +25,7 @@ public class ExpelCube extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-        in.clamp(clamp);
+        in.clamp(clamp);   
         in.setSpeed(speed);
     }
 

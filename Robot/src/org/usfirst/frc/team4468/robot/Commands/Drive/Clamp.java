@@ -3,7 +3,6 @@ package org.usfirst.frc.team4468.robot.Commands.Drive;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team4468.robot.Robot;
-import org.usfirst.frc.team4468.robot.Subsystems.Drivetrain;
 import org.usfirst.frc.team4468.robot.Subsystems.RotatingLift;
 
 public class Clamp extends Command {
@@ -23,9 +22,9 @@ public class Clamp extends Command {
 	 */
 	@Override
 	protected void execute() {
-		if(target != rl.getState()) {
-		    rl.clamp(target);
-		}
+		//if(rl.getState() != target) {
+			rl.clamp(target);
+		//}
 	}
 
 	/* This stops when the state of the shifter changes either from low to high

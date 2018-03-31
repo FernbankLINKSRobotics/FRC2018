@@ -32,9 +32,9 @@ public class HoldingRotate extends Command {
         pid.setOutputRange(-1.0, 1.0);
         pid.setPerTolerance(.5);
         
-        System.out.println(pid.getSetpoint());
+        //System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
-        System.out.println("setpoint one: " + pid.getSetpoint());
+        //System.out.println("setpoint one: " + pid.getSetpoint());
         
     }
     
@@ -70,7 +70,7 @@ public class HoldingRotate extends Command {
      */
     protected void end() {
         rl.stop();
-        //pid.reset();
+        pid.disable();
     }
 
     /* Called when another command which requires one or more of the same
@@ -80,5 +80,6 @@ public class HoldingRotate extends Command {
      */
     protected void interrupted() {
         rl.stop();
+        pid.disable();
     }
 }

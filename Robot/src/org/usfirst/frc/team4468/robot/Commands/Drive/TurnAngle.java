@@ -22,12 +22,22 @@ public class TurnAngle extends Command {
         requires(dt);
         theta = t;
         tolerance = tol;
-            
-        pid = new PID(Constants.angleP, Constants.angleI, Constants.angleD);
+        
+        //if(t < 0) {
+        	pid = new PID(Constants.angleP
+        				, Constants.angleI
+        				, Constants.angleD);
+        /*} else {
+        	pid = new PID(Constants.angleP
+        				, Constants.angleI
+        				, Constants.angleD);
+        }*/
         pid.setInputRange(-180.0, 180.0);
         pid.setAbsTolerance(tolerance);
         pid.setOutputRange(-1.0, 1.0);
         pid.setPoint(theta);
+        
+        System.out.println("TURN START");
     }
         
     /* Called repeatedly when this Command is scheduled to run
@@ -47,6 +57,7 @@ public class TurnAngle extends Command {
      */
     protected boolean isFinished() {
         //System.out.println("Isfinished: " + pid.onTarget(dt.getAngle()));
+    	//System.out.println("Turning");
         return pid.onTarget(dt.getAngle());
     }
 
@@ -55,7 +66,7 @@ public class TurnAngle extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#end()
      */
     protected void end() {
-        System.out.println("END");
+        System.out.println("TURN END");
         dt.stop();
     }
 
@@ -65,7 +76,7 @@ public class TurnAngle extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#interrupted()
      */
     protected void interrupted() {
-        System.out.println("INTER");
+        System.out.println("TURN INTER");
         dt.stop();
     }
 }

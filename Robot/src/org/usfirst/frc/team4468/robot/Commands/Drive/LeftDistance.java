@@ -31,9 +31,7 @@ public class LeftDistance extends Command {
         pid.setPoint(distance); 		
     }
     
-    protected void initialize() {
-        System.out.println("Is Initialized");
-	}
+ 
         
     /* Called repeatedly when this Command is scheduled to run
      * (non-Javadoc)

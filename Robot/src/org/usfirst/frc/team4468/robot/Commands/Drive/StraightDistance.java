@@ -29,6 +29,7 @@ public class StraightDistance extends Command {
         pid.setAbsTolerance(tolerance);
         pid.setPoint(distance);
         //angleRotate =new AngleRotate(rl.getAngle(), 0.0);
+        System.out.println("TURN START");
     }
         
     /* Called repeatedly when this Command is scheduled to run
@@ -52,8 +53,8 @@ public class StraightDistance extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        System.out.println("pid target " + pid.onTarget(dt.getDis()));
-        //System.out.println("Is Done");
+        //System.out.println("pid target " + pid.onTarget(dt.getDis()));
+        System.out.println("Setpoint= "+ pid.getSetpoint() + " Distance= " + dt.getDis());
         return pid.onTarget(dt.getDis());
     }
 
@@ -62,8 +63,9 @@ public class StraightDistance extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#end()
      */
     protected void end() {
-        System.out.println("End");
+        System.out.println("DRIVE END");
         dt.stop();
+        pid.disable();
     }
 
     /* Called when another command which requires one or more of the same
@@ -72,6 +74,8 @@ public class StraightDistance extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#interrupted()
      */
     protected void interrupted() {
+    	System.out.println("DRIVE INTER");
         dt.stop();
+        pid.disable();
     }
 }

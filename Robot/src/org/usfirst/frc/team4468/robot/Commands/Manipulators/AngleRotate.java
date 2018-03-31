@@ -18,6 +18,7 @@ public class AngleRotate extends Command {
     
     public AngleRotate(double angle, double tol) {
         theta = angle;
+        /*
         if (angle<0.0) {
         		negative = true;
         }
@@ -25,20 +26,21 @@ public class AngleRotate extends Command {
         		negative = false;
         }
         System.out.println("PID RotateAngle");
+        */
 
         pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD);
         pid.reset();
         pid.setOutputRange(-1.0, 1.0);
         pid.setAbsTolerance(tol);
 
-        System.out.println(pid.getSetpoint());
+        //System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
         
         //// Comment back in these in for added functionality
         //inc = increment;
     }
     
-    private MotionProfiler onedMotion = new MotionProfiler(3.0, 5.0, 3.0, 0.1, theta, negative);
+    //private MotionProfiler onedMotion = new MotionProfiler(3.0, 5.0, 3.0, 0.1, theta, negative);
     
     /*
      * Called repeatedly when this Command is scheduled to run (non-Javadoc)
@@ -54,7 +56,7 @@ public class AngleRotate extends Command {
     
     protected void execute() {
     	
-        System.out.println("Executed");
+        //System.out.println("Executed");
         /*double value;
         if (onedMotion.getDistance(rl.getAngle(), inc)[0]>theta) {
         	value = rl.getAngle();
@@ -64,7 +66,7 @@ public class AngleRotate extends Command {
         	System.out.println("value: " + value);
         }*/
         rl.rotate(pid.calculate(rl.getAngle()));
-        System.out.println("Calculated Distance:" + pid.calculate(rl.getAngle()));
+        //System.out.println("Calculated Distance:" + pid.calculate(rl.getAngle()));
     }
 
     /*
@@ -76,7 +78,11 @@ public class AngleRotate extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return pid.onTarget(rl.getAngle());
+        return pid.onTarget(rl.getAngle()) ||
+        	(Robot.oi.ctrl.getRawButton(5) ||
+       		 Robot.oi.ctrl.getRawButton(2) ||
+       		 Robot.oi.ctrl.getRawButton(3) ||
+       		 Robot.oi.ctrl.getRawButton(4));
     }
 
     /*
@@ -87,6 +93,7 @@ public class AngleRotate extends Command {
     protected void end() {
         rl.clamp(Value.kReverse);
         rl.stop();
+        pid.disable();
     }
 
     /*
@@ -96,7 +103,8 @@ public class AngleRotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#interrupted()
      */
     protected void interrupted() {
-    	rl.clamp(Value.kReverse);
+    	//rl.clamp(Value.kReverse);
         rl.stop();
+        pid.disable();  
     }
 }

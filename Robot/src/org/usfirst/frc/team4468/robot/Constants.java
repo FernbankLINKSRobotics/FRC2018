@@ -66,8 +66,8 @@ public class Constants{
     
     // Gyro
     public static edu.wpi.first.wpilibj.I2C.Port gyroPort = I2C.Port.kOnboard;
-    public static double angleP = 1.0;
-    public static double angleI = 0.0;
+    public static double angleP = .96;
+    public static double angleI = 0.004;
     public static double angleD = 0.0;
     
     // Shifter

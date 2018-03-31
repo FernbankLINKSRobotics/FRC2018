@@ -42,14 +42,13 @@ public class OI {
     		
     		BottomButton.whenPressed(new HoldingRotate(-10.0));
     		CenterButton.whenPressed(new HoldingRotate(-140.0));
-    		LeftButton.whenPressed(new AngleRotate(-100.0, 20));
-    		RightButton.whenPressed(new AngleRotate(-60.0, 20));	
+    		//LeftButton.whenPressed(new AngleRotate(-10.0, 20));
     		LeftMiddle.whenPressed(new IntakeClamp(Value.kReverse));
     		LeftTop.whenPressed(new IntakeClamp(Value.kForward));
-    		BottomLeft.whenPressed(new IntakeSpeed(0.7));
+    		BottomLeft.whenPressed(new IntakeSpeed(0.5));
     		Trigger.whenPressed(new ExpelCube(Value.kReverse, -1));
-    		RightTop.whenReleased(new Clamp(Value.kForward));
-    		RightBottom.whenPressed(new Clamp(Value.kReverse));
+    		RightTop.whenReleased(new Clamp(Value.kReverse));
+    		RightBottom.whenPressed(new Clamp(Value.kForward));
     		
     		/*
         if (drvr.getTriggerAxis(Hand.kRight) == 1) {
