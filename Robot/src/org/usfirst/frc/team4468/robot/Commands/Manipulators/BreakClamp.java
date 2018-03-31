@@ -31,6 +31,14 @@ public class BreakClamp extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return clamp == rl.getState();
+        return false;//clamp == rl.getState();
+    }
+    
+    protected void end() {
+        rl.clamp(Value.kForward);
+    }
+    
+    protected void interupted() {
+        rl.clamp(Value.kForward);
     }
 }

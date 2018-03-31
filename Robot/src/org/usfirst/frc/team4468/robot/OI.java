@@ -45,39 +45,9 @@ public class OI {
     		//LeftButton.whenPressed(new AngleRotate(-10.0, 20));
     		LeftMiddle.whenPressed(new IntakeClamp(Value.kReverse));
     		LeftTop.whenPressed(new IntakeClamp(Value.kForward));
-    		BottomLeft.whenPressed(new IntakeSpeed(0.5));
+    		BottomLeft.whenPressed(new IntakeSpeed(0.6));
     		Trigger.whenPressed(new ExpelCube(Value.kReverse, -1));
     		RightTop.whenReleased(new Clamp(Value.kReverse));
     		RightBottom.whenPressed(new Clamp(Value.kForward));
-    		
-    		/*
-        if (drvr.getTriggerAxis(Hand.kRight) == 1) {
-            new Shift(Value.kForward).start();
-        } else if (drvr.getTriggerAxis(Hand.kLeft) == 1) {
-            new Shift(Value.kReverse).start();
-        }
-        
-        if (ctrl.getAButtonPressed()) {
-            new HoldingRotate(0).start();
-        } else if (ctrl.getBButtonPressed()) {
-            new HoldingRotate(60).start();
-        } else if (ctrl.getXButtonPressed()) {
-            new HoldingRotate(120).start();
-        } else if (ctrl.getYButtonPressed()) {
-            new HoldingRotate(140).start();
-        }
-            
-        if (drvr.getBumperPressed(Hand.kRight)) {
-            new IntakeClamp(Value.kForward).start();
-        } else if (drvr.getBumperPressed(Hand.kLeft)) {
-            new IntakeClamp(Value.kReverse).start();
-        }
-        */
-        if (ctrl.getTriggerAxis(Hand.kRight) == 1) {
-            Scheduler.getInstance().add(new IntakeSpeed(0.7));
-        } 
-        //else if (ctrl.getTriggerAxis(Hand.kLeft) == -1 ) {
-        //    new IntakeSpeed(0.7).start();
-        //}
     }
 }

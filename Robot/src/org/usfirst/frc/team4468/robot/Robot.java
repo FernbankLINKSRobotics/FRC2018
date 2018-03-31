@@ -74,34 +74,34 @@ public class Robot extends IterativeRobot {
 		} else if (SmartDashboard.getBoolean("doingSide", false)
 					&& SmartDashboard.getBoolean("isLeft", false)
 					&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'L') {
-						new LeftDeposit().start();	
+		    new LeftDeposit().start();	
 		}else if (SmartDashboard.getBoolean("doingSide", false)
 					&& SmartDashboard.getBoolean("isRight", false)
 					&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'R') {
-						new RightDeposit().start();	
+			new RightDeposit().start();	
 		}else if (SmartDashboard.getBoolean("doingLine", false)
 					&& SmartDashboard.getBoolean("isLeft", false)
 					&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'L') {
-						new LineScore().start();
+			new LineScore().start();
 		} else if (SmartDashboard.getBoolean("doingLine", false)
 					&& SmartDashboard.getBoolean("isRight", false)
 					&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'R') {
-						new LineScore().start();
+			new LineScore().start();
 		} else if (SmartDashboard.getBoolean("isCenter", false)
 					&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'L') {
-						new CenterAuto().start();
+			new CenterAuto().start();
 		} else if (SmartDashboard.getBoolean("isCenter", false)
 					&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'R') {
-						new CenterAuto().start();
+			new CenterAuto().start();
 		} else if (SmartDashboard.getBoolean("testingGyro", false)) {
-						new GyroTest().start();
+		    new GyroTest().start();
 		} else if (SmartDashboard.getBoolean("testingStraight",  false)) {
-						new Run().start();
+			new Run().start();
 		} else {
-						new Run().start();
-	}
+			new Run().start();
+		}
 		// angleRotate = new AngleRotate(-140.0, -.01);
-}
+	}
 	
 	/**
 	 * This function is called periodically during autonomous
