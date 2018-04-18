@@ -24,9 +24,8 @@ public class StraightDistance extends Command {
         distance = d;
         tolerance = tol;
             
-        pid = new PID(Constants.lineP, Constants.lineI, Constants.lineD);
+        pid = new PID(Constants.lineP, Constants.lineI, Constants.lineD, tol);
         pid.setOutputRange(-1.0, 1.0);
-        pid.setAbsTolerance(tolerance);
         pid.setPoint(distance);
         //angleRotate =new AngleRotate(rl.getAngle(), 0.0);
         System.out.println("TURN START");
@@ -45,6 +44,7 @@ public class StraightDistance extends Command {
         System.out.println("Distance: " + dt.getDis());
         */
         dt.arcade(0.0, pid.calculate(dt.getDis()));
+        System.out.println("Line Error: " + pid.getError());
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -54,8 +54,8 @@ public class StraightDistance extends Command {
      */
     protected boolean isFinished() {
         //System.out.println("pid target " + pid.onTarget(dt.getDis()));
-        System.out.println("Setpoint= "+ pid.getSetpoint() + " Distance= " + dt.getDis());
-        return pid.onTarget(dt.getDis());
+       // System.out.println("Setpoint= "+ pid.getSetpoint() + " Distance= " + dt.getDis());
+        return pid.onTarget();
     }
 
     /* Called once after isFinished returns true
@@ -65,7 +65,6 @@ public class StraightDistance extends Command {
     protected void end() {
         System.out.println("DRIVE END");
         dt.stop();
-        pid.disable();
     }
 
     /* Called when another command which requires one or more of the same
@@ -76,6 +75,5 @@ public class StraightDistance extends Command {
     protected void interrupted() {
     	System.out.println("DRIVE INTER");
         dt.stop();
-        pid.disable();
     }
 }

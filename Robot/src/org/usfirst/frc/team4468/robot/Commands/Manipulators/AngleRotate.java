@@ -28,10 +28,9 @@ public class AngleRotate extends Command {
         System.out.println("PID RotateAngle");
         */
 
-        pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD);
+        pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD, tol, true);
         pid.reset();
         pid.setOutputRange(-1.0, 1.0);
-        pid.setAbsTolerance(tol);
 
         //System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
@@ -78,7 +77,7 @@ public class AngleRotate extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return pid.onTarget(rl.getAngle()) ||
+        return pid.onTarget() ||
         	(Robot.oi.ctrl.getRawButton(5) ||
        		 Robot.oi.ctrl.getRawButton(2) ||
        		 Robot.oi.ctrl.getRawButton(3) ||
@@ -93,7 +92,6 @@ public class AngleRotate extends Command {
     protected void end() {
         rl.clamp(Value.kReverse);
         rl.stop();
-        pid.disable();
     }
 
     /*
@@ -105,6 +103,5 @@ public class AngleRotate extends Command {
     protected void interrupted() {
     	//rl.clamp(Value.kReverse);
         rl.stop();
-        pid.disable();  
     }
 }

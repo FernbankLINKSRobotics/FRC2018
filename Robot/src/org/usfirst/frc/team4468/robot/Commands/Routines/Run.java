@@ -12,6 +12,6 @@ public class Run extends CommandGroup {
     public Run() {
     	System.out.println("IN RUN");
     	addSequential(new Clamp(Value.kForward));
-        addSequential(new StraightDistance(-3.5, .05)); 
+        addSequential(new StraightDistance(-3.0, .05)); 
     }
 }

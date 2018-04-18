@@ -25,9 +25,8 @@ public class LeftDistance extends Command {
     	
         requires(dt);
         distance = d;
-        pid = new PID(Constants.leftP, Constants.leftI, Constants.lifterD);
+        pid = new PID(Constants.leftP, Constants.leftI, Constants.lifterD, 1.0);
         pid.setOutputRange(-1.0, 1.0);
-        pid.setPerTolerance(1.0);
         pid.setPoint(distance); 		
     }
     
@@ -38,11 +37,13 @@ public class LeftDistance extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
+    	/*
     		System.out.println("Inside Left execute");
     		System.out.println("Left Output: " + pid.calculate(dt.getLeftDistance()));
     		System.out.println("Left Error: " + pid.getError());
     		System.out.println("Left SetPoint: " + pid.getSetpoint());
-    		dt.tank(pid.calculate(dt.getLeftDistance()), 0.0);
+    		*/
+    	dt.tank(pid.calculate(dt.getLeftDistance()), 0.0);
     }
 
     /* Make this return true when this Command no longer needs to run execute()
@@ -51,7 +52,7 @@ public class LeftDistance extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return pid.onTarget(dt.getLeftDistance());
+        return pid.onTarget();
     }
 
     /* Called once after isFinished returns true

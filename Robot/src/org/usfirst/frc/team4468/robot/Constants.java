@@ -3,6 +3,7 @@ package org.usfirst.frc.team4468.robot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -42,9 +43,9 @@ public class Constants{
 	public static double rightI = 0.0;
 	public static double rightD = 0.0;
 	// Both Sides
-	public static double lineP = 45.0;
-	public static double lineI = 0.01;
-	public static double lineD = 0.01;
+	public static double lineP = .95;
+	public static double lineI = 0.0;
+	public static double lineD = 0.0;
 	
 
 	// IO
@@ -65,10 +66,10 @@ public class Constants{
     public static int rightEnc1 = 0;
     
     // Gyro
-    public static edu.wpi.first.wpilibj.I2C.Port gyroPort = I2C.Port.kOnboard;
-    public static double angleP = .96;
-    public static double angleI = 0.004;
-    public static double angleD = 0.0;
+    public static edu.wpi.first.wpilibj.SPI.Port gyroPort = SPI.Port.kMXP;
+    public static double angleP = 0.012;
+    public static double angleI = 0.0;
+    public static double angleD = 0.00;
     
     // Shifter
     public static int shifterPort1 = 0;
@@ -83,9 +84,9 @@ public class Constants{
     
     // Lifter
     public static int lifterPort1 = 3;
-    public static double lifterP  = 5.0;
-    public static double lifterI  = 0.0;
-    public static double lifterD  = .12;
+    public static double lifterP  = .05;
+    public static double lifterI  = 0.005;
+    public static double lifterD  = 0.0;
     public static int BreakClampPort1 = 6;
     public static int BreakClampPort2 = 7;
     

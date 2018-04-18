@@ -13,6 +13,7 @@ import org.usfirst.frc.team4468.robot.Subsystems.RotatingLift;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -92,7 +93,7 @@ public class Robot extends IterativeRobot {
 			new CenterAuto().start();
 		} else if (SmartDashboard.getBoolean("isCenter", false)
 					&& DriverStation.getInstance().getGameSpecificMessage().charAt(0) == 'R') {
-			new CenterAuto().start();
+			new LineScore().start();
 		} else if (SmartDashboard.getBoolean("testingGyro", false)) {
 		    new GyroTest().start();
 		} else if (SmartDashboard.getBoolean("testingStraight",  false)) {
@@ -121,7 +122,7 @@ public class Robot extends IterativeRobot {
 		 */
 		drive.encoderReset();
 		drive.gyroReset();
-																	
+		Scheduler.getInstance().removeAll();															
 	}
 	
 	public void teleopPeriodic () {
@@ -142,6 +143,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("RightENC", drive.getRightDistance());
 		SmartDashboard.putNumber("Petentiometer", rotatingLift.getAngle());
 		SmartDashboard.putNumber("TurnAngle", drive.getAngle());
+		SmartDashboard.putBoolean("Clamp", intake.getState() == Value.kForward);
+		SmartDashboard.putBoolean("Sensor", intake.photoGet());
 	}
 }
 

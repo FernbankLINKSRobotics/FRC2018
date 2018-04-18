@@ -26,14 +26,14 @@ public class TurnAngle extends Command {
         //if(t < 0) {
         	pid = new PID(Constants.angleP
         				, Constants.angleI
-        				, Constants.angleD);
+        				, Constants.angleD
+        				, tol
+        				, true);
         /*} else {
         	pid = new PID(Constants.angleP
         				, Constants.angleI
         				, Constants.angleD);
         }*/
-        pid.setInputRange(-180.0, 180.0);
-        pid.setAbsTolerance(tolerance);
         pid.setOutputRange(-1.0, 1.0);
         pid.setPoint(theta);
         
@@ -58,7 +58,7 @@ public class TurnAngle extends Command {
     protected boolean isFinished() {
         //System.out.println("Isfinished: " + pid.onTarget(dt.getAngle()));
     	//System.out.println("Turning");
-        return pid.onTarget(dt.getAngle());
+        return pid.onTarget();
     }
 
     /* Called once after isFinished returns true

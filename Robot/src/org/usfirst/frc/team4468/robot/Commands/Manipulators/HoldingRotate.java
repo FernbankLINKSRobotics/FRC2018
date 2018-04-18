@@ -25,12 +25,11 @@ public class HoldingRotate extends Command {
     		double theta = angle;
     		System.out.println("PID RotateAngle");
 
-        pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD);
+        pid = new PID(Constants.lifterP, Constants.lifterI, Constants.lifterD, .5, true);
         pid.reset();
         
         //pid.setInputRange(-180.0, 180.0);
         pid.setOutputRange(-1.0, 1.0);
-        pid.setPerTolerance(.5);
         
         //System.out.println(pid.getSetpoint());
         pid.setPoint(theta);
@@ -43,7 +42,7 @@ public class HoldingRotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#execute()
      */
     protected void execute() {
-    		System.out.println("Executed");
+    		//System.out.println("Executed");
     		rl.rotate(pid.calculate(rl.getAngle()));
     		//System.out.println("Calculated Distance:" + pid.calculate(rl.getAngle()));
     }
@@ -69,8 +68,8 @@ public class HoldingRotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#end()
      */
     protected void end() {
+    	System.out.println("HOLDING END");
         rl.stop();
-        pid.disable();
     }
 
     /* Called when another command which requires one or more of the same
@@ -79,7 +78,7 @@ public class HoldingRotate extends Command {
      * @see edu.wpi.first.wpilibj.command.Command#interrupted()
      */
     protected void interrupted() {
-        rl.stop();
-        pid.disable();
+    	System.out.println("HOLDING INTER");
+        rl.stop();  
     }
 }

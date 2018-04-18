@@ -3,6 +3,7 @@ package org.usfirst.frc.team4468.robot;
 import org.usfirst.frc.team4468.robot.Commands.Drive.Clamp;
 import org.usfirst.frc.team4468.robot.Commands.Drive.Shift;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.AngleRotate;
+import org.usfirst.frc.team4468.robot.Commands.Manipulators.BreakClamp;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.ExpelCube;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.HoldingRotate;
 import org.usfirst.frc.team4468.robot.Commands.Manipulators.IntakeClamp;
@@ -39,15 +40,22 @@ public class OI {
     		JoystickButton RightTop = new JoystickButton(ctrl, 11);
     		JoystickButton RightBottom = new JoystickButton(ctrl, 10);
     		
+    		JoystickButton RightTrigger = new JoystickButton(drvr, 6);
+    		JoystickButton LeftTrigger = new JoystickButton(drvr, 5);
+    		//4 unclamp 5 clamp
     		
     		BottomButton.whenPressed(new HoldingRotate(-10.0));
     		CenterButton.whenPressed(new HoldingRotate(-140.0));
-    		//LeftButton.whenPressed(new AngleRotate(-10.0, 20));
+    		LeftButton.whenPressed(new HoldingRotate(-50.0));
+    		//RightButton.whenPressed(new BreakClamp(Value.kForward));
     		LeftMiddle.whenPressed(new IntakeClamp(Value.kReverse));
     		LeftTop.whenPressed(new IntakeClamp(Value.kForward));
     		BottomLeft.whenPressed(new IntakeSpeed(0.6));
-    		Trigger.whenPressed(new ExpelCube(Value.kReverse, -1));
+    		Trigger.whenPressed(new ExpelCube(Value.kReverse, -.5));
     		RightTop.whenReleased(new Clamp(Value.kReverse));
     		RightBottom.whenPressed(new Clamp(Value.kForward));
+    		
+    		RightTrigger.whenPressed(new Shift(Value.kForward));
+    		LeftTrigger.whenPressed(new Shift(Value.kReverse));
     }
 }

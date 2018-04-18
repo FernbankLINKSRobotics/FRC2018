@@ -5,32 +5,26 @@ import edu.wpi.first.wpilibj.Timer;
 public class PID {
     
     //Constants
-	public double maxVelocity = 6;
-    private double kP;
-    private double kI;
-    private double kD;
-    private boolean perTolerance;
-    private boolean absTolerance;
-    private boolean fFactorSetAccel;
-    private boolean setRangeO;
-    private boolean setRangeI;
-    private boolean disabled;
-    private double fFactorA;
-    private double the_percent;
-    private double the_distance;
-    private double minRangeO;
-    private double maxRangeO;
-    private double minRangeI;
-    private double maxRangeI;
-    private double target;
+    private double kP = 0;
+    private double kI = 0;
+    private double kD = 0;
+    private double tolerance = 0;
+    private boolean rangeIn = false;
+    private boolean rangeOut = false;
+    private boolean continuous = false;
+    private double maxIn = 0;
+    private double minIn = 0;
+    private double maxOut = 0;
+    private double minOut = 0;
+    private double target = 0;
     
     
     //Used for calculating deltaE (A.R.C of the error)
-    private double previousError = Double.MAX_VALUE;
-    private double previousTime = 0;
-    private double previousMeasure = 0;
-    private double previousVelocity = 0;
-    private double errorSum = 0;
+    private double prevErr = Double.MAX_VALUE;
+    private double prevMeasure = 0;
+    private double totalError = 0;
+    private double prevTime = 0;
+    private double err = 0;
     
     /**
      * Constructor. Creates a new PID instance.
@@ -43,6 +37,41 @@ public class PID {
         kP = P;
         kI = I;
         kD = D;
+        prevTime = Timer.getFPGATimestamp();
+    }
+    
+    /**
+     * Constructor. Creates a new PID instance.
+     * 
+     * @param P The P tuning constant. Set as 0 to disable.
+     * @param I The I tuning constant. Set as 0 to disable.
+     * @param D The D tuning constant. Set as 0 to disable.
+     * @param T the absolute tolerance of the system.
+     */
+    public PID(double P, double I, double D, double T){
+        kP = P;
+        kI = I;
+        kD = D;
+        tolerance = T;
+        prevTime = Timer.getFPGATimestamp();
+    }
+    
+    /**
+     * Constructor. Creates a new PID instance.
+     * 
+     * @param P The P tuning constant. Set as 0 to disable.
+     * @param I The I tuning constant. Set as 0 to disable.
+     * @param D The D tuning constant. Set as 0 to disable.
+     * @param T The absolute tolerance of the system.
+     * @param C Determines if the loop is continuous.
+     */
+    public PID(double P, double I, double D, double T, boolean C){
+        kP = P;
+        kI = I;
+        kD = D;
+        tolerance = T;
+        continuous = C;
+        prevTime = Timer.getFPGATimestamp();
     }
     
     /**
@@ -52,9 +81,9 @@ public class PID {
      * @param max The maximum range
      */
     public void setOutputRange(double min, double max) {
-    	    setRangeO = true;
-    	    minRangeO = min;
-    	    maxRangeO = max;
+        rangeOut = false;
+    	    minOut = min;
+    	    maxOut = max;
     }
     
     /**
@@ -64,19 +93,9 @@ public class PID {
     * @param max The maximum range
     */
     public void setInputRange(double min, double max) {
-        setRangeI = true;
-    	    minRangeI = min;
-    	    maxRangeI = max;
-    }
-    
-    /**
-     * Sets the percent tolerance.
-     * 
-     * @param percent The specified percent tolerance.
-     */
-    public void setPerTolerance(double percent) {
-    	    perTolerance = true;
-    	    the_percent = percent/100;
+        rangeIn = true;
+    	    minIn = min;
+    	    maxIn = max;
     }
     
     /**
@@ -84,66 +103,43 @@ public class PID {
      * 
      * @param percent The specified encoder distance tolerance.
      */
-    public void setAbsTolerance(double distance) {
-    	    absTolerance = true;
-    	    the_distance = distance;
-    }
+    public void setTolerance(double distance) { tolerance = distance; }
     
-    public boolean onTarget(double measure) {
-        if(perTolerance) {
-            //System.out.println("per tol: " + (Math.abs(measure - target) < Math.abs(target * (the_percent/ 100))));
-            return Math.abs(measure - target) < Math.abs(target * (the_percent /100));
-        } else if (absTolerance) {
-            //System.out.println("abs tol: " + (Math.abs(measure - target) < the_distance));
-            return Math.abs(measure - target) < the_distance;
-        } else {
-            throw new IllegalArgumentException("Please set a tolerance");
-        }
-    }
+    public boolean onTarget() { return Math.abs(prevMeasure - target) < tolerance; }
     
     /**
      * Sets the target.
      * 
      * @param theTarget The specified distance to go.
      */
-    public void setPoint(double theTarget) {
-    	    if (setRangeI) {
-    	        // Limit the input to specified ranges
-    	        target = Clamp(minRangeI, maxRangeI, theTarget);
-    	    } else {
-    	        target = theTarget;
-    	    }
-    }
+    public void setPoint(double theTarget) { target = rangeIn ? clamp(minIn, maxIn, theTarget) : theTarget; }
     
     /**
-     * Sets the acceleration feed forward factor.
+     * Sets if the loop is continuous.
      * 
-     * @param fff The acceleration feed forward factor.
+     * @param cont is the boolean for the state.
      */
-    public void feedForwardAccel(double accel) {
-    	    fFactorSetAccel = true;
-    	    fFactorA = accel;
-    }
+    public void setContinuous(boolean cont) { continuous = cont; }
     
     /**
      * Disables the PID
+     * @throws Throwable 
      */
-    public void disable() {
-    	    disabled = true;
-    }
+    public void disable() throws Throwable { this.finalize(); }
     
     /**
      * Returns the specified setpoint
      * 
      * @return the setpoint
      */
-    public double getSetpoint() {
-    	    return target;
-    }
+    public double getSetpoint() { return target; }
     
-    public double getError() {
-        return previousError;
-}
+    /**
+     * Returns the specified error
+     * 
+     * @return the Error
+     */
+    public double getError() { return prevErr; }
     
     /**
      * Run a single PID calculation on the given inputs. This does not loop
@@ -154,73 +150,30 @@ public class PID {
      * as an output.
      */
     public double calculate(double measure){
-    	    double output;
-    	    double error;
-    	    double returnOutput;
-    	    // Setting the tolerance
-    	    if (perTolerance) {
-    	        // Setting the percent tolerance
-    	        double percentDistance = Math.abs((the_percent/100)*target);
-    	        if (Math.abs(previousError)<=percentDistance) {
-    	            error = 0;
-    	        } else {
-    	            error = target - measure;
-            }
-    	    } else if (absTolerance) {
-    	        // Setting the absolute tolerance
-    	        if (Math.abs(previousError)<=the_distance) {
-    	            error = 0;
-    	        } else {
-    	            error = target - measure;
-    	        }
-    	    } else if (disabled) {
-    	        // Stop moving
-    	        error = 0.0;
-    	    } else {
-    	        // Setting the error without any tolerance
-    	        error = target - measure;
-    	    }
-        
-        // The operational values
-        double proportional = 0;
-        double integral = 0;
-        double derivative = 0;
-        errorSum += error;
-        double deltaE = previousError-error;
-        double deltaT = Timer.getFPGATimestamp() - previousTime;
-        
-        /**** P ****/
-        proportional = error*kP;
-        
-        /**** I ****/
-        integral = errorSum*kI;
-        
-        /**** D ****/
-        derivative = (deltaE/deltaT)*kD;
-        
-        output = proportional + integral + derivative;
-        double velocity = (measure-previousMeasure)/(deltaT);
-        
-        
-        if (fFactorSetAccel) {
-        	    double acceleration = (velocity-previousVelocity)/(deltaT);
-        	    // Setting the output if the f factor (acceleration) is set
-        	    output += (acceleration*fFactorA);
+        double pValue, iValue, dValue;
+        prevMeasure = measure;
+        err = target - measure;
+        if(continuous && (Math.abs(err) > (maxIn - minIn)/2)){
+            err = (err>0) ? (err - maxIn + minIn) : (err + maxIn - minIn);
         }
-        
-        previousVelocity = velocity; // Set the previous velocity location for the next cycle
-        previousMeasure = measure; // Set the previous measured location for the next cycle
-        previousError = error; // Set the previous error for the next cycle
-        previousTime = Timer.getFPGATimestamp(); // Set the beginning time for the time measured between each output
-        // Return
-        returnOutput = output/100;
-        if (setRangeO) {
-            // Limit to the range if range is set
-        	    return Clamp(minRangeO, maxRangeO, returnOutput);
-        } else {
-        	    return returnOutput;
-        }
-        
+
+        if(err * kP < maxOut && err * kP > minOut){ totalError+=err; }
+        else                                      { totalError=0; }
+
+        //pValue = Math.abs(currentError) < acceptableRange ? 0: p * currentError;
+        pValue = kP * err;
+        iValue = kI * totalError * dt();
+        dValue = kD * (err - prevErr) / dt();
+
+        prevErr = err;
+        return clamp(minOut,maxOut, pValue + iValue + dValue);
+    }
+    
+    private double dt() {
+        double time = Timer.getFPGATimestamp();
+        double delta = time - prevTime;
+        prevTime = time;
+        return delta/1000.0;
     }
     
     /**
@@ -231,18 +184,9 @@ public class PID {
      * @param value The output to be limited
      * @return The limited values
      */
-    public double Clamp(double min, double max, double value) {
-    	    if (value < min) {
-    	        value = min;
-    	    }
-    	    if (value > max) {
-    	        value = max;
-    	    }
-    	    return value;
+    public double clamp(double min, double max, double value) {
+        return Math.max(min, Math.min(max, value));
     }
     
-    public void reset() {
-    		target = 0.0;
-    }
+    public void reset() { target = 0.0; }
 }
-    

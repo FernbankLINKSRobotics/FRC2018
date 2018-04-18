@@ -21,7 +21,7 @@ public class Intake extends Subsystem {
 	//// Constructor and Command
 	public Intake() {
 		//  The left motor needs to spin clockwise so it needs to be the inverse of the other motor, which is counter clockwise
-		left.setInverted(true);
+		right.setInverted(true);
 	}
 	
 	protected void initDefaultCommand() {}

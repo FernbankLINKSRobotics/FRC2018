@@ -21,9 +21,8 @@ public class RightDistance extends Command {
         requires(dt);
         distance = d;
             
-        pid = new PID(Constants.rightP, Constants.rightI, Constants.rightD);
+        pid = new PID(Constants.rightP, Constants.rightI, Constants.rightD, 1.0);
         pid.setOutputRange(-1.0, 1.0);
-        pid.setPerTolerance(1.0);
         pid.setPoint(distance);
     }
         
@@ -45,7 +44,7 @@ public class RightDistance extends Command {
      * @return the command stops when true
      */
     protected boolean isFinished() {
-        return pid.onTarget(dt.getRightDistance());
+        return pid.onTarget();
     }
 
     /* Called once after isFinished returns true
