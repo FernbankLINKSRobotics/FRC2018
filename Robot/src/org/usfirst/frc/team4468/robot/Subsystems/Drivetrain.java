@@ -78,7 +78,7 @@ public class Drivetrain extends Subsystem {
      * @param spd the average speed of the drive
      */
     public void arcade(double rot, double spd) {
-        drive.arcadeDrive(rot, (spd * Constants.turnMultiplier), true); // The turn was a little to strong
+        drive.arcadeDrive((rot * 0.3), (spd * 0.3), true); // The turn was a little to strong
     }
     
     /* Sets the motors in for a tank drive

@@ -45,8 +45,8 @@ public class OI {
     		//LeftButton.whenPressed(new AngleRotate(-10.0, 20));
     		LeftMiddle.whenPressed(new IntakeClamp(Value.kReverse));
     		LeftTop.whenPressed(new IntakeClamp(Value.kForward));
-    		BottomLeft.whenPressed(new IntakeSpeed(0.6));
-    		Trigger.whenPressed(new ExpelCube(Value.kReverse, -1));
+    		BottomLeft.whenPressed(new IntakeSpeed(0.4));
+    		Trigger.whenPressed(new ExpelCube(Value.kReverse, -.6));
     		RightTop.whenReleased(new Clamp(Value.kReverse));
     		RightBottom.whenPressed(new Clamp(Value.kForward));
     }
